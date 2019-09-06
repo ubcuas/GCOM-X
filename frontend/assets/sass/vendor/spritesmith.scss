@@ -1,0 +1,346 @@
+// SCSS variables are information about icon's compiled state, stored under its original file name
+//
+// .icon-home {
+//   width: $icon-home-width;
+// }
+//
+// The large array-like variables contain all information about a single icon
+// $icon-home: x y offset_x offset_y width height total_width total_height image_path;
+//
+// At the bottom of this section, we provide information about the spritesheet itself
+// $spritesheet: width height image $spritesheet-sprites;
+$auto-flight-name: 'auto_flight';
+$auto-flight-x: 512px;
+$auto-flight-y: 41px;
+$auto-flight-offset-x: -512px;
+$auto-flight-offset-y: -41px;
+$auto-flight-width: 25px;
+$auto-flight-height: 41px;
+$auto-flight-total-width: 553px;
+$auto-flight-total-height: 512px;
+$auto-flight-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$auto-flight: (512px, 41px, -512px, -41px, 25px, 41px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'auto_flight', );
+$droneicon-name: 'droneicon';
+$droneicon-x: 0px;
+$droneicon-y: 0px;
+$droneicon-offset-x: 0px;
+$droneicon-offset-y: 0px;
+$droneicon-width: 512px;
+$droneicon-height: 512px;
+$droneicon-total-width: 553px;
+$droneicon-total-height: 512px;
+$droneicon-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$droneicon: (0px, 0px, 0px, 0px, 512px, 512px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'droneicon', );
+$graymarker-icon-name: 'graymarker-icon';
+$graymarker-icon-x: 512px;
+$graymarker-icon-y: 82px;
+$graymarker-icon-offset-x: -512px;
+$graymarker-icon-offset-y: -82px;
+$graymarker-icon-width: 25px;
+$graymarker-icon-height: 41px;
+$graymarker-icon-total-width: 553px;
+$graymarker-icon-total-height: 512px;
+$graymarker-icon-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$graymarker-icon: (512px, 82px, -512px, -82px, 25px, 41px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'graymarker-icon', );
+$layers-name: 'layers';
+$layers-x: 512px;
+$layers-y: 246px;
+$layers-offset-x: -512px;
+$layers-offset-y: -246px;
+$layers-width: 26px;
+$layers-height: 26px;
+$layers-total-width: 553px;
+$layers-total-height: 512px;
+$layers-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$layers: (512px, 246px, -512px, -246px, 26px, 26px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'layers', );
+$marker-icon-name: 'marker-icon';
+$marker-icon-x: 512px;
+$marker-icon-y: 123px;
+$marker-icon-offset-x: -512px;
+$marker-icon-offset-y: -123px;
+$marker-icon-width: 25px;
+$marker-icon-height: 41px;
+$marker-icon-total-width: 553px;
+$marker-icon-total-height: 512px;
+$marker-icon-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$marker-icon: (512px, 123px, -512px, -123px, 25px, 41px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'marker-icon', );
+$marker-shadow-name: 'marker-shadow';
+$marker-shadow-x: 512px;
+$marker-shadow-y: 0px;
+$marker-shadow-offset-x: -512px;
+$marker-shadow-offset-y: 0px;
+$marker-shadow-width: 41px;
+$marker-shadow-height: 41px;
+$marker-shadow-total-width: 553px;
+$marker-shadow-total-height: 512px;
+$marker-shadow-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$marker-shadow: (512px, 0px, -512px, 0px, 41px, 41px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'marker-shadow', );
+$off-axis-name: 'off_axis';
+$off-axis-x: 512px;
+$off-axis-y: 164px;
+$off-axis-offset-x: -512px;
+$off-axis-offset-y: -164px;
+$off-axis-width: 25px;
+$off-axis-height: 41px;
+$off-axis-total-width: 553px;
+$off-axis-total-height: 512px;
+$off-axis-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$off-axis: (512px, 164px, -512px, -164px, 25px, 41px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'off_axis', );
+$save-name: 'save';
+$save-x: 512px;
+$save-y: 272px;
+$save-offset-x: -512px;
+$save-offset-y: -272px;
+$save-width: 25px;
+$save-height: 25px;
+$save-total-width: 553px;
+$save-total-height: 512px;
+$save-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$save: (512px, 272px, -512px, -272px, 25px, 25px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'save', );
+$search-grid-name: 'search_grid';
+$search-grid-x: 512px;
+$search-grid-y: 205px;
+$search-grid-offset-x: -512px;
+$search-grid-offset-y: -205px;
+$search-grid-width: 25px;
+$search-grid-height: 41px;
+$search-grid-total-width: 553px;
+$search-grid-total-height: 512px;
+$search-grid-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$search-grid: (512px, 205px, -512px, -205px, 25px, 41px, 553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', 'search_grid', );
+$retina-auto-flight-name: 'retina_auto_flight';
+$retina-auto-flight-x: 562px;
+$retina-auto-flight-y: 93px;
+$retina-auto-flight-offset-x: -562px;
+$retina-auto-flight-offset-y: -93px;
+$retina-auto-flight-width: 25px;
+$retina-auto-flight-height: 41px;
+$retina-auto-flight-total-width: 614px;
+$retina-auto-flight-total-height: 512px;
+$retina-auto-flight-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-auto-flight: (562px, 93px, -562px, -93px, 25px, 41px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_auto_flight', );
+$retina-droneicon-name: 'retina_droneicon';
+$retina-droneicon-x: 0px;
+$retina-droneicon-y: 0px;
+$retina-droneicon-offset-x: 0px;
+$retina-droneicon-offset-y: 0px;
+$retina-droneicon-width: 512px;
+$retina-droneicon-height: 512px;
+$retina-droneicon-total-width: 614px;
+$retina-droneicon-total-height: 512px;
+$retina-droneicon-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-droneicon: (0px, 0px, 0px, 0px, 512px, 512px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_droneicon', );
+$retina-graymarker-icon-name: 'retina_graymarker-icon';
+$retina-graymarker-icon-x: 512px;
+$retina-graymarker-icon-y: 0px;
+$retina-graymarker-icon-offset-x: -512px;
+$retina-graymarker-icon-offset-y: 0px;
+$retina-graymarker-icon-width: 50px;
+$retina-graymarker-icon-height: 82px;
+$retina-graymarker-icon-total-width: 614px;
+$retina-graymarker-icon-total-height: 512px;
+$retina-graymarker-icon-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-graymarker-icon: (512px, 0px, -512px, 0px, 50px, 82px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_graymarker-icon', );
+$retina-layers-name: 'retina_layers';
+$retina-layers-x: 562px;
+$retina-layers-y: 0px;
+$retina-layers-offset-x: -562px;
+$retina-layers-offset-y: 0px;
+$retina-layers-width: 52px;
+$retina-layers-height: 52px;
+$retina-layers-total-width: 614px;
+$retina-layers-total-height: 512px;
+$retina-layers-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-layers: (562px, 0px, -562px, 0px, 52px, 52px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_layers', );
+$retina-marker-icon-name: 'retina_marker-icon';
+$retina-marker-icon-x: 512px;
+$retina-marker-icon-y: 82px;
+$retina-marker-icon-offset-x: -512px;
+$retina-marker-icon-offset-y: -82px;
+$retina-marker-icon-width: 50px;
+$retina-marker-icon-height: 82px;
+$retina-marker-icon-total-width: 614px;
+$retina-marker-icon-total-height: 512px;
+$retina-marker-icon-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-marker-icon: (512px, 82px, -512px, -82px, 50px, 82px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_marker-icon', );
+$retina-marker-shadow-name: 'retina_marker-shadow';
+$retina-marker-shadow-x: 562px;
+$retina-marker-shadow-y: 52px;
+$retina-marker-shadow-offset-x: -562px;
+$retina-marker-shadow-offset-y: -52px;
+$retina-marker-shadow-width: 41px;
+$retina-marker-shadow-height: 41px;
+$retina-marker-shadow-total-width: 614px;
+$retina-marker-shadow-total-height: 512px;
+$retina-marker-shadow-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-marker-shadow: (562px, 52px, -562px, -52px, 41px, 41px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_marker-shadow', );
+$retina-off-axis-name: 'retina_off_axis';
+$retina-off-axis-x: 587px;
+$retina-off-axis-y: 93px;
+$retina-off-axis-offset-x: -587px;
+$retina-off-axis-offset-y: -93px;
+$retina-off-axis-width: 25px;
+$retina-off-axis-height: 41px;
+$retina-off-axis-total-width: 614px;
+$retina-off-axis-total-height: 512px;
+$retina-off-axis-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-off-axis: (587px, 93px, -587px, -93px, 25px, 41px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_off_axis', );
+$retina-save-name: 'retina_save';
+$retina-save-x: 587px;
+$retina-save-y: 134px;
+$retina-save-offset-x: -587px;
+$retina-save-offset-y: -134px;
+$retina-save-width: 25px;
+$retina-save-height: 25px;
+$retina-save-total-width: 614px;
+$retina-save-total-height: 512px;
+$retina-save-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-save: (587px, 134px, -587px, -134px, 25px, 25px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_save', );
+$retina-search-grid-name: 'retina_search_grid';
+$retina-search-grid-x: 562px;
+$retina-search-grid-y: 134px;
+$retina-search-grid-offset-x: -562px;
+$retina-search-grid-offset-y: -134px;
+$retina-search-grid-width: 25px;
+$retina-search-grid-height: 41px;
+$retina-search-grid-total-width: 614px;
+$retina-search-grid-total-height: 512px;
+$retina-search-grid-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-search-grid: (562px, 134px, -562px, -134px, 25px, 41px, 614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', 'retina_search_grid', );
+$spritesheet-width: 553px;
+$spritesheet-height: 512px;
+$spritesheet-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png';
+$spritesheet-sprites: ($auto-flight, $droneicon, $graymarker-icon, $layers, $marker-icon, $marker-shadow, $off-axis, $save, $search-grid, );
+$spritesheet: (553px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite.png', $spritesheet-sprites, );
+$retina-spritesheet-width: 614px;
+$retina-spritesheet-height: 512px;
+$retina-spritesheet-image: '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png';
+$retina-spritesheet-sprites: ($retina-auto-flight, $retina-droneicon, $retina-graymarker-icon, $retina-layers, $retina-marker-icon, $retina-marker-shadow, $retina-off-axis, $retina-save, $retina-search-grid, );
+$retina-spritesheet: (614px, 512px, '/uas/gcomv2/frontend/assets/images/spritesmith-generated/sprite@2x.png', $retina-spritesheet-sprites, );
+
+// These "retina group" variables are mappings for the naming and pairing of normal and retina sprites.
+//
+// The list formatted variables are intended for mixins like `retina-sprite` and `retina-sprites`.
+$auto-flight-group-name: 'auto_flight';
+$auto-flight-group: ('auto_flight', $auto-flight, $retina-auto-flight, );
+$droneicon-group-name: 'droneicon';
+$droneicon-group: ('droneicon', $droneicon, $retina-droneicon, );
+$graymarker-icon-group-name: 'graymarker-icon';
+$graymarker-icon-group: ('graymarker-icon', $graymarker-icon, $retina-graymarker-icon, );
+$layers-group-name: 'layers';
+$layers-group: ('layers', $layers, $retina-layers, );
+$marker-icon-group-name: 'marker-icon';
+$marker-icon-group: ('marker-icon', $marker-icon, $retina-marker-icon, );
+$marker-shadow-group-name: 'marker-shadow';
+$marker-shadow-group: ('marker-shadow', $marker-shadow, $retina-marker-shadow, );
+$off-axis-group-name: 'off_axis';
+$off-axis-group: ('off_axis', $off-axis, $retina-off-axis, );
+$save-group-name: 'save';
+$save-group: ('save', $save, $retina-save, );
+$search-grid-group-name: 'search_grid';
+$search-grid-group: ('search_grid', $search-grid, $retina-search-grid, );
+$retina-groups: ($auto-flight-group, $droneicon-group, $graymarker-icon-group, $layers-group, $marker-icon-group, $marker-shadow-group, $off-axis-group, $save-group, $search-grid-group, );
+
+// The provided mixins are intended to be used with the array-like variables
+//
+// .icon-home {
+//   @include sprite-width($icon-home);
+// }
+//
+// .icon-email {
+//   @include sprite($icon-email);
+// }
+//
+// Example usage in HTML:
+//
+// `display: block` sprite:
+// <div class="icon-home"></div>
+//
+// To change `display` (e.g. `display: inline-block;`), we suggest using a common CSS class:
+//
+// // CSS
+// .icon {
+//   display: inline-block;
+// }
+//
+// // HTML
+// <i class="icon icon-home"></i>
+@mixin sprite-width($sprite) {
+  width: nth($sprite, 5);
+}
+
+@mixin sprite-height($sprite) {
+  height: nth($sprite, 6);
+}
+
+@mixin sprite-position($sprite) {
+  $sprite-offset-x: nth($sprite, 3);
+  $sprite-offset-y: nth($sprite, 4);
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+
+@mixin sprite-image($sprite) {
+  $sprite-image: nth($sprite, 9);
+  background-image: url(#{$sprite-image});
+}
+
+@mixin sprite($sprite) {
+  @include sprite-image($sprite);
+  @include sprite-position($sprite);
+  @include sprite-width($sprite);
+  @include sprite-height($sprite);
+}
+
+// The `retina-sprite` mixin sets up rules and a media query for a sprite/retina sprite.
+//   It should be used with a "retina group" variable.
+//
+// The media query is from CSS Tricks: https://css-tricks.com/snippets/css/retina-display-media-query/
+//
+// $icon-home-group: ('icon-home', $icon-home, $icon-home-2x, );
+//
+// .icon-home {
+//   @include retina-sprite($icon-home-group);
+// }
+@mixin sprite-background-size($sprite) {
+  $sprite-total-width: nth($sprite, 7);
+  $sprite-total-height: nth($sprite, 8);
+  background-size: $sprite-total-width $sprite-total-height;
+}
+
+@mixin retina-sprite($retina-group) {
+  $normal-sprite: nth($retina-group, 2);
+  $retina-sprite: nth($retina-group, 3);
+  @include sprite($normal-sprite);
+
+  @media (-webkit-min-device-pixel-ratio: 2),
+         (min-resolution: 192dpi) {
+    @include sprite-image($retina-sprite);
+    @include sprite-background-size($normal-sprite);
+  }
+}
+
+// The `sprites` mixin generates identical output to the CSS template
+//   but can be overridden inside of SCSS
+//
+// @include sprites($spritesheet-sprites);
+@mixin sprites($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}
+
+// The `retina-sprites` mixin generates a CSS rule and media query for retina groups
+//   This yields the same output as CSS retina template but can be overridden in SCSS
+//
+// @include retina-sprites($retina-groups);
+@mixin retina-sprites($retina-groups) {
+  @each $retina-group in $retina-groups {
+    $sprite-name: nth($retina-group, 1);
+    .#{$sprite-name} {
+      @include retina-sprite($retina-group);
+    }
+  }
+}

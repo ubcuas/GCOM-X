@@ -1,0 +1,14 @@
+.ReactModal__Overlay {
+    z-index: 1000;
+}
+
+$button-width: 25%;
+$divider-width: 2px;
+.closeConfirmObjectModal {
+    width: calc(#{$button-width} - #{$divider-width});
+    margin-right: $divider-width;
+}
+.saveConfirmObjectModal {
+    width: calc(#{$button-width} - #{$divider-width});
+    margin-left: $divider-width;
+}

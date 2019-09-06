@@ -1,0 +1,94 @@
+version: "3"
+
+services:
+  # This is for development purposes ONLY
+  # And should not be in prod
+  interop_server:
+    container_name: interop-server
+    hostname: interop_server
+    image: auvsisuas/interop-server:latest
+    ports:
+      - "8000:80"
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.6
+
+  nginx:
+    container_name: NGINX
+    hostname: gcomv2_nginx
+    build:
+      context: ./nginx
+    volumes:
+      - .:/uas/gcomv2/nginx
+    ports:
+      - "8089:80"
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.17
+
+  db:
+    container_name: gcomv2_db
+    hostname: gcomv2_db
+    image: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.5
+
+  redis:
+    container_name: gcomv2_redis
+    hostname: gcomv2_redis
+    image: redis:4.0.5-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.4
+
+  npm:
+    container_name: gcomv2_npm
+    hostname: gcomv2_npm
+    build:
+      context: ./frontend
+    image: gcomv2_frontend_image
+    command: [ "npm", "run", "start" ]
+    volumes:
+      - ./frontend:/uas/gcomv2/frontend
+      - /uas/gcomv2/frontend/node_modules
+    working_dir: /uas/gcomv2/frontend
+    ports:
+      - "3000:3000"
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.3
+
+  django:
+    container_name: gcomv2_django
+    hostname: gcomv2_django
+    build:
+      context: ./backend
+    image: gcomv2_server_image
+    command: [ "python", "manage.py", "runserver", "0.0.0.0:8080" ]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./backend:/uas/gcomv2/api
+      - ./frontend:/uas/gcomv2/api/frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - npm
+      - redis
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.2
+
+networks:
+  uasnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.0.0.0/16

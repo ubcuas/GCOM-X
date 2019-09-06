@@ -1,0 +1,29 @@
+.leftPanel {
+    height: calc(98% - 2.5rem);
+    top: calc(1% + 2.5rem);
+    left: 0;
+    border-right: 1px solid gray;
+    position: absolute;
+    text-align: center;
+    background: white;
+
+    .btn {
+        border-radius: 0 !important;
+    }
+
+    .btn:focus {
+        box-shadow: none !important;
+    }
+
+    $divider-width: 2px;
+    .imageSectionButton {
+        width: calc(50% - #{$divider-width});
+        margin-right: $divider-width;
+        margin-bottom: 1%;
+    }
+    .objectSectionButton {
+        width: calc(50% - #{$divider-width});
+        margin-left: $divider-width;
+        margin-bottom: 1%;
+    }
+}
