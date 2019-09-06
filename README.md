@@ -52,8 +52,13 @@ See the full documentation on UAS confluence [here](http://confluence.ubcuas.com
     - `sudo docker-compose run django coverage html`
 - Then go to `htmlcov/` and open `index.html`, select the file to see the code coverage by lines.
 
-## Adding new pypi libs
+## Adding new pypi packages
 ```shell
     $ echo <lib> >> requirements.txt
-    $ sudo docker-compose build --parallel
+    $ sudo docker-compose build django
+  ```
+
+## Adding new node packages
+```shell
+    $ sudo docker-compose run npm npm install <lib>
   ```
