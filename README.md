@@ -9,10 +9,13 @@ See the full documentation on UAS confluence [here](http://confluence.ubcuas.com
 
 ## Setup
 **Using docker container environment:**
-- Using the script
+
+- First, install `docker` and `docker-compose`
 
 ```shell
-    $ sudo ./tools/setup_docker.sh
+    $ git submodule update --init --recursive
+    $ sudo docker-compose build --parallel
+    $ sudo docker-compose run django python manage.py migrate
 ```
 
 ## Running - docker
