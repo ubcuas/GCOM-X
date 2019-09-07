@@ -23,7 +23,6 @@ Build & Push:
   tags:
     - docker
   script:
-    - ./tools/setup-ci.sh
     - docker-compose build --parallel
     - docker-compose run django python manage.py migrate
 
@@ -32,7 +31,6 @@ Test Frontend:
   tags:
     - docker
   script:
-    - ./tools/setup-ci.sh
     - docker-compose build --parallel
     - docker-compose run npm npm test
     - docker-compose run npm npm run coverage
@@ -46,7 +44,6 @@ Test Backend:
   tags:
     - docker
   script:
-    - ./tools/setup-ci.sh
     - docker-compose build --parallel
     - docker-compose run django coverage run --source='.' manage.py test
     - docker-compose run django coverage report
