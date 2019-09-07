@@ -1,7 +1,7 @@
 # UBC UAS Dockerfile - API Backend
 
 # Pull the Python base image
-FROM python:3.6
+FROM python:3.7
 
 # Add dependencies
 RUN apt-get -qq update && apt-get -qq install -y \
@@ -16,10 +16,6 @@ RUN apt-get -qq update && apt-get -qq install -y \
         python3-pyproj \
         python3-lxml \
         sudo
-
-# Link libboost python shared library to allow for -lboost_python3 linker flag
-WORKDIR /usr/lib/x86_64-linux-gnu/
-RUN ln -s libboost_python-py35.so libboost_python3.so
 
 # Get exiv2 0.26 and build py3exiv2 from source for WEBP support
 RUN mkdir -p /tmp
