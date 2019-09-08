@@ -1,0 +1,3 @@
+[submodule "tools/GeoTag"]
+	path = tools/GeoTag
+	url = https://gitlab.com/ubcuas/GeoTag.git
