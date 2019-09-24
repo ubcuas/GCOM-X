@@ -1,0 +1,14 @@
+{
+    "id": 12,
+    "mission": 1,
+    "type": "STANDARD",
+    "latitude": 49.1,
+    "longitude": -123.1,
+    "orientation": "N",
+    "shape": "RECTANGLE",
+    "shapeColor": null,
+    "alphanumeric": "A",
+    "alphanumericColor": null,
+    "description": "description",
+    "autonomous": false
+}

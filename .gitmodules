@@ -1,6 +1,6 @@
 [submodule "tools/GeoTag"]
 	path = tools/GeoTag
-	url = https://gitlab.com/ubcuas/GeoTag.git
+	url = ../GeoTag.git
 [submodule "smurfette"]
 	path = smurfette
-	url = https://gitlab.com/ubcuas/smurfette.git
+	url = ../smurfette.git
