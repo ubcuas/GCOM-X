@@ -74,7 +74,8 @@ class ImageDownloader(threading.Thread):
                         roll = geotags['roll']
 
                         geotag.write_geo_tag(SRC_DIR + name + '.webp',
-                                            latitude, longitude, altitude,                         hdg=heading, roll=roll)
+                                            latitude, longitude, altitude,
+                                            hdg=heading, roll=roll)
 
                         jpg_metadata = pyexiv2.metadata.ImageMetadata(SRC_DIR + image)
                         jpg_metadata.read()

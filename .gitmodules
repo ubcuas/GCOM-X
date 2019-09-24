@@ -3,4 +3,4 @@
 	url = https://gitlab.com/ubcuas/GeoTag.git
 [submodule "smurfette"]
 	path = smurfette
-	url = git@gitlab.com:ubcuas/smurfette.git
+	url = https://gitlab.com/ubcuas/smurfette.git
