@@ -4,6 +4,7 @@
 !/backend/staticfiles/hello
 /backend/mediafiles/*
 !/backend/mediafiles/tests
+/backend/mediafiles/tests/*.json
 
 /frontend/assets/bundles/*
 /frontend/assets/webpack_bundles/*
