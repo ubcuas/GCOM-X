@@ -3,15 +3,32 @@ version: "3"
 services:
   # This is for development purposes ONLY
   # And should not be in prod
+  interop-db:
+    hostname: interop-db
+    image: postgres
+    environment:
+      - POSTGRES_DB=auvsi_suas_db
+    networks:
+      interopnet:
+        ipv4_address: 172.170.0.2
+
+  # This is for development purposes ONLY
+  # And should not be in prod
   interop_server:
     container_name: interop-server
     hostname: interop_server
     image: auvsisuas/interop-server:latest
     ports:
       - "8000:80"
+    depends_on:
+      - interop-db
+    links:
+      - interop-db
     networks:
       uasnet:
         ipv4_address: 172.0.0.6
+      interopnet:
+        ipv4_address: 172.170.0.3
 
   nginx:
     container_name: NGINX
@@ -92,3 +109,8 @@ networks:
     ipam:
       config:
         - subnet: 172.0.0.0/16
+  interopnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.170.0.0/16
