@@ -16,6 +16,7 @@ See the full documentation on UAS confluence [here](http://confluence.ubcuas.com
     $ git submodule update --init --recursive
     $ sudo docker-compose build --parallel
     $ sudo docker-compose run django python manage.py migrate
+    $ sudo docker-compose run interop_server bash -c "./healthcheck.py --postgres_host interop-db && ./manage.py migrate && ./config/load_test_data.py"
 ```
 
 ## Running - docker
