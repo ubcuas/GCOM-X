@@ -11,7 +11,7 @@ from imp_module.GPS_adjust import GPS_Image_Projector
 from imp_module.models import ImpImage
 from imp_module.image_download import ImageDownloader
 
-from gcomx.settings.local_base import MEDIA_ROOT
+from gcomx.settings.local import MEDIA_ROOT
 
 IMAGES_DIR = MEDIA_ROOT + "/images/"
 

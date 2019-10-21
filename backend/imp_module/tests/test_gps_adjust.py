@@ -1,6 +1,6 @@
 import unittest
 import math
-from gcomx.settings.local_base import MEDIA_ROOT
+from gcomx.settings.local import MEDIA_ROOT
 from PIL import Image
 from imp_module.GPS_adjust import GPS_Image_Projector
 

@@ -17,7 +17,7 @@ from imp_module.models import ImpImage
 from imp_module.consumers import ImpImageConsumer
 from imp_module import image_utils
 
-from gcomx.settings.local_base import MEDIA_ROOT
+from gcomx.settings.local import MEDIA_ROOT
 
 import imp_module.geotag as geotag
 
