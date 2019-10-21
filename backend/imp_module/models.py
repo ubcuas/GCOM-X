@@ -20,6 +20,7 @@ class ImpImage(models.Model):
     altitude = models.DecimalField(default=0, max_digits=7, decimal_places=4)
     heading = models.IntegerField(default=0)
     roll = models.FloatField(default=0)
+    yaw = models.FloatField(default=0)
 
     @classmethod
     def update(cls, pk, data):
@@ -100,7 +101,7 @@ class ImpODLC(models.Model):
         if "orientationAbs" in data_cpy:
             data_cpy["orientationAbss"] = [data_cpy["orientationAbs"]]
             del data_cpy["orientationAbs"]
-        
+
         objs.update(**data_cpy)
         pre_save.send(ImpODLC, instance=objs.first())
 

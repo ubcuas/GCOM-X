@@ -132,14 +132,16 @@ class ImageFileHandler(FileSystemEventHandler):
             longitude = geotags['lon']
             altitude = geotags['alt']
             heading = geotags['hdg']
-            roll = geotags['roll']
-            yaw = geotags['yaw']
+            roll = geotags['roll'] if geotags['roll'] else 0
+            yaw = geotags['yaw'] if geotags['yaw'] else 0
 
             # Images must have valid GPS data
-            attributes = (latitude, longitude, altitude, heading, roll)
+            attributes = (latitude, longitude, altitude, heading)
             if any([a is None for a in attributes]):
-                logger.error("Image %s does not contain valid GPS data. Data: %s", name, attributes)
+                logger.error(f"Image {name} does not contain valid GPS data. Data: {attributes}")
                 return False
+            if any([a is None for a in (roll, yaw)]):
+                logger.warning(f"Image {name} is missing roll and yaw values")
 
         except Exception as e:
             traceback.print_tb(e.__traceback__)
@@ -148,7 +150,7 @@ class ImageFileHandler(FileSystemEventHandler):
             image_utils.nuke_exif_orientation_tag(IMAGES_DIR + name)
 
             imp = ImpImage(name=name, processed_flag=0, latitude=latitude, longitude=longitude,
-                            altitude=altitude, heading=heading, roll=roll)
+                            altitude=altitude, heading=heading, roll=roll, yaw=yaw)
 
             try:
                 imp.save()

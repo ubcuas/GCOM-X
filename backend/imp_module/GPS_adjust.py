@@ -11,7 +11,7 @@ EARTH_R = 6.3781e6                 # m
 # Class that allows for GPS adjustment
 class GPS_Image_Projector():
     def __init__(self, location, altitude, focal_length, roll_degrees, image):
-        self.conv_location = utm.from_latlon(*location)  # Convert the location to it's UTM values
+        self.conv_location = utm.from_latlon(float(location[0]), float(location[1]))  # Convert the location to it's UTM values
         angle = math.radians(roll_degrees)
 
         # Field of view calculations
