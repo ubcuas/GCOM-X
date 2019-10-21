@@ -59,7 +59,8 @@ class TestModels(TestCase):
             "longitude": Decimal("-123.10000000"),
             "altitude": Decimal("30.0000"),
             "heading": 40,
-            "roll": 23.2000
+            "roll": 23.2000,
+            'yaw': 0.0
         }
 
         self.assertEqual(ImpImage.objects.values()[0], expected_image_data)
@@ -73,7 +74,8 @@ class TestModels(TestCase):
             "longitude": Decimal("-123.10000000"),
             "altitude": Decimal("30.0000"),
             "heading": 40,
-            "roll": 23.2000
+            "roll": 23.2000,
+            'yaw': 0.0
         }
 
         ImpImage.update(1, {

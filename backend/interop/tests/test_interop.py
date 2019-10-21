@@ -79,26 +79,41 @@ class InteropMissionCase(TestCase):
                                     active=True)
         test_session.save()
 
-    def test_get_interop(self):
+    def test_get_status(self):
         c = Client()
-        response = c.get(reverse('interop.home'))
+        response = c.get(reverse('interop.status'))
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(0, response.json()['status'])
 
     @patch('interop.views.Client')
-    def test_post_interop(self, mock_Client):
+    def test_post_login(self, mock_Client):
         # Mock the data that is returned from the client
         mock_Client.return_value.get_mission.return_value = mock_get_mission()
 
         c = Client()
-        post_data = {'password': "testpass", 'port_num': "8000", 'url': "127.0.0.1", 'username': "testuser", "mission_id" : 1}
-        response = c.post(reverse('interop.home'),
+        post_data = {'password': "testpass", 'port_num': "8000", 'url': "127.0.0.1", 'username': "testuser"}
+        response = c.post(reverse('interop.login'),
                         post_data,
                         content_type="application/json")
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, response.json()['status'])
 
-        submit_url = post_data['url']+':'+ post_data['port_num']
+        mock_Client.assert_called()
+
+    @patch('interop.views.Client')
+    def test_post_mission(self, mock_Client):
+        # Mock the data that is returned from the client
+        mock_Client.return_value.get_mission.return_value = mock_get_mission()
+
+        c = Client()
+        post_data = {"mission_id" : 1}
+        response = c.post(reverse('interop.mission'),
+                        post_data,
+                        content_type="application/json")
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, response.json()['status'])
+
         mock_Client.assert_called()
