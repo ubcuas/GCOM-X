@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GCOMv2 from '../app/gcom_v2';
+import GCOMv2 from '../app/gcomx';
 
-const wrapper = document.getElementById('gcom_v2-root');
+const wrapper = document.getElementById('gcomx-root');
 if (wrapper)
 {
     ReactDOM.render(

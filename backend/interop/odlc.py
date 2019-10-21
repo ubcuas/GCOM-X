@@ -1,7 +1,7 @@
 import logging
 import asyncio
 
-from gcom_v2.settings.local_base import MEDIA_ROOT
+from gcomx.settings.local_base import MEDIA_ROOT
 from interop.client import Client
 
 logger = logging.getLogger(__name__)

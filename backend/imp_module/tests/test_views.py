@@ -2,7 +2,7 @@ import os
 from shutil import copyfile
 
 from django.test import TestCase
-from gcom_v2.settings.local_base import MEDIA_ROOT
+from gcomx.settings.local_base import MEDIA_ROOT
 
 class TestViews(TestCase):
     TESTS_DIR = MEDIA_ROOT + "/tests/"

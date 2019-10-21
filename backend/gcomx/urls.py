@@ -15,7 +15,7 @@ urlpatterns = [
     url('avoidance/', include('avoidance.urls')),
     url("", include('imp_module.urls')),
     url("", include('interop.urls')),
-    url(r'^$', TemplateView.as_view(template_name='gcom_v2/index.html'), name='home'),
+    url(r'^$', TemplateView.as_view(template_name='gcomx/index.html'), name='home'),
 ]
 
 

@@ -1,22 +1,23 @@
 version: "3"
 
 services:
-  # This is for development purposes ONLY
-  # And should not be in prod
+  ### This is for development purposes ONLY ###
+  ### And should not be in prod ###
   interop-db:
+    container_name: interop-db
     hostname: interop-db
     image: postgres
     environment:
       - POSTGRES_DB=auvsi_suas_db
     networks:
       interopnet:
-        ipv4_address: 172.170.0.2
+        ipv4_address: 172.170.0.76
 
-  # This is for development purposes ONLY
-  # And should not be in prod
+  ### This is for development purposes ONLY ###
+  ### And should not be in prod ###
   interop_server:
     container_name: interop-server
-    hostname: interop_server
+    hostname: interop-server
     image: auvsisuas/interop-server:latest
     ports:
       - "8000:80"
@@ -26,13 +27,13 @@ services:
       - interop-db
     networks:
       uasnet:
-        ipv4_address: 172.0.0.6
+        ipv4_address: 172.0.0.77
       interopnet:
-        ipv4_address: 172.170.0.3
+        ipv4_address: 172.170.0.77
 
   nginx:
-    container_name: NGINX
-    hostname: gcomv2_nginx
+    container_name: gcomx-nginx
+    hostname: gcomx-nginx
     build:
       context: ./nginx
     volumes:
@@ -41,11 +42,11 @@ services:
       - "8089:80"
     networks:
       uasnet:
-        ipv4_address: 172.0.0.17
+        ipv4_address: 172.0.0.6
 
   db:
-    container_name: gcomv2_db
-    hostname: gcomv2_db
+    container_name: gcomx-db
+    hostname: gcomx-db
     image: postgres
     ports:
       - "5432:5432"
@@ -54,8 +55,8 @@ services:
         ipv4_address: 172.0.0.5
 
   redis:
-    container_name: gcomv2_redis
-    hostname: gcomv2_redis
+    container_name: gcomx-redis
+    hostname: gcomx-redis
     image: redis:4.0.5-alpine
     command: ["redis-server", "--appendonly", "yes"]
     ports:
@@ -65,8 +66,8 @@ services:
         ipv4_address: 172.0.0.4
 
   npm:
-    container_name: gcomv2_npm
-    hostname: gcomv2_npm
+    container_name: gcomx-npm
+    hostname: gcomx-npm
     build:
       context: ./frontend
     image: gcomv2_frontend_image
@@ -82,8 +83,8 @@ services:
         ipv4_address: 172.0.0.3
 
   django:
-    container_name: gcomv2_django
-    hostname: gcomv2_django
+    container_name: gcomx-django
+    hostname: gcomx-django
     build:
       context: ./backend
     image: gcomv2_server_image

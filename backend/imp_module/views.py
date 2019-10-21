@@ -11,7 +11,7 @@ from imp_module.GPS_adjust import GPS_Image_Projector
 from imp_module.models import ImpImage
 from imp_module.image_download import ImageDownloader
 
-from gcom_v2.settings.local_base import MEDIA_ROOT
+from gcomx.settings.local_base import MEDIA_ROOT
 
 IMAGES_DIR = MEDIA_ROOT + "/images/"
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 @require_http_methods(['POST', 'DELETE', 'GET'])
 def image_download(request):
     """Request to download images
-    
+
     Returns:
         JsonResponse -- status true if downloading
     """

@@ -1,5 +1,5 @@
 """
-WSGI config for gcom_v2 project.
+WSGI config for gcomx project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gcom_v2.settings.production")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gcomx.settings.production")
 
 application = get_wsgi_application()

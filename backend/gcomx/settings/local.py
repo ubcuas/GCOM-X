@@ -5,7 +5,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'HOST': 'gcomv2_db',
+        'HOST': 'gcomx-db',
         'PORT': 5432,
     }
 }

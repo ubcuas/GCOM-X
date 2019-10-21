@@ -10,9 +10,9 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gcom_v2.settings.local")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gcomx.settings.local")
 
-app = Celery('gcom_v2')
+app = Celery('gcomx')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 

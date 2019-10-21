@@ -19,8 +19,8 @@ if __name__ == "__main__":
     if sys.argv[1] == 'test':
         if settings_module:
             print("Ignoring config('DJANGO_SETTINGS_MODULE') because it's test. "
-                  "Using 'gcom_v2.settings.test'")
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gcom_v2.settings.test")
+                  "Using 'gcomx.settings.test'")
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gcomx.settings.test")
     else:  # pragma: no cover
         if settings_module is None:
             print("Error: no DJANGO_SETTINGS_MODULE found. Will NOT start devserver. "

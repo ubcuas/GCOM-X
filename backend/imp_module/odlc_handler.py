@@ -1,7 +1,7 @@
 import logging
 import json, os
 from PIL import Image
-from gcom_v2.settings.local_base import MEDIA_ROOT
+from gcomx.settings.local_base import MEDIA_ROOT
 from imp_module.models import ImpImage
 from interop.odlc import convert_odlc_to_json
 

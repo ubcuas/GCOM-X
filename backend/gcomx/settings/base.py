@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'gcom_v2.urls'
+ROOT_URLCONF = 'gcomx.urls'
 
 TEMPLATES = [
     {
@@ -75,13 +75,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'gcom_v2.wsgi.application'
-ASGI_APPLICATION = 'gcom_v2.routing.application'
+WSGI_APPLICATION = 'gcomx.wsgi.application'
+ASGI_APPLICATION = 'gcomx.routing.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": ["redis://gcomv2_redis:6379/1"],
+            "hosts": ["redis://gcomx-redis:6379/1"],
         },
     },
 }

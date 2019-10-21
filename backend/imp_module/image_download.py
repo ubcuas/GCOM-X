@@ -10,7 +10,7 @@ from PIL import Image
 from time import sleep
 
 try:
-    from gcom_v2.settings.local import MEDIA_ROOT
+    from gcomx.settings.local import MEDIA_ROOT
     from imp_module import geotag
 except ModuleNotFoundError:
     MEDIA_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/mediafiles'

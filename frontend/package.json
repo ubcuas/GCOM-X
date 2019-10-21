@@ -1,8 +1,8 @@
 {
-  "name": "gcom_v2-frontend",
+  "name": "gcomx-frontend",
   "version": "0.0.1",
   "private": true,
-  "description": "gcom_v2 frontend assets.",
+  "description": "gcomx frontend assets.",
   "main": "index.js",
   "scripts": {
     "test": "jest",

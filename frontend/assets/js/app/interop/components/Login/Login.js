@@ -8,10 +8,10 @@ class Login extends React.Component
     {
         super(props);
         this.state = {
-            url: '10.10.130.10',
+            url: 'interop-server',
             port_num: '80',
-            username: 'british',
-            password: '9203074594',
+            username: 'testuser',
+            password: 'testpass',
             mission_id: '1',
         };
     }

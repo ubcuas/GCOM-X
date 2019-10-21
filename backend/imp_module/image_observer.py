@@ -17,7 +17,7 @@ from imp_module.models import ImpImage
 from imp_module.consumers import ImpImageConsumer
 from imp_module import image_utils
 
-from gcom_v2.settings.local_base import MEDIA_ROOT
+from gcomx.settings.local_base import MEDIA_ROOT
 
 import imp_module.geotag as geotag
 
@@ -87,7 +87,7 @@ class ImageFileHandler(FileSystemEventHandler):
         else:
             # Check if the images in the queryset exists, if not delete
             for image in queryset:
-                
+
                 if not ImageFileHandler._file_exists(image.name):
                     ImpImage.objects.filter(name=image.name).delete()
 
@@ -162,7 +162,7 @@ class ImageFileHandler(FileSystemEventHandler):
     @preconditions(lambda name: ImageFileHandler._file_exists(name))
     def _check_file_type(name):
         """
-        Check if the file is a valid JPEG 
+        Check if the file is a valid JPEG
             :param name: requires name to represent a valid file in the MEDIAROOT images folder
             :return True if the image is a valid JPEG, False otherwise
         """
