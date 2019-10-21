@@ -18,10 +18,8 @@ SECURE_HSTS_PRELOAD = True
 DEBUG = True
 
 ADMINS = (
-    ('Admin', 'foo@example.com'),
+    ('UAS McFly', 'info@ubcuas.com'),
 )
-
-# AUTH_USER_MODEL = 'users.User'
 
 ALLOWED_HOSTS = ['*']
 
@@ -29,21 +27,22 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sessions',
     'django.contrib.staticfiles',
 
-    'django_js_reverse',
-    'webpack_loader',
-    'import_export',
     'imp_module.apps.ImpModuleConfig',
     'interop.apps.InteropConfig',
     'avoidance.apps.AvoidanceConfig',
-    'rest_framework',
-    'django_extensions',
+
     'background_task',
-    'django_nose',
     'channels',
+    'django_extensions',
+    'django_js_reverse',
+    'django_nose',
+    'import_export',
+    'rest_framework',
+    'webpack_loader',
 ]
 
 MIDDLEWARE = [
@@ -66,10 +65,10 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
             ],
         },
     },

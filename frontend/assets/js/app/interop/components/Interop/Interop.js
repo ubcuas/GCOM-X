@@ -20,9 +20,9 @@ const ConnectionStatus = Object.freeze({
     CONNECTED_SENDING_DATA_FAILED: 3,
 });
 
-const IMAGE_DOWNLOAD_ENDPOINT = '/api/imp/image-download/';
-const SKYAYE_HEARTBEAT_ENDPOINT = '/api/imp/skyaye-heartbeat/';
-const INTEROP_HOME_ENDPOINT = 'api/interop/home';
+const INTEROP_LOGIN_ENDPOINT = 'api/interop/login';
+const INTEROP_MISSION_ENDPOINT = 'api/interop/mission';
+const INTEROP_STATUS_ENDPOINT = 'api/interop/status';
 const TELEMETRY_ENDPOINT = 'api/interop/telemetrythread';
 
 class Interop extends Component
@@ -34,13 +34,7 @@ class Interop extends Component
         this.state = {
             telemetryStatus: ConnectionStatus.DISCONNECTED,
             relogin: false,
-            downloadingStatus: false,
-            skyayeHeartbeat: {
-                camera: null,
-                telemetry: null,
-                monitor: null,
-            },
-            currentMissionID: null,
+            currentMissionID: -1
         };
     }
 
@@ -57,7 +51,7 @@ class Interop extends Component
 
     static getConnectionStatus()
     {
-        return axios.get(INTEROP_HOME_ENDPOINT)
+        return axios.get(INTEROP_STATUS_ENDPOINT)
         .then(r => ({
             status: r.data.status,
             missionID: r.data.mission_id,
@@ -73,24 +67,6 @@ class Interop extends Component
         return axios.get(TELEMETRY_ENDPOINT)
         .then(r => r.data.status)
         .catch(() => TelemetryStatus.ERROR);
-    }
-
-    static getDownloadingStatus()
-    {
-        return axios.get(IMAGE_DOWNLOAD_ENDPOINT)
-        .then(r => r.data.status || false)
-        .catch(() => false);
-    }
-
-    static getHeartbeatStatus()
-    {
-        return axios.get(SKYAYE_HEARTBEAT_ENDPOINT)
-        .then(r => r.data)
-        .catch(() => ({
-            camera: 'Error',
-            telemetry: 'Error',
-            monitor: 'Error',
-        }));
     }
 
     updatePage()
@@ -124,37 +100,15 @@ class Interop extends Component
         });
     }
 
-    updateDownloading()
-    {
-        Interop.getDownloadingStatus().then((status) =>
-        {
-            this.setState({
-                downloadingStatus: status,
-            });
-        });
-    }
-
-    updateSkyayeHeartbeat()
-    {
-        Interop.getHeartbeatStatus().then((status) =>
-        {
-            this.setState({
-                skyayeHeartbeat: status,
-            });
-        });
-    }
-
     refresh()
     {
         this.updatePage();
         this.updateTelemetry();
-        // this.updateDownloading();
-        // this.updateSkyayeHeartbeat();
     }
 
     login(params)
     {
-        axios.post(INTEROP_HOME_ENDPOINT, params)
+        axios.post(INTEROP_LOGIN_ENDPOINT, params)
         .then((response) =>
         {
             this.props.history.push('/status');
@@ -172,6 +126,18 @@ class Interop extends Component
             relogin: true,
         });
         this.props.history.push('/');
+    }
+
+    grabInteropMission(id)
+    {
+        axios.post(INTEROP_MISSION_ENDPOINT, {mission_id: id})
+        .then(response =>
+        {
+            this.setState({
+                currentMissionID: response.data.mission_id
+            });
+        })
+        .catch(e => alert(e));
     }
 
     sendTelemetry()
@@ -200,36 +166,9 @@ class Interop extends Component
         }
     }
 
-    downloadImages()
-    {
-        if (!this.state.downloadingStatus)
-        {
-            axios.post(IMAGE_DOWNLOAD_ENDPOINT)
-            .then((r) =>
-            {
-                this.setState({
-                    downloadingStatus: r.data.status,
-                });
-            })
-            .catch(e => alert(e));
-        }
-        else
-        {
-            axios.delete(IMAGE_DOWNLOAD_ENDPOINT)
-            .then((r) =>
-            {
-                this.setState({
-                    downloadingStatus: r.data.status,
-                });
-            })
-            .catch(e => alert(e));
-        }
-    }
-
     render()
     {
-        const { telemetryStatus, currentMissionID,
-                downloadingStatus, skyayeHeartbeat } = this.state;
+        const { telemetryStatus, currentMissionID } = this.state;
         return (
             <div className="interop">
                 <div className="heading">
@@ -259,12 +198,9 @@ class Interop extends Component
                         render={() => (
                             <Status
                                 sendTelemetry={() => this.sendTelemetry()}
+                                grabInteropMission={(id) => this.grabInteropMission(id)}
                                 telemetryStatus={telemetryStatus}
                                 currentMissionID={currentMissionID}
-                                // downloadImages={() => this.downloadImages()}
-                                // downloadingStatus={downloadingStatus}
-                                // updateSkyayeHeartbeat={() => this.updateSkyayeHeartbeat()}
-                                // skyayeHeartbeat={skyayeHeartbeat}
                                 relogin={() => this.relogin()}
                             />
                         )}

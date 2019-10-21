@@ -6,7 +6,6 @@ import { TelemetryStatus } from '../Interop';
 import './style.scss';
 
 const WAYPOINT_FILE_ENDPOINT = '/avoidance/file/route/';
-const POLL_INTERVAL = 5000;
 
 class Status extends Component
 {
@@ -30,30 +29,12 @@ class Status extends Component
         super(props);
 
         this.state = {
-            timeout: null,
+            newMissionID: 1
         };
     }
 
     componentDidMount()
     {
-        // this.pollHeartbeat();
-    }
-
-    pollHeartbeat()
-    {
-        if (this.state.timeout)
-            clearInterval(this.state.timeout);
-
-        const poll = () =>
-        {
-            this.props.updateSkyayeHeartbeat();
-
-            this.setState({
-                timeout: setTimeout(poll, POLL_INTERVAL),
-            });
-        };
-
-        poll();
     }
 
     downloadWaypointFile()
@@ -67,8 +48,7 @@ class Status extends Component
 
     render()
     {
-        const { sendTelemetry, telemetryStatus, relogin, currentMissionID,
-                downloadingStatus, downloadImages, skyayeHeartbeat } = this.props;
+        const { sendTelemetry, telemetryStatus, relogin, currentMissionID, grabInteropMission } = this.props;
         return (
             <div className="status">
                 <button
@@ -89,6 +69,18 @@ class Status extends Component
                 <div className="card card-flush-right"><h5>
                     { currentMissionID }
                 </h5></div>
+                <input
+                    type="number"
+                    className="form-control card card-flush-right"
+                    value={ this.state.newMissionID }
+                    onChange={e => this.setState({newMissionID: e.target.value})}
+                />
+                <button
+                    className="btn btn-success flush-right"
+                    onClick={() => grabInteropMission(this.state.newMissionID)}
+                >
+                    Grab Interop mission
+                </button>
 
                 <h5>Telemetry Status</h5>
                 <div className="card status-card"><h5>
@@ -100,33 +92,6 @@ class Status extends Component
                 >
                     Toggle Telemetry
                 </button>
-
-                {/* <h3 className="center">Skyaye Status</h3>
-
-                <h5>Image Downloading</h5>
-                <div className="card status-card"><h5>
-                    { String(downloadingStatus) }
-                </h5></div>
-                <button
-                    className="btn btn-primary flush-right"
-                    onClick={() => downloadImages()}
-                >
-                    Toggle image download
-                </button>
-                <br />
-
-                <h5 className="label">Camera</h5>
-                <div className="card card-flush-right"><h5>
-                    { String(skyayeHeartbeat.camera) }
-                </h5></div>
-                <h5 className="label">Telemetry</h5>
-                <div className="card card-flush-right"><h5>
-                    { String(skyayeHeartbeat.telemetry) }
-                </h5></div>
-                <h5 className="label">Monitor</h5>
-                <div className="card card-flush-right"><h5>
-                    { String(skyayeHeartbeat.monitor) }
-                </h5></div> */}
             </div>
         );
     }
@@ -137,14 +102,6 @@ Status.propTypes = {
     telemetryStatus: PropTypes.number.isRequired,
     relogin: PropTypes.func.isRequired,
     currentMissionID: PropTypes.number.isRequired,
-    // downloadingStatus: PropTypes.bool.isRequired,
-    // downloadImages: PropTypes.func.isRequired,
-    // updateSkyayeHeartbeat: PropTypes.func.isRequired,
-    // skyayeHeartbeat: PropTypes.shape({
-    //     camera: PropTypes.string,
-    //     telemetry: PropTypes.string,
-    //     monitor: PropTypes.string,
-    // }).isRequired,
 };
 
 export default Status;

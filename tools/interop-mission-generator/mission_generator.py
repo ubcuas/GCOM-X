@@ -53,11 +53,11 @@ data = {
 
 def add_and_get_index(item, data_list):
     """Adds an item to the list if it does not already exist and returns the index of the item
-    
+
     Arguments:
         item {*} -- Item to add to the list
         data_list {list} -- list to modify
-    
+
     Returns:
         int -- index of the item in the list
     """
@@ -71,10 +71,10 @@ def add_and_get_index(item, data_list):
 def add_and_get_gps(gps_data):
     """Adds a new GPS object to the GPS list if it does not already exist and returns
     the index of the GPS object in the list
-    
+
     Arguments:
         gps_data {list} -- GPS data in the form of [lat, lon]
-    
+
     Returns:
         int -- index of the GPS object in the GPS list
     """
@@ -89,10 +89,10 @@ def add_and_get_gps(gps_data):
 def add_and_get_aerial(aerial_data):
     """Adds a new AerialPosition object to the AerialPosition list if it does not already exist,
     and returns the index of the AerialPosition object in the list
-    
+
     Arguments:
         aerial_data {list} -- AerialPosition in the form of [lat, lon, alt]
-    
+
     Returns:
         int -- index of the AerialPosition object in the AerialPosition list
     """
@@ -108,10 +108,10 @@ def add_and_get_aerial(aerial_data):
 
 def try_parsing(name):
     """Decorator that prints out an error message and exits the program if an exception is thrown
-    
+
     Arguments:
         name {str]} -- Name of element to parse
-    
+
     Returns:
         function -- decorated function
     """
@@ -128,16 +128,16 @@ def try_parsing(name):
 
 def check_data(data, name, length, data_types):
     """Verifies a list has the correct length and types
-    
+
     Arguments:
         data {list} -- list to verify
         name {str} -- name of the list
         length {int} -- expected length of the list
         data_types {tuple} -- tuple of valid types
-    
+
     Raises:
         ValueError: If the list has an incorrect length or any element has an invalid type
-    
+
     Returns:
         list -- the list if it is valid
     """

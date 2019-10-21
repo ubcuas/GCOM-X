@@ -21,7 +21,7 @@ Uas_client connection status
 3 - Connected Sending data Failed
 """
 connect_stat = 0
-current_mission_id = 1
+current_mission_id = -1
 
 telemetrythread = None
 
@@ -89,44 +89,68 @@ def telemetrythread_control(request):
         return HttpResponse(status=400)  # Bad request
 
 @csrf_exempt
-@require_http_methods(["GET", "POST"])
-def home(request):
+@require_http_methods(["POST"])
+def login(request):
     global connect_stat
     global current_mission_id
 
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        username = body['username']
-        password = body['password']
-        current_mission_id = int(body['mission_id'])
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    username = body['username']
+    password = body['password']
 
-        logger.info('Login: username - %s, password - %s', username, password)
-        logger.info('Login: url - %s, port - %s', body['url'], body['port_num'])
+    logger.info('Login: username - %s, password - %s', username, password)
+    logger.info('Login: url - %s, port - %s', body['url'], body['port_num'])
 
-        try:
-            gcomclient = Client()
-            gcomclient.login(body['url'], body['port_num'], username, password)
+    try:
+        gcomclient = Client()
+        gcomclient.login(body['url'], body['port_num'], username, password)
 
-            mission = gcomclient.get_mission(mission_id=current_mission_id)
-            logger.debug(mission)
-            UasMission.create(mission)
+    except Exception as e:
+        logger.exception(e)
+        return HttpResponseServerError(e)
 
-        except Exception as e:
-            logger.exception(e)
-            return HttpResponseServerError(e)
+    connect_stat = 1
+    response = {
+        'status': connect_stat,
+        'mission_id': current_mission_id,
+    }
+    return JsonResponse(response)
 
-        connect_stat = 1
-        response = {
-            'status': connect_stat,
-            'mission_id': current_mission_id,
-        }
-        return JsonResponse(response)
+@csrf_exempt
+@require_http_methods(["GET"])
+def status(request):
+    global connect_stat
+    global current_mission_id
 
-    if request.method == 'GET':
-        response = {
-            'status': connect_stat,
-            'mission_id': current_mission_id,
-        }
+    response = {
+        'status': connect_stat,
+        'mission_id': current_mission_id,
+    }
 
-        return JsonResponse(response)
+    return JsonResponse(response)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def mission(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    current_mission_id = int(body['mission_id'])
+
+    try:
+        gcomclient = Client()
+
+        mission = gcomclient.get_mission(mission_id=current_mission_id)
+        logger.debug(mission)
+        UasMission.create(mission)
+
+    except Exception as e:
+        logger.exception(e)
+        return HttpResponseServerError(e)
+
+    response = {
+        'status': connect_stat,
+        'mission_id': current_mission_id,
+    }
+
+    return JsonResponse(response)

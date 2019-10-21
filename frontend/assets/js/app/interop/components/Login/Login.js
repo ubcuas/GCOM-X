@@ -12,21 +12,19 @@ class Login extends React.Component
             port_num: '80',
             username: 'testuser',
             password: 'testpass',
-            mission_id: '1',
         };
     }
 
     handleLogin(e)
     {
         e.preventDefault();
-        const { url, port_num, username, password, mission_id } = this.state;
+        const { url, port_num, username, password } = this.state;
 
         this.props.login({
             url,
             port_num,
             username,
             password,
-            mission_id,
         });
     }
 
@@ -43,13 +41,6 @@ class Login extends React.Component
             <div className="login">
                 <div className="Login">
                     <form onSubmit={e => this.handleLogin(e)}>
-                        Mission ID
-                        <input
-                            type="number"
-                            className="form-control"
-                            value={this.state.mission_id}
-                            onChange={e => this.updateField('mission_id', e)}
-                        />
                         Server URL
                         <input
                             type="text"
