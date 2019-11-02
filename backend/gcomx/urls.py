@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^jsreverse/$', django_js_reverse.views.urls_js, name='js_reverse'),
 
     url('avoidance/', include('avoidance.urls')),
+    url('surveyopti/', include('surveyopti.urls')),
     url("", include('imp_module.urls')),
     url("", include('interop.urls')),
     url(r'^$', TemplateView.as_view(template_name='gcomx/index.html'), name='home'),
