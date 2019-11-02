@@ -498,19 +498,25 @@ class Map:
         self.graph.add_nodes_from(possible_points)
 
         total_nodes = self.graph.number_of_nodes()
-        count = 0
+        num_nodes_checked = 0
+
+        loading_milestone = 10.0
+
+        visited_nodes = dict({})
 
         for s_node in self.graph.nodes:
-            if (count / total_nodes * 100) % 5 == 0:
-                logger.info("Preprocessing: %s", count / total_nodes * 100)
+            if (num_nodes_checked / total_nodes * 100) >= loading_milestone:
+                logger.info("Preprocessing: %.1f", loading_milestone)
+                loading_milestone = loading_milestone + 10.0
             for e_node in self.graph.nodes:
                 if s_node == e_node:
                     continue
-                elif s_node in self.graph.adj[e_node]:
+                elif e_node in visited_nodes.keys():
                     continue
                 elif self.valid_line(s_node, e_node):
                     self.graph.add_edge(s_node, e_node)
-            count += 1
+            num_nodes_checked += 1
+            visited_nodes[s_node] = True
         logger.info("Map preprocessing done!")
 
     def _convert_obs_to_points(self, obstacles, altitude=40):
