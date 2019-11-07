@@ -39,8 +39,8 @@ RUN python3 configure.py && ./build.sh && ./build.sh -i
 RUN rm -rf /tmp
 
 # Create our working DIR
-RUN mkdir -p /uas/gcomv2/api
-WORKDIR /uas/gcomv2/api
+RUN mkdir -p /uas/gcomx/api
+WORKDIR /uas/gcomx/api
 
 # Install Python Dependencies
 COPY requirements.txt ./

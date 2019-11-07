@@ -1,3 +1,3 @@
-import GCOMv2 from './gcomx';
+import GCOMX from './gcomx';
 
-export default GCOMv2;
+export default GCOMX;

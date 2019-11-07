@@ -11,7 +11,7 @@ const Component = Object.freeze({
     IMP: 2,
 });
 
-class GCOMv2 extends React.Component
+class GCOMX extends React.Component
 {
     constructor(props)
     {
@@ -87,4 +87,4 @@ class GCOMv2 extends React.Component
     }
 }
 
-export default GCOMv2;
+export default GCOMX;

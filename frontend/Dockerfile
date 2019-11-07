@@ -6,8 +6,8 @@ FROM node:8-alpine
 RUN apk add --no-cache git
 
 # Create app directory
-RUN mkdir -p /uas/gcomv2/frontend
-WORKDIR /uas/gcomv2/frontend
+RUN mkdir -p /uas/gcomx/frontend
+WORKDIR /uas/gcomx/frontend
 
 # Install app dependencies
 COPY package*.json ./
