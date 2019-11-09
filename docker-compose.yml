@@ -31,6 +31,18 @@ services:
       interopnet:
         ipv4_address: 172.170.0.77
 
+  golden-retriever:
+    container_name: gcomx-golden-retriever
+    hostname: gcomx-golden-retriever
+    build:
+      context: ./golden-retriever
+    command: [ "python", "app.py"]
+    volumes:
+      - ./backend/mediafiles/images:/uas/gcomx/golden/images
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.7
+
   nginx:
     container_name: gcomx-nginx
     hostname: gcomx-nginx
