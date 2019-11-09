@@ -4,3 +4,6 @@
 [submodule "smurfette"]
 	path = smurfette
 	url = ../smurfette.git
+[submodule "golden-retriever"]
+	path = golden-retriever
+	url = ../golden-retriever.git
