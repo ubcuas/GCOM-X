@@ -39,3 +39,26 @@ class UasTelemetry(models.Model):
                 'heading': self.uas_heading,
                 'altitude': meter_to_feet(self.altitude_msl)}
 
+class OtherAircraftTelemetry(models.Model):
+    """
+    Aircraft Telemetry Data, from NOT our aircraft.
+    Filled in via interop and used in the active aircraft avoidance.
+
+    Attributes:
+        latitude: Latitude in decimal degrees.
+        longitude: Longitude in decimal degrees.
+        altitude_msl: Altitude MSL in feet.
+        uas_heading: Aircraft heading (true north) in degrees (0-360).
+    """
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    altitude_msl = models.FloatField()
+    uas_heading = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    uploaded = models.BooleanField(default=False)
+
+    def marshal(self):
+        return {'latitude': self.latitude,
+                'longitude': self.longitude,
+                'heading': self.uas_heading,
+                'altitude': meter_to_feet(self.altitude_msl)}

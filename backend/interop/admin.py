@@ -11,6 +11,10 @@ class UasTelemetry_admin(admin.ModelAdmin):
     list_display = ('latitude', 'longitude', 'altitude_msl', 'uas_heading', 'created_at', 'uploaded')
 admin.site.register(UasTelemetry, UasTelemetry_admin)
 
+class OtherAircraftTelemetry_admin(admin.ModelAdmin):
+    list_display = ('latitude', 'longitude', 'altitude_msl', 'uas_heading', 'created_at', 'uploaded')
+admin.site.register(OtherAircraftTelemetry, OtherAircraftTelemetry_admin)
+
 class UasMission_admin(admin.ModelAdmin):
     list_display = ('id', 'active')
 admin.site.register(UasMission, UasMission_admin)
