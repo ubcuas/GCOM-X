@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 
 from interop.models import UasMission, UasTelemetry
 from interop.telemetry import telemThread
+from interop.active_aircraft_avoidance import aaaThread
 
 from interop.client import Client
 
@@ -24,6 +25,7 @@ connect_stat = 0
 current_mission_id = -1
 
 telemetrythread = None
+aircraftavoidancethread = None
 
 def get_connect_stat():
     global connect_stat
@@ -32,6 +34,11 @@ def get_connect_stat():
 def get_telemetrythread():
     global telemetrythread
     return telemetrythread
+
+def get_aircraftavoidancethread():
+    global aircraftavoidancethread
+    return aircraftavoidancethread
+
 
 @csrf_exempt
 @require_http_methods(["GET"])
@@ -83,6 +90,52 @@ def telemetrythread_control(request):
         payload = {
                 'status': telemetrythread.is_alive(),
                 'conf': telemetrythread.conf,
+            }
+        return JsonResponse(payload)
+    else:
+        return HttpResponse(status=400)  # Bad request
+
+@csrf_exempt
+@require_http_methods(["GET", "POST", "PUT", "DELETE"])
+def aircraftavoidancethread_control(request):
+    global aircraftavoidancethread
+    global uasclient
+
+    ## Start thread with conf
+    if request.method == 'POST':
+        if aircraftavoidancethread and aircraftavoidancethread.is_alive():
+            logger.warning("aircraftavoidancethread has already started!")
+            return HttpResponse(status=400)  # Bad request
+
+        conf = json.loads(request.body)
+        aircraftavoidancethread = aaaThread(conf=conf)
+        logger.info("aircraftavoidancethread starting")
+        aircraftavoidancethread.start()
+
+    ## Update configuration in running thread
+    if request.method == 'PUT':
+        if not aircraftavoidancethread:
+            logger.warning("aircraftavoidancethread has NOT started! Can't update")
+            return HttpResponse(status=400)  # Bad request
+
+        conf = json.loads(request.body)
+        aircraftavoidancethread.update_conf(conf)
+
+    ## Stop the thread
+    if request.method == 'DELETE':
+        if not aircraftavoidancethread:
+            logger.warning("aircraftavoidancethread Already stopped")
+        else:
+            aircraftavoidancethread.stop()
+
+    if request.method == 'GET':  # Get status and configuration
+        pass
+
+    ## Return the status and thread conf
+    if aircraftavoidancethread:
+        payload = {
+                'status': aircraftavoidancethread.is_alive(),
+                'conf': aircraftavoidancethread.conf,
             }
         return JsonResponse(payload)
     else:

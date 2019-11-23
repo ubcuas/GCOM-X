@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'api/interop/mission$', views.mission, name='interop.mission'),
     url(r'api/interop/status$', views.status, name='interop.status'),
     url(r'api/interop/telemetrythread$', views.telemetrythread_control, name='interop.telemetrythread'),
+    url(r'api/interop/aircraftavoidance$', views.aircraftavoidancethread_control, name='interop.aircraftavoidancethread'),
     url(r'api/interop/telemetry$', views.telemetry, name='interop.telemetry')
 ]

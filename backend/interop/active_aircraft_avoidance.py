@@ -14,7 +14,6 @@ class aaaThread(threading.Thread):
 
     def __init__(self, conf):
         threading.Thread.__init__(self)
-        self.gcom_client = Client()
         self.conf.update(conf)
         self.cont = True
 
@@ -24,6 +23,8 @@ class aaaThread(threading.Thread):
         while self.cont:
 
             ### Aircraft Avoidance Work Goes Here ####
+            print("hELLO!!!!!!")
+            print("THis is a test")
 
             time.sleep(self.conf['interval'])
 
