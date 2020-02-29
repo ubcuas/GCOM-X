@@ -1,4 +1,4 @@
-import Interop, { TelemetryStatus } from './Interop';
+import Interop, { TelemetryStatus, AAAStatus } from './Interop';
 
-export { TelemetryStatus };
+export { TelemetryStatus, AAAStatus };
 export default Interop;

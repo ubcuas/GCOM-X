@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import downloadFile from 'js-file-download';
-import { TelemetryStatus } from '../Interop';
+import { TelemetryStatus, AAAStatus } from '../Interop';
 import './style.scss';
 
 const WAYPOINT_FILE_ENDPOINT = '/avoidance/file/route/';
@@ -18,6 +18,21 @@ class Status extends Component
             case TelemetryStatus.SENDING:
                 return 'Sending';
             case TelemetryStatus.ERROR:
+                return 'Error';
+            default:
+                return '';
+        }
+    }
+
+    static aaaStatusToText(status)
+    {
+        switch (status)
+        {
+            case AAAStatus.STOPPED:
+                return 'Stopped';
+            case AAAStatus.SENDING:
+                return 'Avoiding';
+            case AAAStatus.ERROR:
                 return 'Error';
             default:
                 return '';
@@ -48,7 +63,7 @@ class Status extends Component
 
     render()
     {
-        const { sendTelemetry, telemetryStatus, relogin, currentMissionID, grabInteropMission } = this.props;
+        const { sendTelemetry, sendAAA, telemetryStatus, relogin, currentMissionID, grabInteropMission } = this.props;
         return (
             <div className="status">
                 <button
@@ -92,6 +107,17 @@ class Status extends Component
                 >
                     Toggle Telemetry
                 </button>
+
+                <h5>AAA Status</h5>
+                <div className="card status-card"><h5>
+                    { Status.aaaStatusToText(telemetryStatus) }
+                </h5></div>
+                <button
+                    className="btn btn-primary flush-right"
+                    onClick={() => sendAAA()}
+                >
+                    Toggle Avoidance
+                </button>
             </div>
         );
     }
@@ -99,7 +125,9 @@ class Status extends Component
 
 Status.propTypes = {
     sendTelemetry: PropTypes.func.isRequired,
+    sendAAA: PropTypes.func.isRequired,
     telemetryStatus: PropTypes.number.isRequired,
+    aaaStatus: PropTypes.number.isRequired,
     relogin: PropTypes.func.isRequired,
     currentMissionID: PropTypes.number.isRequired,
 };

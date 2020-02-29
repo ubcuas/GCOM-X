@@ -12,6 +12,12 @@ export const TelemetryStatus = Object.freeze({
     SENDING: 1,
 });
 
+export const AAAStatus = Object.freeze({
+    ERROR: -1,
+    STOPPED: 0,
+    SENDING: 1,
+});
+
 const ConnectionStatus = Object.freeze({
     ERROR: -1,
     DISCONNECTED: 0,
@@ -24,6 +30,7 @@ const INTEROP_LOGIN_ENDPOINT = 'api/interop/login';
 const INTEROP_MISSION_ENDPOINT = 'api/interop/mission';
 const INTEROP_STATUS_ENDPOINT = 'api/interop/status';
 const TELEMETRY_ENDPOINT = 'api/interop/telemetrythread';
+const AAA_ENDPOINT = 'api/interop/aircraftavoidance';
 
 class Interop extends Component
 {
@@ -33,6 +40,7 @@ class Interop extends Component
 
         this.state = {
             telemetryStatus: ConnectionStatus.DISCONNECTED,
+            aaaStatus: ConnectionStatus.DISCONNECTED,
             relogin: false,
             currentMissionID: -1
         };
@@ -166,9 +174,35 @@ class Interop extends Component
         }
     }
 
+    sendAAA()
+    {
+        if (this.state.aaaStatus !== AAAStatus.SENDING)
+        {
+            axios.post(AAA_ENDPOINT, {})
+            .then(() =>
+            {
+                this.setState({
+                    aaaStatus: AAAStatus.SENDING,
+                });
+            })
+            .catch(e => alert(e));
+        }
+        else
+        {
+            axios.delete(AAA_ENDPOINT, {})
+            .then(() =>
+            {
+                this.setState({
+                    aaaStatus: AAAStatus.STOPPED,
+                });
+            })
+            .catch(e => alert(e));
+        }
+    }
+
     render()
     {
-        const { telemetryStatus, currentMissionID } = this.state;
+        const { aaaStatus, telemetryStatus, currentMissionID } = this.state;
         return (
             <div className="interop">
                 <div className="heading">
@@ -198,8 +232,10 @@ class Interop extends Component
                         render={() => (
                             <Status
                                 sendTelemetry={() => this.sendTelemetry()}
+                                sendAAA={() => this.sendAAA()}
                                 grabInteropMission={(id) => this.grabInteropMission(id)}
                                 telemetryStatus={telemetryStatus}
+                                aaaStatus={aaaStatus}
                                 currentMissionID={currentMissionID}
                                 relogin={() => this.relogin()}
                             />
