@@ -6,13 +6,9 @@ import os
 
 from interop.models import UasTelemetry, OtherAircraftTelemetry
 
-print('\n'.join(sys.path))
-
 os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
-
 logger = logging.getLogger(__name__)
-print('HI')
 
 
 class aaaThread(threading.Thread):
@@ -31,12 +27,13 @@ class aaaThread(threading.Thread):
         while self.cont:
 
             # Aircraft Avoidance Work Goes Here#
-            KM_PER_DEMICAL_DEG_LONG = 78.71
             KM_PER_DEMICAL_DEG_LAT = 111.32
             FEET_PER_METER = 3.281
             M_PER_KM = 1000
 
+            #time in seconds to predict into the future
             TIME_PREDICTION = 10
+
 
             os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
@@ -62,6 +59,9 @@ class aaaThread(threading.Thread):
                     slopes.append(slope(tuple_2[i], tuple_1[i], t))
                 return slopes
 
+            #param: slopes is a tuple of (slope of x, slope of y, slope of z)
+            #       tuple_2 is the last coordinates (x,y,z)
+            #returns: tuple, where each element is tuple_2[i] + slopes[i]*TIME_PREDICTION
             def get_predicted(slopes, tuple_2):
                 predicted = []
                 for i in range(0, 3):
@@ -73,12 +73,12 @@ class aaaThread(threading.Thread):
             def get_abs_difference(tuple_1, tuple_2):
                 abs_diff = []
                 for i in range(0,3):
-                    abs_diff.append(abs(uas_predicted[i]-other_predicted[i]))
+                    abs_diff.append(abs(tuple_1[i] - tuple_2[i]))
                 return abs_diff
 
             #given 2 datetime objects, calculates total time difference in seconds
             def get_time_difference(time1, time2):
-                return abs(time1-time2).total_seconds()
+                return abs(time1 - time2).total_seconds()
 
             uas_list = list(UasTelemetry.objects.all().order_by('-id')[:2])
             other_list = list(OtherAircraftTelemetry.objects.all().order_by('-id')[:2])
