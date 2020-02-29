@@ -4,7 +4,7 @@ import time
 import sys
 import os
 
-from gps.models import UasTelemetry, OtherAircraftTelemetry
+from interop.models import UasTelemetry, OtherAircraftTelemetry
 
 print('\n'.join(sys.path))
 
@@ -54,7 +54,7 @@ class aaaThread(threading.Thread):
             def slope(coordinate_2, coordinate_1, t):
                 return (coordinate_2 - coordinate_1)/t
 
-            #returns a tuple of slopes (slope of x, slope of y, slope of z) 
+            #returns a tuple of slopes (slope of x, slope of y, slope of z)
             #param: 2 tuples and delta t, where each tuple is a (x,y,z) coordinate
             def get_slope_list(tuple_2, tuple_1, t):
                 slopes = []
@@ -79,7 +79,7 @@ class aaaThread(threading.Thread):
             #given 2 datetime objects, calculates total time difference in seconds
             def get_time_difference(time1, time2):
                 return abs(time1-time2).total_seconds()
-                        
+
             uas_list = list(UasTelemetry.objects.all().order_by('-id')[:2])
             other_list = list(OtherAircraftTelemetry.objects.all().order_by('-id')[:2])
 
