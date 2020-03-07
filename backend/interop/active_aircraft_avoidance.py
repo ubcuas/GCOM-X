@@ -26,7 +26,6 @@ class aaaThread(threading.Thread):
 
         while self.cont:
 
-            # Aircraft Avoidance Work Goes Here#
             KM_PER_DEMICAL_DEG_LAT = 111.32
             FEET_PER_METER = 3.281
             M_PER_KM = 1000
@@ -34,8 +33,6 @@ class aaaThread(threading.Thread):
             #time in seconds to predict into the future
             TIME_PREDICTION = 10
 
-
-            os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
             # Aircraft Avoidance Work Goes Here#
 
@@ -80,42 +77,43 @@ class aaaThread(threading.Thread):
             def get_time_difference(time1, time2):
                 return abs(time1 - time2).total_seconds()
 
-            uas_list = list(UasTelemetry.objects.all().order_by('-id')[:2])
-            other_list = list(OtherAircraftTelemetry.objects.all().order_by('-id')[:2])
+            if UasTelemetry.objects.count() > 1 and OtherAircraftTelemetry.objects.count() > 1:
+                uas_list = list(UasTelemetry.objects.all().order_by('-id')[:2])
+                other_list = list(OtherAircraftTelemetry.objects.all().order_by('-id')[:2])
 
-            # get x, y, z coordinates
-            uas2 = (uas_list[0].longitude, uas_list[0].latitude, uas_list[0].altitude_msl)
-            uas1 = (uas_list[1].longitude, uas_list[1].latitude, uas_list[1].altitude_msl)
+                # get x, y, z coordinates
+                uas2 = (uas_list[0].longitude, uas_list[0].latitude, uas_list[0].altitude_msl)
+                uas1 = (uas_list[1].longitude, uas_list[1].latitude, uas_list[1].altitude_msl)
 
-            #get interval between uas2 and uas1 in seconds
+                #get interval between uas2 and uas1 in seconds
 
-            uas_t = get_time_difference(uas_list[0].created_at, uas_list[1].created_at)
+                uas_t = get_time_difference(uas_list[0].created_at, uas_list[1].created_at)
 
-            uas_slopes = get_slope_list(uas2, uas1, uas_t)
-            uas_predicted = get_predicted(uas_slopes, uas2)
+                uas_slopes = get_slope_list(uas2, uas1, uas_t)
+                uas_predicted = get_predicted(uas_slopes, uas2)
 
-            for i in range (0,3):
-                print(uas_predicted[i])
+                for i in range (0,3):
+                    print(uas_predicted[i])
 
-            #for other aircraft
-            other2 = (other_list[0].longitude, other_list[0].latitude, other_list[0].altitude_msl)
-            other1 = (other_list[1].longitude, other_list[1].latitude, other_list[1].altitude_msl)
+                #for other aircraft
+                other2 = (other_list[0].longitude, other_list[0].latitude, other_list[0].altitude_msl)
+                other1 = (other_list[1].longitude, other_list[1].latitude, other_list[1].altitude_msl)
 
-            other_t = get_time_difference(other_list[0].created_at, other_list[1].created_at)
+                other_t = get_time_difference(other_list[0].created_at, other_list[1].created_at)
 
-            other_slopes = get_slope_list(other2, other1, other_t)
-            other_predicted = get_predicted(other_slopes, other2)
+                other_slopes = get_slope_list(other2, other1, other_t)
+                other_predicted = get_predicted(other_slopes, other2)
 
-            abs_diff = get_abs_difference(uas_predicted, other_predicted)
+                abs_diff = get_abs_difference(uas_predicted, other_predicted)
 
-            metersApart = math.sqrt(get_longitude_meters(abs_diff[0], abs_diff[1])**2 \
-                + (get_latitude_meters(abs_diff[1]))**2 \
-                + (abs_diff[2] / FEET_PER_METER)**2)
+                metersApart = math.sqrt(get_longitude_meters(abs_diff[0], abs_diff[1])**2 \
+                    + (get_latitude_meters(abs_diff[1]))**2 \
+                    + (abs_diff[2] / FEET_PER_METER)**2)
 
-            print(metersApart)
+                print(metersApart)
 
-            if metersApart < 300:
-                print ("May collide! Will be", int(metersApart),  "m apart", int(TIME_PREDICTION), "s later!")
+                if metersApart < 300:
+                    print ("May collide! Will be", round(metersApart),  "m apart", int(TIME_PREDICTION), "s later!")
 
             time.sleep(self.conf['interval'])
 
