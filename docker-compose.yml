@@ -59,9 +59,13 @@ services:
   db:
     container_name: gcomx-db
     hostname: gcomx-db
-    image: postgres
+    image: postgres:11
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - "5432:5432"
+    volumes:
+      - gcomx-dbdata:/var/lib/postgresql/data/
     networks:
       uasnet:
         ipv4_address: 172.0.0.5
@@ -82,7 +86,7 @@ services:
     hostname: gcomx-npm
     build:
       context: ./frontend
-    image: gcomx_frontend_image
+    image: gcomx-frontend-image
     command: [ "npm", "run", "start" ]
     volumes:
       - ./frontend:/uas/gcomx/frontend
@@ -99,7 +103,7 @@ services:
     hostname: gcomx-django
     build:
       context: ./backend
-    image: gcomx_server_image
+    image: gcomx-server-image
     command: [ "python", "manage.py", "runserver", "0.0.0.0:8080" ]
     stdin_open: true
     tty: true
@@ -127,3 +131,6 @@ networks:
     ipam:
       config:
         - subnet: 172.170.0.0/16
+
+volumes:
+  gcomx-dbdata:
