@@ -1,12 +1,13 @@
 # UBC UAS Dockerfile - API Backend
 
 # Pull the Python base image
-FROM python:3.7.4-buster
+FROM ubcuas/pyuuas:latest
 
 # Add dependencies
 RUN apt-get -qq update && apt-get install -y \
         cmake \
         libboost-python-dev \
+        libgdal-dev \
         libwebp-dev \
         libxml2-dev \
         libxslt-dev \
@@ -17,6 +18,7 @@ RUN apt-get -qq update && apt-get install -y \
 # Make dir for manual deps
 RUN mkdir -p /tmp
 
+## BEGIN REMOVE WITH LIBUUAS
 # Build version 0.26 of libexiv2 for WEBP support
 WORKDIR /tmp
 RUN wget https://www.exiv2.org/releases/exiv2-0.26-trunk.tar.gz \
@@ -37,6 +39,7 @@ RUN python3 configure.py && ./build.sh && ./build.sh -i
 
 # Cleanup
 RUN rm -rf /tmp
+## END REMOVE WITH LIBUUAS
 
 # Create our working DIR
 RUN mkdir -p /uas/gcomx/api
@@ -50,3 +53,6 @@ RUN pip3 install -U -r requirements.txt
 ENV PYTHONUNBUFFERED=1
 EXPOSE 8080
 STOPSIGNAL SIGINT
+
+# Run server
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
