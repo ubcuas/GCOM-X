@@ -8,6 +8,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': ':memory:',
         'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'gcomx-db',
         'PORT': 5432,
     }
