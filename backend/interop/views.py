@@ -11,6 +11,8 @@ from interop.telemetry import telemThread
 
 from interop.client import Client
 
+from pylibuuas.telem import deserialize_telem_msg
+
 logger = logging.getLogger(__name__)
 
 """
@@ -34,13 +36,25 @@ def get_telemetrythread():
     return telemetrythread
 
 @csrf_exempt
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def telemetry(request):
-    uas_telem = UasTelemetry.objects.all().order_by('-created_at')
-    if uas_telem:
-        return JsonResponse(uas_telem[0].marshal())
-    else:
-        return HttpResponse(status=204)  # No content
+    if request.method == 'GET':
+        uas_telem = UasTelemetry.objects.all().order_by('-created_at')
+        if uas_telem:
+            return JsonResponse(uas_telem[0].marshal())
+        else:
+            return HttpResponse(status=204)  # No content
+
+    if request.method == 'POST':
+        telem = deserialize_telem_msg(request.body)
+        new_telem = UasTelemetry(latitude = telem.latitude,
+                                longitude = telem.longitude,
+                                altitude_msl = telem.altitude_msl_m,
+                                uas_heading = telem.heading_deg)
+        new_telem.save()
+        return HttpResponse(status=200)
+
+    return HttpResponse(status=400)  # Bad request
 
 @csrf_exempt
 @require_http_methods(["GET", "POST", "PUT", "DELETE"])
@@ -75,7 +89,8 @@ def telemetrythread_control(request):
         else:
             telemetrythread.stop()
 
-    if request.method == 'GET':  # Get status and configuration
+    ## Get status and configuration
+    if request.method == 'GET':
         pass
 
     ## Return the status and thread conf

@@ -27,7 +27,7 @@ WORKDIR /tmp/exiv2-trunk
 RUN mkdir build && cd build \
         && sed -i '/GCC_MINOR/d' ../CMakeLists.txt \
         && cmake .. -DCMAKE_BUILD_TYPE=Release \
-        && cmake --build . -- -j2 \
+        && cmake --build . -- -j$(nproc) \
         && sudo make install \
         && sudo ldconfig
 
