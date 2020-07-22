@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Switch, Route, withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -25,131 +25,102 @@ const INTEROP_MISSION_ENDPOINT = 'api/interop/mission';
 const INTEROP_STATUS_ENDPOINT = 'api/interop/status';
 const TELEMETRY_ENDPOINT = 'api/interop/telemetrythread';
 
-class Interop extends Component
-{
-    constructor(props)
-    {
-        super(props);
+const Interop = (props) => {
+    const [telemetryStatus, setTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
+    const [needsRelogin, setNeedsRelogin] = useState(false);
+    const [currentMissionID, setCurrentMissionID] = useState(-1);
 
-        this.state = {
-            telemetryStatus: ConnectionStatus.DISCONNECTED,
-            relogin: false,
-            currentMissionID: -1
-        };
+    // refresh once when created
+    useEffect(() => {
+        refresh();
+    }, []);
+
+    // update page if pathname has changed
+    useEffect(() => {
+        updatePage();
+    }, [props.location.pathname]);
+
+    const updatePage = async() => {
+        let status = await getConnectionStatus();
+        if (props.location.pathname !== '/' &&
+            (status.status === ConnectionStatus.DISCONNECTED ||
+            status.status === ConnectionStatus.ERROR))
+            props.history.push('/');
+        else if (!needsRelogin &&
+                props.location.pathname === '/' &&
+                status.status !== ConnectionStatus.DISCONNECTED &&
+                status.status !== ConnectionStatus.ERROR)
+            props.history.push('/status');
+
+        setCurrentMissionID(status.missionID);
     }
 
-    componentDidMount()
-    {
-        this.refresh();
+    const getConnectionStatus = async () => {
+        try {
+            let res = await axios.get(INTEROP_STATUS_ENDPOINT)
+            return {
+                status: res.data.status,
+                missionID: res.data.mission_id,
+            }
+        } catch (err) {
+            return {
+                status: ConnectionStatus.ERROR,
+                missionID: null,
+            }
+        }
     }
 
-    componentDidUpdate(prevProps)
-    {
-        if (this.props.location.pathname !== prevProps.location.pathname)
-            this.updatePage();
+    const getTelemetryStatus = async () => {
+        try {
+            let res = await axios.get(TELEMETRY_ENDPOINT)
+            return res.data.status;
+        } catch (err) {
+            return TelemetryStatus.ERROR;
+        }
     }
 
-    static getConnectionStatus()
-    {
-        return axios.get(INTEROP_STATUS_ENDPOINT)
-        .then(r => ({
-            status: r.data.status,
-            missionID: r.data.mission_id,
-        }))
-        .catch(() => ({
-            status: ConnectionStatus.ERROR,
-            missionID: null,
-        }));
+    const updateTelemetry = async () => {
+        let telemetryStatus = await getTelemetryStatus();
+        setTelemetryStatus(Number(telemetryStatus));
     }
 
-    static getTelemetryStatus()
-    {
-        return axios.get(TELEMETRY_ENDPOINT)
-        .then(r => r.data.status)
-        .catch(() => TelemetryStatus.ERROR);
+    const refresh = () => {
+        updatePage();
+        updateTelemetry();
     }
 
-    updatePage()
-    {
-        // Prevent going to the status page if user has not logged on
-        Interop.getConnectionStatus().then((status) =>
-        {
-            if (this.props.location.pathname !== '/' &&
-                (status.status === ConnectionStatus.DISCONNECTED ||
-                status.status === ConnectionStatus.ERROR))
-                this.props.history.push('/');
-            else if (!this.state.relogin &&
-                    this.props.location.pathname === '/' &&
-                    status.status !== ConnectionStatus.DISCONNECTED &&
-                    status.status !== ConnectionStatus.ERROR)
-                this.props.history.push('/status');
-
-            this.setState({
-                currentMissionID: status.missionID,
-            });
-        });
+    const login = async (params) => {
+        try {
+            let response = await axios.post(INTEROP_LOGIN_ENDPOINT, params)
+            props.history.push('/status');
+            setNeedsRelogin(false);
+            setCurrentMissionID(response.data.mission_id);
+        } catch (err) {
+            alert(err);
+        }
     }
 
-    updateTelemetry()
-    {
-        Interop.getTelemetryStatus().then((telemetryStatus) =>
-        {
-            this.setState({
-                telemetryStatus: Number(telemetryStatus),
-            });
-        });
+    const relogin = () => { 
+        setNeedsRelogin(true);
+        props.history.push('/');
     }
 
-    refresh()
-    {
-        this.updatePage();
-        this.updateTelemetry();
+    const grabInteropMission = async () => {
+        try {
+            let response = await axios.post(INTEROP_MISSION_ENDPOINT, {mission_id: id})
+            setCurrentMissionID(response.data.mission_id);
+        } catch (err) {
+            alert(err);
+        }
     }
 
-    login(params)
-    {
-        axios.post(INTEROP_LOGIN_ENDPOINT, params)
-        .then((response) =>
-        {
-            this.props.history.push('/status');
-            this.setState({
-                relogin: false,
-                currentMissionID: response.data.mission_id,
-            });
-        })
-        .catch(e => alert(e));
-    }
-
-    relogin()
-    {
-        this.setState({
-            relogin: true,
-        });
-        this.props.history.push('/');
-    }
-
-    grabInteropMission(id)
-    {
-        axios.post(INTEROP_MISSION_ENDPOINT, {mission_id: id})
-        .then(response =>
-        {
-            this.setState({
-                currentMissionID: response.data.mission_id
-            });
-        })
-        .catch(e => alert(e));
-    }
-
-    sendTelemetry()
-    {
-        if (this.state.telemetryStatus !== TelemetryStatus.SENDING)
+    const sendTelemetry = () => {
+        if (telemetryStatus !== TelemetryStatus.SENDING)
         {
             axios.post(TELEMETRY_ENDPOINT, {})
             .then(() =>
             {
-                this.setState({
-                    telemetryStatus: TelemetryStatus.SENDING,
-                });
+                setTelemetryStatus(TelemetryStatus.SENDING);
             })
             .catch(e => alert(e));
         }
@@ -158,57 +129,51 @@ class Interop extends Component
             axios.delete(TELEMETRY_ENDPOINT, {})
             .then(() =>
             {
-                this.setState({
-                    telemetryStatus: TelemetryStatus.STOPPED,
-                });
+                setTelemetryStatus(TelemetryStatus.STOPPED);
             })
             .catch(e => alert(e));
         }
     }
 
-    render()
-    {
-        const { telemetryStatus, currentMissionID } = this.state;
-        return (
-            <div className="interop">
-                <div className="heading">
-                    <h1>Interop</h1>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => this.refresh()}
-                    >
-                        Refresh
-                    </button>
-                </div>
-                <br />
-
-                <Switch>
-                    <Route
-                        path="/"
-                        exact
-                        render={() => (
-                            <Login
-                                login={params => this.login(params)}
-                            />
-                        )}
-                    />
-                    <Route
-                        path="/status"
-                        exact
-                        render={() => (
-                            <Status
-                                sendTelemetry={() => this.sendTelemetry()}
-                                grabInteropMission={(id) => this.grabInteropMission(id)}
-                                telemetryStatus={telemetryStatus}
-                                currentMissionID={currentMissionID}
-                                relogin={() => this.relogin()}
-                            />
-                        )}
-                    />
-                </Switch>
+    return (
+        <div className="interop">
+            <div className="heading">
+                <h1>Interop</h1>
+                <button
+                    className="btn btn-primary"
+                    onClick={refresh}
+                >
+                    Refresh
+                </button>
             </div>
-        );
-    }
+            <br />
+
+            <Switch>
+                <Route
+                    path="/"
+                    exact
+                    render={() => (
+                        <Login
+                            login={login}
+                        />
+                    )}
+                />
+                <Route
+                    path="/status"
+                    exact
+                    render={() => (
+                        <Status
+                            sendTelemetry={() => sendTelemetry}
+                            grabInteropMission={grabInteropMission}
+                            telemetryStatus={telemetryStatus}
+                            currentMissionID={currentMissionID}
+                            relogin={relogin}
+                        />
+                    )}
+                />
+            </Switch>
+        </div>
+    );
 }
 
 Interop.propTypes = {

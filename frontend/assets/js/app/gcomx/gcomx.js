@@ -3,6 +3,7 @@ import { HashRouter } from 'react-router-dom';
 import Imp from '../imp';
 import Interop from '../interop';
 import Map from '../map';
+import { hot } from 'react-hot-loader/root';
 import './style.scss';
 
 const Component = Object.freeze({
@@ -87,4 +88,4 @@ class GCOMX extends React.Component
     }
 }
 
-export default GCOMX;
+export default hot(GCOMX);
