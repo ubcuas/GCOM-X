@@ -87,6 +87,11 @@ describe('MidPanel', () =>
         );
     });
 
+    afterEach(() =>
+    {
+        midPanel.unmount();
+    });
+
     test('updateImage calls overlayImage if loadImage succeeds', async () =>
     {
         midPanel.instance().overlayImage = jest.fn();
