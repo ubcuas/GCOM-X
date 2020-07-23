@@ -105,7 +105,7 @@ const Interop = (props) => {
         props.history.push('/');
     }
 
-    const grabInteropMission = async () => {
+    const grabInteropMission = async (id) => {
         try {
             let response = await axios.post(INTEROP_MISSION_ENDPOINT, {mission_id: id})
             setCurrentMissionID(response.data.mission_id);
@@ -163,7 +163,7 @@ const Interop = (props) => {
                     exact
                     render={() => (
                         <Status
-                            sendTelemetry={() => sendTelemetry}
+                            sendTelemetry={sendTelemetry}
                             grabInteropMission={grabInteropMission}
                             telemetryStatus={telemetryStatus}
                             currentMissionID={currentMissionID}
