@@ -66,7 +66,7 @@ const Status = ({ sendTelemetry, telemetryStatus, relogin, currentMissionID, gra
 
             <h5>Telemetry Status</h5>
             <div className="card status-card"><h5>
-                { Status.telemetryStatusToText(telemetryStatus) }
+                { telemetryStatusToText(telemetryStatus) }
             </h5></div>
             <button
                 className="btn btn-primary flush-right"
