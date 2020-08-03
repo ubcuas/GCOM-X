@@ -40,7 +40,7 @@ const Interop = (props) => {
         updatePage();
     }, [props.location.pathname]);
 
-    const updatePage = async() => {
+    async function updatePage() {
         let status = await getConnectionStatus();
         if (props.location.pathname !== '/' &&
             (status.status === ConnectionStatus.DISCONNECTED ||
@@ -55,7 +55,7 @@ const Interop = (props) => {
         setCurrentMissionID(status.missionID);
     }
 
-    const getConnectionStatus = async () => {
+    async function getConnectionStatus() {
         try {
             let res = await axios.get(INTEROP_STATUS_ENDPOINT)
             return {
@@ -70,7 +70,7 @@ const Interop = (props) => {
         }
     }
 
-    const getTelemetryStatus = async () => {
+    async function getTelemetryStatus() {
         try {
             let res = await axios.get(TELEMETRY_ENDPOINT)
             return res.data.status;
@@ -79,17 +79,17 @@ const Interop = (props) => {
         }
     }
 
-    const updateTelemetry = async () => {
+    async function updateTelemetry() {
         let telemetryStatus = await getTelemetryStatus();
         setTelemetryStatus(Number(telemetryStatus));
     }
 
-    const refresh = () => {
+    function refresh() {
         updatePage();
         updateTelemetry();
     }
 
-    const login = async (params) => {
+    function login(params) {
         try {
             let response = await axios.post(INTEROP_LOGIN_ENDPOINT, params)
             props.history.push('/status');
@@ -100,12 +100,12 @@ const Interop = (props) => {
         }
     }
 
-    const relogin = () => { 
+    function relogin() { 
         setNeedsRelogin(true);
         props.history.push('/');
     }
 
-    const grabInteropMission = async (id) => {
+    async function grabInteropMission(id) {
         try {
             let response = await axios.post(INTEROP_MISSION_ENDPOINT, {mission_id: id})
             setCurrentMissionID(response.data.mission_id);
@@ -114,7 +114,7 @@ const Interop = (props) => {
         }
     }
 
-    const sendTelemetry = () => {
+    function sendTelemetry() {
         if (telemetryStatus !== TelemetryStatus.SENDING)
         {
             axios.post(TELEMETRY_ENDPOINT, {})
