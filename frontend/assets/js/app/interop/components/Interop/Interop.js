@@ -89,7 +89,7 @@ const Interop = (props) => {
         updateTelemetry();
     }
 
-    function login(params) {
+    async function login(params) {
         try {
             let response = await axios.post(INTEROP_LOGIN_ENDPOINT, params)
             props.history.push('/status');
@@ -100,7 +100,7 @@ const Interop = (props) => {
         }
     }
 
-    function relogin() { 
+    function relogin() {
         setNeedsRelogin(true);
         props.history.push('/');
     }

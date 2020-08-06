@@ -115,11 +115,11 @@ def login(request):
     password = body['password']
 
     logger.info('Login: username - %s, password - %s', username, password)
-    logger.info('Login: url - %s, port - %s', body['url'], body['port_num'])
+    logger.info('Login: url - %s, port - %s', body['url'], body['portNum'])
 
     try:
         gcomclient = Client()
-        gcomclient.login(body['url'], body['port_num'], username, password)
+        gcomclient.login(body['url'], body['portNum'], username, password)
 
     except Exception as e:
         logger.exception(e)

@@ -92,7 +92,7 @@ class InteropMissionCase(TestCase):
         mock_Client.return_value.get_mission.return_value = mock_get_mission()
 
         c = Client()
-        post_data = {'password': "testpass", 'port_num': "8000", 'url': "127.0.0.1", 'username': "testuser"}
+        post_data = {'password': "testpass", 'portNum': "8000", 'url': "127.0.0.1", 'username': "testuser"}
         response = c.post(reverse('interop.login'),
                         post_data,
                         content_type="application/json")
