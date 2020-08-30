@@ -10,7 +10,7 @@ var nodeModulesDir = path.resolve(__dirname, 'node_modules');
 baseConfig[1].entry = [
   'bootstrap-loader/extractStyles',
   'whatwg-fetch',
-  'babel-polyfill',
+  '@babel/polyfill,
   './assets/js/index.js',
 ]
 
@@ -23,7 +23,13 @@ baseConfig[1].output = {
 baseConfig[1].module.loaders.push({
   test: /\.jsx?$/,
   exclude: [nodeModulesDir],
-  loaders: ['babel-loader?presets[]=react,presets[]=es2015']
+  loaders: ['babel-loader'],
+  // options: {
+  //   presets: [
+  //     "@babel/preset-env",
+  //     "@babel/preset-react"
+  //   ],
+  // }
 },
 {
   test: /\.(woff(2)?|eot|ttf)(\?v=\d+\.\d+\.\d+)?$/,

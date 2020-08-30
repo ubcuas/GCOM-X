@@ -11,7 +11,7 @@ baseConfig[1].entry = [
   'webpack/hot/only-dev-server',
   'bootstrap-loader',
   'whatwg-fetch',
-  'babel-polyfill',
+  '@babel/polyfill',
   './assets/js/index',
 ]
 
@@ -25,7 +25,13 @@ baseConfig[1].output = {
 baseConfig[1].module.loaders.push({
   test: /\.jsx?$/,
   exclude: [nodeModulesDir],
-  loaders: ['babel-loader?presets[]=react,presets[]=es2015']
+  loaders: ['babel-loader'],
+  // options: {
+  //   presets: [
+  //     "@babel/preset-env",
+  //     "@babel/preset-react"
+  //   ],
+  // }
 },
 {
   test: /\.(woff(2)?|eot|ttf)(\?v=\d+\.\d+\.\d+)?$/,
