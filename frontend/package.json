@@ -13,9 +13,6 @@
     "coverage": "jest --coverage"
   },
   "jest": {
-    "transform": {
-      ".*": "<rootDir>/node_modules/jest-css-modules"
-    },
     "collectCoverageFrom": [
       "assets/js/**/*.{js,jsx}"
     ],
@@ -38,7 +35,7 @@
       "assets/js/app"
     ],
     "moduleNameMapper": {
-      "\\.(css|scss)$": "<rootDir>/tests/__mocks__/styleMock.js"
+      "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules"
     },
     "setupFiles": [
       "<rootDir>/tests/test-env.js",
@@ -117,6 +114,7 @@
     "@babel/node": "^7.0.0",
     "ajv": "^6.6.2",
     "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^26.3.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.3.5",
@@ -127,9 +125,10 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.12.3",
     "jest": "^24.7.1",
-    "jest-css-modules": "^1.1.0",
+    "jest-css-modules": "^2.1.0",
     "mock-socket": "^8.0.5",
     "react-hot-loader": "^4.12.21",
-    "react-test-renderer": "^16.13.1"
+    "react-test-renderer": "^16.13.1",
+    "regenerator-runtime": "^0.13.7"
   }
 }

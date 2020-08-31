@@ -8,9 +8,9 @@ var path = require('path');
 var nodeModulesDir = path.resolve(__dirname, 'node_modules');
 
 baseConfig[1].entry = [
+  '@babel/polyfill',
   'bootstrap-loader/extractStyles',
   'whatwg-fetch',
-  '@babel/polyfill,
   './assets/js/index.js',
 ]
 
