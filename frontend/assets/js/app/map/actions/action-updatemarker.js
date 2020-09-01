@@ -1,4 +1,4 @@
-export const updateMarker = (targetMarkerId, newlat, newlng) => {
+export const updateMarker = (targetMarkerId, newlat, newlng, newalt) => {
     // update marker
     //
     return {
@@ -6,7 +6,8 @@ export const updateMarker = (targetMarkerId, newlat, newlng) => {
         payload: {
             targetMarkerId,
             newlat,
-            newlng
+            newlng,
+            newalt
         },
     };
 };

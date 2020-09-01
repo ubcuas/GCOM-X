@@ -9,6 +9,7 @@ import allReducers from '../../reducers/allReducers';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { logger } from 'redux-logger';
+
 import './style.scss';
 
 library.add(faSyncAlt);
@@ -36,16 +37,10 @@ class Main extends React.Component
     {
         return (
             <Provider store={store}>
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="left col-sm-3">
-                            <LeftPanel />
-                        </div>
-                        <div className="right col-sm-9">
-                            <MapPanel visibility={this.props.visibility} />
-                            <BottomPanel />
-                        </div>
-                    </div>
+                <div className="full-height container-fluid">
+                    <MapPanel visibility={this.props.visibility} />
+                    {/* <LeftPanel />
+                    <BottomPanel /> */}
                 </div>
             </Provider>
         );
