@@ -12,6 +12,8 @@ import axios from "axios";
 import 'react-dropdown/style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './style.scss';
+import DraggableContainer from '../DraggableContainer';
+
 /*
  * Panel to manage waypoints, obstacles, etc
  */
@@ -142,14 +144,21 @@ class BottomPanel extends React.Component
     render()
     {
         return (
-            <div className="bottomPanel">
-                <div className="container-fluid">
-                    <div className="row">
-                        {this.displayControls()}
-                        {this.displayWaypointTable()}
+            <DraggableContainer
+                bottom="0"
+                left="20%"
+                title="Bottom Panel"
+                width={900}
+            >
+                <div className="bottomPanel">
+                    <div className="container-fluid">
+                        <div className="row">
+                            {this.displayControls()}
+                            {this.displayWaypointTable()}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </DraggableContainer>
         );
     }
 }
@@ -157,7 +166,8 @@ class BottomPanel extends React.Component
 function mapStateToProps(state)
 {
     return {
-        markers: state.markers,
+        selectedMarker: state.markers.selectedMarker,
+        markers: state.markers.markers,
         missions: state.missions,
         currentMission: state.curMission,
         newAltitude: state.newAlt

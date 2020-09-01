@@ -25,36 +25,92 @@ const defaultMarkers = [
     }
 ];
 
-export default function (markers = defaultMarkers, action)
-{
-    switch (action.type)
-    {
-        case 'ADD_MARKER':
-            return [
-                ...markers,
-                action.payload
+const defaultMarkerState = {
+    markers: defaultMarkers,
+    selectedMarker: null
+}
+
+function recalculateOrder(markers) {
+    return markers.map((marker, index) => {
+        return {
+            ...marker,
+            order: index + 1
+        }
+    })
+}
+
+export default function (state = defaultMarkerState, action) {
+    switch (action.type) {
+        case 'ADD_MARKER': {
+            // add a marker after the currently selected marker. if it is null, add to the end.
+            
+            // index to insert
+            let index = state.selectedMarker === null ? state.markers.length : state.selectedMarker;
+
+            // immutable array insertion
+            let newMarkers = [
+                ...state.markers.slice(0, index), // all elements before index
+                action.payload, // insert the new marker at the index
+                ...state.markers.slice(index) // all elements after index
             ];
-        case 'UPDATE_MARKER':
+
+            // recalculate order
+            newMarkers = recalculateOrder(newMarkers);
+
+            return {
+                selectedMarker: index + 1, // update selected marker to the newly added marker
+                markers: newMarkers
+            };
+        }
+        case 'UPDATE_MARKER': {
             let {
                 targetMarkerId,
                 newlat,
-                newlng
+                newlng,
+                newalt
             } = action.payload;
-
-            return markers.map((marker) => {
+            
+            let newMarkers = state.markers.map((marker) => {
                 if (marker.order === targetMarkerId) {
                   return {
                       ...marker,
                       latitude: newlat,
-                      longitude: newlng
+                      longitude: newlng,
+                      altitude: newalt
                   }
                 } else {
                     return marker;
                 }
             });
+
+            return {
+                ...state,
+                markers: newMarkers
+            }
+        }
+        case 'DELETE_MARKER': {
+            // immutable array deletion
+            let newMarkers = state.markers.filter((item, index) => item.order !== action.payload);
+
+            // recalculate order
+            newMarkers = recalculateOrder(newMarkers);
+
+            return {
+                selectedMarker: Math.max(1, state.selectedMarker-1), // update selected marker to the marker before the one that was deleted
+                markers: newMarkers
+            };
+        }
         case 'LOAD_MARKERS':
-            return action.payload;
+            return {
+                ...state,
+                markers: action.payload
+            };
+        case 'SELECT_MARKER':
+            return {
+                ...state,
+                selectedMarker: action.payload
+            };
         default:
-            return markers;
+            return state;
     }
 }

@@ -7,16 +7,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addMarker } from '../../actions/action-addmarker';
 
-import WaypointMarker from './WaypointMarker';
+import WaypointMarker from '../WaypointMarker';
+
+import WaypointEditor from '../WaypointEditor';
+import BottomPanel from '../BottomPanel';
+import LeftPanel from '../LeftPanel';
 
 // icons
 import './style.scss';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.offline';
 
-const markerIcon = 'leaflet/dist/images/marker-icon.png';
-const markerIcon2x = 'leaflet/dist/images/marker-icon@2x.png';
-const markerIconShadow = 'leaflet/dist/images/marker-shadow.png';
+const markerIcon = '/static/images/marker-icon.png';
+const markerIcon2x = '/static/images/marker-icon@2x.png';
+const markerIconShadow = '/static/images/marker-shadow.png';
 const aircraftImg = '/static/images/droneicon.png';
 const grayIcon = '/static/images/graymarker-icon.png';
 const grayIcon2x = '/static/images/graymarker-icon@2x.png';
@@ -141,7 +145,7 @@ const MapPanel = ({ visibility }) => {
 
     const aircraft = useSelector(state => state.aircraft);
     const mapProps = useSelector(state => state.mapProps);
-    const markers = useSelector(state => state.markers);
+    const { markers, selectedMarker } = useSelector(state => state.markers);
     const obstacles = useSelector(state => state.obstacles);
     const newAltitude = useSelector(state => state.newAlt);
     const flyzone = useSelector(state => state.flyzone);
@@ -161,6 +165,10 @@ const MapPanel = ({ visibility }) => {
     }
 
     function switchMarker(marker) {
+        if (marker.order === selectedMarker) {
+            return regularBlueIcon;
+        }
+
         if (!marker.is_generated)
             return defaultIcon;
 
@@ -247,35 +255,43 @@ const MapPanel = ({ visibility }) => {
 
     return (
         // map layer
-        <Map
-            className="map leaflet-container"
-            center={position}
-            zoom={mapProps.zoom}
-            onClick={onClick}
-            onContextMenu={onRightClick}
-            attributionControl={false}
-            zoomControl={false}
-            ref={(ref) => setMap(ref)}
-        >
-            {/* Leaflet layers */}
-            <OfflineTileLayer
-                // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-            />
+        <>
+            <div class="draggable-container">
+                <WaypointEditor />
+                <LeftPanel />
+                <BottomPanel />
+            </div>
+            <Map
+                className="map leaflet-container"
+                center={position}
+                zoom={mapProps.zoom}
+                onClick={onClick}
+                onContextMenu={onRightClick}
+                attributionControl={false}
+                zoomControl={false}
+                ref={(ref) => setMap(ref)}
+            >
+                {/* Leaflet layers */}
+                <OfflineTileLayer
+                    // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                />
 
-            <OfflineControl></OfflineControl>
+                <OfflineControl></OfflineControl>
 
-            {/* Render aircraft */}
-            {aircraftMarker(aircraft)}
+                {/* Render aircraft */}
+                {aircraftMarker(aircraft)}
 
-            {/* Render the markers, obstacles and polylines */}
-            {waypoints}
-            {waypointsCircles}
-            {obstaclePolygons}
-            {flyzonePolygon}
-            {polyLines(flattenWaypointsToCoords(markers))}
-        </Map>
+                {/* Render the markers, obstacles and polylines */}
+                {waypoints}
+                {waypointsCircles}
+                {obstaclePolygons}
+                {flyzonePolygon}
+                {polyLines(flattenWaypointsToCoords(markers))}
+                
+            </Map>
+        </>
     );
 }
 
