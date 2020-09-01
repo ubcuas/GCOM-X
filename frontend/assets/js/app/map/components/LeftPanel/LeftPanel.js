@@ -6,6 +6,8 @@ import { getAircraftTelem } from '../../actions/action-getaircrafttelem';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import './style.scss';
+import WaypointEditor from '../WaypointEditor';
+import DraggableContainer from '../DraggableContainer';
 
 function tableRow(key, value)
 {
@@ -70,9 +72,19 @@ class LeftPanel extends React.Component {
         return arr;
     }
 
-    render()
-    {
-        return this.displayTelemetryTable();
+    render() {
+        return (
+            <DraggableContainer
+                top={"30%"}
+                left={"0"}
+                title="Left Panel"
+                width={300}
+            >
+                <div id="left-panel">
+                    {this.displayTelemetryTable()}
+                </div>
+            </DraggableContainer>
+        )
     }
 }
 

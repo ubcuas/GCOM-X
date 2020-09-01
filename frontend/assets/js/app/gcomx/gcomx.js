@@ -57,8 +57,8 @@ class GCOMX extends React.Component
                 <div
                     className="component"
                     style={{
-                        visibility: this.state.component === Component.MAP ? 'visible' : 'hidden',
-                        height: this.state.component === Component.MAP ? '100%' : '0',
+                        display: this.state.component === Component.MAP ? 'inherit' : 'none',
+                        // height: this.state.component === Component.MAP ? '100%' : '0',
                     }}
                 >
                     <Map visibility={this.state.component === Component.MAP} />
@@ -66,8 +66,8 @@ class GCOMX extends React.Component
                 <div
                     className="component"
                     style={{
-                        visibility: this.state.component === Component.INTEROP ? 'visible' : 'hidden',
-                        height: this.state.component === Component.INTEROP ? '100%' : '0',
+                        display: this.state.component === Component.INTEROP ? 'inherit' : 'none',
+                        // height: this.state.component === Component.INTEROP ? '100%' : '0',
                     }}
                 >
                     <HashRouter>
@@ -77,8 +77,8 @@ class GCOMX extends React.Component
                 <div
                     className="component"
                     style={{
-                        visibility: this.state.component === Component.IMP ? 'visible' : 'hidden',
-                        height: this.state.component === Component.IMP ? '100%' : '0',
+                        display: this.state.component === Component.IMP ? 'inherit' : 'none',
+                        // height: this.state.component === Component.IMP ? '100%' : '0',
                     }}
                 >
                     <Imp />
