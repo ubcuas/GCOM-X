@@ -1,10 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useRef, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Map, Marker, Popup, TileLayer, LayersControl, Polyline, Circle, Polygon, MapControl } from 'react-leaflet';
+import React, {useEffect, useState } from 'react';
+import { Map, Marker, LayersControl, Polyline, Circle, Polygon } from 'react-leaflet';
 import L from 'leaflet';
 import { useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { addMarker } from '../../actions/action-addmarker';
 
 import WaypointMarker from '../WaypointMarker';
@@ -12,6 +10,9 @@ import WaypointMarker from '../WaypointMarker';
 import WaypointEditor from '../WaypointEditor';
 import BottomPanel from '../BottomPanel';
 import LeftPanel from '../LeftPanel';
+
+import OfflineControl from './OfflineControl';
+import OfflineTileLayer from './OfflineTileLayer';
 
 // icons
 import './style.scss';
@@ -30,7 +31,6 @@ const searchIcon = '/static/images/search_grid.png';
 const searchIcon2x = '/static/images/search_grid@2x.png';
 const axisIcon = '/static/images/off_axis.png';
 const axisIcon2x = '/static/images/off_axis@2x.png';
-const downloadIcon = '/static/images/save.png';
 
 const { BaseLayer } = LayersControl;
 
@@ -84,58 +84,6 @@ function flattenCoordinateObjects(obstacleObjs)
     return obstacleObjs.map(obstacle => L.latLng(obstacle.latitude, obstacle.longitude));
 }
 
-
-/*
- *  Offline layer implementation
- */
-class OfflineTileLayer extends TileLayer
-{
-    createLeafletElement() {
-        return new L.tileLayer.offline('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                minZoom: 5,
-                maxZoom: 20,
-                crossOrigin: true,
-            }
-        );
-    }
-}
-
-const otl = new L.tileLayer.offline('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    minZoom: 5,
-    maxZoom: 20,
-    crossOrigin: true,
-});
-
-/*
- *  Offline Control implementation
- */
-class OfflineControl extends MapControl
-{
-    createLeafletElement() {
-        return new L.control.savetiles(otl, {
-            position: 'bottomright',
-            saveText: '<img src="'+downloadIcon+'"/>',
-            rmText: '✖',
-            zoomlevels: [13,18],
-            maxZoom: 20,
-            saveWhatYouSee: false,
-            bounds: null,
-            confirm: function(layer, successCallback) {
-                if (window.confirm("Save " + layer._tilesforSave.length)) {
-                    successCallback();
-                }
-            },
-            confirmRemoval: function(layer, successCallback) {
-                if (window.confirm("Remove all " + layer.storagesize + " tiles?")) {
-                    successCallback();
-                }
-            },
-        });
-    }
-}
-
 /*
  * Top Level Component for MapPanel Module
  */
@@ -151,6 +99,13 @@ const MapPanel = ({ visibility }) => {
     const flyzone = useSelector(state => state.flyzone);
 
     const [map, setMap] = useState(null);
+
+    const offlineTileLayer = new L.tileLayer.offline('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        minZoom: 5,
+        maxZoom: 20,
+        crossOrigin: true,
+    });
 
     useEffect(() => {
         if (map && visibility) {
@@ -244,10 +199,11 @@ const MapPanel = ({ visibility }) => {
     };
 
     const onClick = (e) => {
-        dispatch(addMarker(getNextMarkerId(), e.latlng.lat, e.latlng.lng, newAltitude));
+        // dispatch(addMarker(getNextMarkerId(), e.latlng.lat, e.latlng.lng, newAltitude));
     };
 
     const onRightClick = (e) => {
+        dispatch(addMarker(getNextMarkerId(), e.latlng.lat, e.latlng.lng, newAltitude));
         consoleLogGPS(e);
     };
 
@@ -256,7 +212,7 @@ const MapPanel = ({ visibility }) => {
     return (
         // map layer
         <>
-            <div class="draggable-container">
+            <div className="draggable-container">
                 <WaypointEditor />
                 <LeftPanel />
                 <BottomPanel />
@@ -273,12 +229,12 @@ const MapPanel = ({ visibility }) => {
             >
                 {/* Leaflet layers */}
                 <OfflineTileLayer
-                    // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                    tileLayer={offlineTileLayer}
                 />
 
-                <OfflineControl></OfflineControl>
+                <OfflineControl
+                    tileLayer={offlineTileLayer}
+                />
 
                 {/* Render aircraft */}
                 {aircraftMarker(aircraft)}
@@ -289,7 +245,6 @@ const MapPanel = ({ visibility }) => {
                 {obstaclePolygons}
                 {flyzonePolygon}
                 {polyLines(flattenWaypointsToCoords(markers))}
-                
             </Map>
         </>
     );
