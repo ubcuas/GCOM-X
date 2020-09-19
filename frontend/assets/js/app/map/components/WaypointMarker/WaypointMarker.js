@@ -25,9 +25,6 @@ const WaypointMarker = ({ marker, icon }) => {
             onclick={handleClick}
             icon={icon}
         >
-            {/* <Popup>
-                <span>{marker.wp_type}</span>
-            </Popup> */}
         </Marker>
     )
 };
