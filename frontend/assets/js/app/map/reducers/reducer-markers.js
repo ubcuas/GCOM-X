@@ -45,7 +45,7 @@ export default function (state = defaultMarkerState, action) {
             // add a marker after the currently selected marker. if it is null, add to the end.
             
             // index to insert
-            let index = state.selectedMarker ? state.markers.length : state.selectedMarker;
+            let index = state.selectedMarker ? state.selectedMarker : state.markers.length;
 
             // immutable array insertion
             let newMarkers = [

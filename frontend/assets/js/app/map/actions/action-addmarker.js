@@ -1,11 +1,10 @@
-export const addMarker = (nextMarkerId, lat, lng, alt) =>
+export const addMarker = (lat, lng, alt) =>
 {
     console.log(lat, lng);
     // add marker
     return {
         type: 'ADD_MARKER',
         payload: {
-            order: nextMarkerId,
             latitude: lat,
             longitude: lng,
             altitude: alt,

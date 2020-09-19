@@ -199,12 +199,10 @@ const MapPanel = ({ visibility }) => {
     };
 
     const onClick = (e) => {
-        // dispatch(addMarker(getNextMarkerId(), e.latlng.lat, e.latlng.lng, newAltitude));
     };
 
     const onRightClick = (e) => {
-        dispatch(addMarker(getNextMarkerId(), e.latlng.lat, e.latlng.lng, newAltitude));
-        consoleLogGPS(e);
+        dispatch(addMarker(e.latlng.lat, e.latlng.lng, newAltitude));
     };
 
     const position = [mapProps.latitude, mapProps.longitude];
@@ -249,27 +247,5 @@ const MapPanel = ({ visibility }) => {
         </>
     );
 }
-
-// const waypointPropType = PropTypes.shape({
-//     id: PropTypes.any,
-//     latlng: PropTypes.array,
-// });
-
-// const mapPropPropType = PropTypes.shape({
-//     lat: PropTypes.number,
-//     lng: PropTypes.number,
-//     zoom: PropTypes.number,
-// });
-
-// const aircraftPropType = PropTypes.shape({
-//     marker: waypointPropType,
-// });
-
-// MapPanel.propTypes = {
-//     aircraft: aircraftPropType.isRequired,
-//     markers: PropTypes.arrayOf(waypointPropType).isRequired,
-//     mapProps: mapPropPropType.isRequired,
-//     addMarker: PropTypes.func.isRequired,
-// };
 
 export default MapPanel;

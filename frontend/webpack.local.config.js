@@ -26,12 +26,6 @@ baseConfig[1].module.loaders.push({
   test: /\.jsx?$/,
   exclude: [nodeModulesDir],
   loaders: ['babel-loader'],
-  // options: {
-  //   presets: [
-  //     "@babel/preset-env",
-  //     "@babel/preset-react"
-  //   ],
-  // }
 },
 {
   test: /\.(woff(2)?|eot|ttf)(\?v=\d+\.\d+\.\d+)?$/,
