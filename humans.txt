@@ -2,3 +2,5 @@
 - Eric Mikulin
 - Ken Johnson
 - Alexander Chudinov
+- Jonathan Hirsch
+- Liang Liu
