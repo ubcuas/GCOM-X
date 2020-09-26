@@ -6,12 +6,13 @@ services:
   interop-db:
     container_name: interop-db
     hostname: interop-db
-    image: postgres
+    image: postgres:latest
     environment:
       - POSTGRES_DB=auvsi_suas_db
+      - POSTGRES_PASSWORD=postgres
     networks:
       interopnet:
-        ipv4_address: 172.170.0.76
+        ipv4_address: 172.170.0.21
 
   ### This is for development purposes ONLY ###
   ### And should not be in prod ###
@@ -27,21 +28,76 @@ services:
       - interop-db
     networks:
       uasnet:
-        ipv4_address: 172.0.0.77
+        ipv4_address: 172.0.0.22
       interopnet:
-        ipv4_address: 172.170.0.77
+        ipv4_address: 172.170.0.22
 
   golden-retriever:
     container_name: gcomx-golden-retriever
     hostname: gcomx-golden-retriever
-    build:
-      context: ./golden-retriever
-    command: [ "python", "app.py"]
+    image: ubcuas/golden:latest
     volumes:
-      - ./backend/mediafiles/images:/uas/gcomx/golden/images
+      - ./backend/mediafiles/images:/uas/golden/images
     networks:
       uasnet:
         ipv4_address: 172.0.0.7
+
+  db:
+    container_name: gcomx-db
+    hostname: gcomx-db
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.6
+
+  redis:
+    container_name: gcomx-redis
+    hostname: gcomx-redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.5
+
+  npm:
+    container_name: gcomx-npm
+    hostname: gcomx-npm
+    image: ubcuas/gcomxfe:latest
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/uas/gcomx/frontend
+      - /uas/gcomx/frontend/node_modules
+    working_dir: /uas/gcomx/frontend
+    ports:
+      - "3000:3000"
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.4
+
+  django:
+    container_name: gcomx-django
+    hostname: gcomx-django
+    image: ubcuas/gcomxbe:latest
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/uas/gcomx/api
+      - ./frontend:/uas/gcomx/api/frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - npm
+      - redis
+    networks:
+      uasnet:
+        ipv4_address: 172.0.0.3
 
   nginx:
     container_name: gcomx-nginx
@@ -52,66 +108,6 @@ services:
       - .:/uas/gcomx/nginx
     ports:
       - "8089:80"
-    networks:
-      uasnet:
-        ipv4_address: 172.0.0.6
-
-  db:
-    container_name: gcomx-db
-    hostname: gcomx-db
-    image: postgres
-    ports:
-      - "5432:5432"
-    networks:
-      uasnet:
-        ipv4_address: 172.0.0.5
-
-  redis:
-    container_name: gcomx-redis
-    hostname: gcomx-redis
-    image: redis:4.0.5-alpine
-    command: ["redis-server", "--appendonly", "yes"]
-    ports:
-      - "6379:6379"
-    networks:
-      uasnet:
-        ipv4_address: 172.0.0.4
-
-  npm:
-    container_name: gcomx-npm
-    hostname: gcomx-npm
-    build:
-      context: ./frontend
-    image: gcomx_frontend_image
-    command: [ "npm", "run", "start" ]
-    volumes:
-      - ./frontend:/uas/gcomx/frontend
-      - /uas/gcomx/frontend/node_modules
-    working_dir: /uas/gcomx/frontend
-    ports:
-      - "3000:3000"
-    networks:
-      uasnet:
-        ipv4_address: 172.0.0.3
-
-  django:
-    container_name: gcomx-django
-    hostname: gcomx-django
-    build:
-      context: ./backend
-    image: gcomx_server_image
-    command: [ "python", "manage.py", "runserver", "0.0.0.0:8080" ]
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./backend:/uas/gcomx/api
-      - ./frontend:/uas/gcomx/api/frontend
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-      - npm
-      - redis
     networks:
       uasnet:
         ipv4_address: 172.0.0.2

@@ -14,7 +14,7 @@ variables:
   GIT_STRATEGY: fetch
   GIT_SUBMODULE_STRATEGY: recursive
 
-Build & Push:
+Build:
   stage: build
   tags:
     - docker

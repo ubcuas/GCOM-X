@@ -3,6 +3,7 @@
 # Pull the base node image
 FROM node:8-alpine
 
+# Build dependency
 RUN apk add --no-cache git
 
 # Create app directory
@@ -21,3 +22,6 @@ COPY *.js *.json .babelrc .bootstraprc ./
 
 # Expose the correct port
 EXPOSE 3000
+
+# Run server
+CMD ["npm", "run", "start"]
