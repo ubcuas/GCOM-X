@@ -1,8 +1,10 @@
 # Crafted with care by the following humans:
 - Eric Mikulin
-<<<<<<< humans.txt
 - Phoenix Liu
 - Ken Johnson
+- Alexander Chudinov
+- Kate Huang :DD
 - Jonathan Hirsch
 - Liang Liu
->>>>>>> humans.txt
+- Isabelle Andre
+
