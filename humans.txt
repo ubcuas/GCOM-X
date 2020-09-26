@@ -1,4 +1,9 @@
 # Crafted with care by the following humans:
 - Eric Mikulin
 - Ken Johnson
+- Alexander Chudinov
+- Kate Huang :DD
+- Jonathan Hirsch
+- Liang Liu
+- Isabelle Andre
 - Niko Andrianos
