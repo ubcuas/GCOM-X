@@ -1,3 +1,6 @@
 # Crafted with care by the following humans:
 - Eric Mikulin
+- Ken Johnson
+- Jonathan Hirsch
+- Liang Liu
 - Isabelle Andre
