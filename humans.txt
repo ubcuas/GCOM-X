@@ -1,5 +1,6 @@
 # Crafted with care by the following humans:
 - Eric Mikulin
 - Ken Johnson
+- Kate Huang :DD
 - Jonathan Hirsch
 - Liang Liu
