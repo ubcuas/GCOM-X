@@ -2,5 +2,6 @@
 - Eric Mikulin
 - Ken Johnson
 - Alexander Chudinov
+- Kate Huang :DD
 - Jonathan Hirsch
 - Liang Liu
