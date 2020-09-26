@@ -21,7 +21,7 @@ docker-compose pull
 ```
 The images can also be built locally:
 ```
-sudo docker-compose build --parallel
+docker-compose build --parallel
 ```
 **After installing:** Run the following commands to setup database migrations:
 ```
