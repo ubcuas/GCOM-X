@@ -1,5 +1,6 @@
 # Crafted with care by the following humans:
 - Eric Mikulin
+- Phoenix Liu
 - Ken Johnson
 - Lucy Hua
 - Alexander Chudinov
@@ -8,3 +9,4 @@
 - Liang Liu
 - Isabelle Andre
 - Yekta Ataozden
+
