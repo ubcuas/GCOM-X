@@ -1,21 +1,27 @@
 /* eslint-disable no-underscore-dangle */
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Map, Marker, Popup, TileLayer, LayersControl, Polyline, Circle, Polygon, MapControl } from 'react-leaflet';
+import React, {useEffect, useState } from 'react';
+import { Map, Marker, LayersControl, Polyline, Circle, Polygon } from 'react-leaflet';
 import L from 'leaflet';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addMarker } from '../../actions/action-addmarker';
-import { updateMarker } from '../../actions/action-updatemarker';
+
+import WaypointMarker from '../WaypointMarker';
+
+import WaypointEditor from '../WaypointEditor';
+import BottomPanel from '../BottomPanel';
+import LeftPanel from '../LeftPanel';
+
+import OfflineControl from './OfflineControl';
+import OfflineTileLayer from './OfflineTileLayer';
 
 // icons
 import './style.scss';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.offline';
 
-const markerIcon = 'leaflet/dist/images/marker-icon.png';
-const markerIcon2x = 'leaflet/dist/images/marker-icon@2x.png';
-const markerIconShadow = 'leaflet/dist/images/marker-shadow.png';
+const markerIcon = '/static/images/marker-icon.png';
+const markerIcon2x = '/static/images/marker-icon@2x.png';
+const markerIconShadow = '/static/images/marker-shadow.png';
 const aircraftImg = '/static/images/droneicon.png';
 const grayIcon = '/static/images/graymarker-icon.png';
 const grayIcon2x = '/static/images/graymarker-icon@2x.png';
@@ -25,7 +31,6 @@ const searchIcon = '/static/images/search_grid.png';
 const searchIcon2x = '/static/images/search_grid@2x.png';
 const axisIcon = '/static/images/off_axis.png';
 const axisIcon2x = '/static/images/off_axis@2x.png';
-const downloadIcon = '/static/images/save.png';
 
 const { BaseLayer } = LayersControl;
 
@@ -79,84 +84,46 @@ function flattenCoordinateObjects(obstacleObjs)
     return obstacleObjs.map(obstacle => L.latLng(obstacle.latitude, obstacle.longitude));
 }
 
-
-/*
- *  Offline layer implementation
- */
-class OfflineTileLayer extends TileLayer
-{
-    createLeafletElement() {
-        return new L.tileLayer.offline('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                minZoom: 5,
-                maxZoom: 20,
-                crossOrigin: true,
-            }
-        );
-    }
-}
-
-const otl = new L.tileLayer.offline('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    minZoom: 5,
-    maxZoom: 20,
-    crossOrigin: true,
-});
-
-/*
- *  Offline Control implementation
- */
-class OfflineControl extends MapControl
-{
-    createLeafletElement() {
-        return new L.control.savetiles(otl, {
-            position: 'bottomright',
-            saveText: '<img src="'+downloadIcon+'"/>',
-            rmText: '✖',
-            zoomlevels: [13,18],
-            maxZoom: 20,
-            saveWhatYouSee: false,
-            bounds: null,
-            confirm: function(layer, successCallback) {
-                if (window.confirm("Save " + layer._tilesforSave.length)) {
-                    successCallback();
-                }
-            },
-            confirmRemoval: function(layer, successCallback) {
-                if (window.confirm("Remove all " + layer.storagesize + " tiles?")) {
-                    successCallback();
-                }
-            },
-        });
-    }
-}
-
 /*
  * Top Level Component for MapPanel Module
  */
-class MapPanel extends React.Component
-{
-    constructor(props)
-    {
-        super(props);
-        this.state = null;
-    }
+const MapPanel = ({ visibility }) => {
+    console.log('rerender')
+    const dispatch = useDispatch();
 
-    componentDidUpdate(prevProps) {
-        if (!prevProps.visibility && this.props.visibility) {
-            this.map.leafletElement.invalidateSize()
+    const aircraft = useSelector(state => state.aircraft);
+    const mapProps = useSelector(state => state.mapProps);
+    const { markers, selectedMarker } = useSelector(state => state.markers);
+    const obstacles = useSelector(state => state.obstacles);
+    const newAltitude = useSelector(state => state.newAlt);
+    const flyzone = useSelector(state => state.flyzone);
+
+    const [map, setMap] = useState(null);
+
+    const offlineTileLayer = new L.tileLayer.offline('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        minZoom: 5,
+        maxZoom: 20,
+        crossOrigin: true,
+    });
+
+    useEffect(() => {
+        if (map && visibility) {
+            map.leafletElement.invalidateSize()
         }
-    }
+    }, [visibility]);
 
-    getNextMarkerId()
-    {
-        if (this.props.markers.length)
-            return this.props.markers.length + 1;
+    function getNextMarkerId() {
+        if (markers.length)
+            return markers.length + 1;
         return 1;
     }
 
-    switchMarker(marker)
-    {
+    function switchMarker(marker) {
+        if (marker.order === selectedMarker) {
+            return regularBlueIcon;
+        }
+
         if (!marker.is_generated)
             return defaultIcon;
 
@@ -172,171 +139,113 @@ class MapPanel extends React.Component
         }
     }
 
-    render()
-    {
-        // constants
-        const aircraftIcon = L.icon({
-            iconUrl: aircraftImg,
-            iconSize: [50, 50],
-        });
+    // constants
+    const aircraftIcon = L.icon({
+        iconUrl: aircraftImg,
+        iconSize: [50, 50],
+    });
 
-        // render aircraft
-        const aircraftMarker = aircraft => (
-            <Marker position={[aircraft.latitude, aircraft.longitude]} key="aircraft" icon={aircraftIcon} draggable={true} />
-        );
+    // render aircraft
+    const aircraftMarker = aircraft => (
+        <Marker position={[aircraft.latitude, aircraft.longitude]} key="aircraft" icon={aircraftIcon} draggable={true} />
+    );
 
-        const updateMarker = (e) =>
-        {
-            console.log(e.target.options.id);
-            this.props.updateMarker(this.props, e.target.options.id, e.target.getLatLng().lat, e.target.getLatLng().lng);
-        };
+    // render waypoints
+    const waypoints = markers.map(marker => (
+        <WaypointMarker
+            key={marker.order}
+            marker={marker}
+            icon={switchMarker(marker)}
+        />
+    ));
 
-        // render waypoints
-        const waypoints = this.props.markers.map(marker => (
-            <Marker
-                position={[marker.latitude, marker.longitude]}
-                id={marker.order}
-                key={marker.order}
-                draggable={marker.is_generated}
-                onMoveend={updateMarker}
-                icon={this.switchMarker(marker)}
-            >
-                <Popup>
-                    <span>{marker.wp_type}</span>
-                </Popup>
-            </Marker>
-        ));
-
-        // render waypointCircles
-        const waypointsCircles = this.props.markers.map((marker, index) => (
-                <Circle
-                    radius={2}  // 100 feet radius (30.48m)
-                    center={[marker.latitude, marker.longitude]}
-                    color="blue"
-                    key={index}
-                    stroke={!marker.is_generated}
-                    fill={!marker.is_generated}
-                />
-        ));
-
-        // render obstacles
-        const obstacles = this.props.obstacles.map((obstacle, index) => (
-            <Polygon
-                positions={flattenCoordinateObjects(obstacle)}
+    // render waypointCircles
+    const waypointsCircles = markers.map((marker, index) => (
+            <Circle
+                radius={2}  // 100 feet radius (30.48m)
+                center={[marker.latitude, marker.longitude]}
+                color="blue"
                 key={index}
-                color="yellow"
+                stroke={!marker.is_generated}
+                fill={!marker.is_generated}
             />
-        ));
+    ));
 
-        // render fly zone
-        const flyzone = (
-            <Polygon
-                positions={flattenCoordinateObjects(this.props.flyzone.points)}
-                color="red"
-            />
-        );
+    // render obstacles
+    const obstaclePolygons = obstacles.map((obstacle, index) => (
+        <Polygon
+            positions={flattenCoordinateObjects(obstacle)}
+            key={index}
+            color="yellow"
+        />
+    ));
 
-        // render polylines
-        const polyLines = points => (
-            <Polyline positions={points} />
-        );
+    // render fly zone
+    const flyzonePolygon = (
+        <Polygon
+            positions={flattenCoordinateObjects(flyzone.points)}
+            color="red"
+        />
+    );
 
-        const consoleLogGPS = (e) =>
-        {
-            const latlon = e.latlng;
-            console.log(latlon.lat, latlon.lng);
-        };
+    // render polylines
+    const polyLines = points => (
+        <Polyline positions={points} />
+    );
 
-        const onClick = (e) =>
-        {
-            this.props.addMarker(e, this.props, this.getNextMarkerId(), this.props.newAltitude);
-        };
+    const consoleLogGPS = (e) => {
+        const latlon = e.latlng;
+        console.log(latlon.lat, latlon.lng);
+    };
 
-        const onRightClick = (e) =>
-        {
-            consoleLogGPS(e);
-        };
+    const onClick = (e) => {
+    };
 
-        const position = [this.props.mapProps.latitude, this.props.mapProps.longitude];
+    const onRightClick = (e) => {
+        dispatch(addMarker(e.latlng.lat, e.latlng.lng, newAltitude));
+    };
 
-        return (
-            // map layer
+    const position = [mapProps.latitude, mapProps.longitude];
+
+    return (
+        // map layer
+        <>
+            <div className="draggable-container">
+                <WaypointEditor />
+                <LeftPanel />
+                <BottomPanel />
+            </div>
             <Map
                 className="map leaflet-container"
                 center={position}
-                zoom={this.props.mapProps.zoom}
-                onClick={onRightClick}
-                onContextMenu={onClick}
+                zoom={mapProps.zoom}
+                onClick={onClick}
+                onContextMenu={onRightClick}
                 attributionControl={false}
                 zoomControl={false}
-                ref={(map) =>
-                {
-                    this.map = map;
-                }}
+                ref={(ref) => setMap(ref)}
             >
                 {/* Leaflet layers */}
                 <OfflineTileLayer
-                    // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                    tileLayer={offlineTileLayer}
                 />
 
-                <OfflineControl></OfflineControl>
+                <OfflineControl
+                    tileLayer={offlineTileLayer}
+                />
 
                 {/* Render aircraft */}
-                {aircraftMarker(this.props.aircraft)}
+                {aircraftMarker(aircraft)}
 
                 {/* Render the markers, obstacles and polylines */}
                 {waypoints}
                 {waypointsCircles}
-                {obstacles}
-                {flyzone}
-                {polyLines(flattenWaypointsToCoords(this.props.markers))}
+                {obstaclePolygons}
+                {flyzonePolygon}
+                {polyLines(flattenWaypointsToCoords(markers))}
             </Map>
-        );
-    }
+        </>
+    );
 }
 
-const waypointPropType = PropTypes.shape({
-    id: PropTypes.any,
-    latlng: PropTypes.array,
-});
-
-const mapPropPropType = PropTypes.shape({
-    lat: PropTypes.number,
-    lng: PropTypes.number,
-    zoom: PropTypes.number,
-});
-
-const aircraftPropType = PropTypes.shape({
-    marker: waypointPropType,
-});
-
-MapPanel.propTypes = {
-    aircraft: aircraftPropType.isRequired,
-    markers: PropTypes.arrayOf(waypointPropType).isRequired,
-    mapProps: mapPropPropType.isRequired,
-    addMarker: PropTypes.func.isRequired,
-};
-
-function mapStateToProps(state)
-{
-    return {
-        aircraft: state.aircraft,
-        mapProps: state.mapProps,
-        markers: state.markers,
-        obstacles: state.obstacles,
-        newAltitude: state.newAlt,
-        flyzone: state.flyzone
-    };
-}
-
-function mapDispatchToProps(dispatch)
-{
-    return bindActionCreators({
-        addMarker,
-        updateMarker,
-    }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MapPanel);
+export default MapPanel;

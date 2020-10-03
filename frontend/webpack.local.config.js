@@ -7,11 +7,11 @@ var path = require('path');
 var nodeModulesDir = path.resolve(__dirname, 'node_modules');
 
 baseConfig[1].entry = [
+  '@babel/polyfill',
   'webpack-dev-server/client?http://localhost:3000',
   'webpack/hot/only-dev-server',
   'bootstrap-loader',
   'whatwg-fetch',
-  'babel-polyfill',
   './assets/js/index',
 ]
 
@@ -25,7 +25,7 @@ baseConfig[1].output = {
 baseConfig[1].module.loaders.push({
   test: /\.jsx?$/,
   exclude: [nodeModulesDir],
-  loaders: ['babel-loader?presets[]=react,presets[]=es2015']
+  loaders: ['babel-loader'],
 },
 {
   test: /\.(woff(2)?|eot|ttf)(\?v=\d+\.\d+\.\d+)?$/,
