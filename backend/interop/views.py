@@ -47,10 +47,10 @@ def telemetry(request):
 
     if request.method == 'POST':
         telem = deserialize_telem_msg(request.body)
-        new_telem = UasTelemetry(latitude = telem.latitude,
-                                longitude = telem.longitude,
-                                altitude_msl = telem.altitude_msl_m,
-                                uas_heading = telem.heading_deg)
+        new_telem = UasTelemetry(latitude=telem.latitude_dege7 / 1.0E7,
+                                 longitude=telem.longitude_dege7 / 1.0E7,
+                                 altitude_msl=telem.altitude_msl_m,
+                                 uas_heading=telem.heading_deg)
         new_telem.save()
         return HttpResponse(status=200)
 

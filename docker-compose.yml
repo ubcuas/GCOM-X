@@ -16,7 +16,7 @@ services:
 
   ### This is for development purposes ONLY ###
   ### And should not be in prod ###
-  interop_server:
+  interop-server:
     container_name: interop-server
     hostname: interop-server
     image: auvsisuas/interop-server:latest
@@ -27,7 +27,7 @@ services:
     links:
       - interop-db
     networks:
-      uasnet:
+      gcomnet:
         ipv4_address: 172.0.0.22
       interopnet:
         ipv4_address: 172.170.0.22
@@ -39,7 +39,7 @@ services:
     volumes:
       - ./backend/mediafiles/images:/uas/golden/images
     networks:
-      uasnet:
+      gcomnet:
         ipv4_address: 172.0.0.7
 
   db:
@@ -51,7 +51,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      uasnet:
+      gcomnet:
         ipv4_address: 172.0.0.6
 
   redis:
@@ -61,12 +61,12 @@ services:
     ports:
       - "6379:6379"
     networks:
-      uasnet:
+      gcomnet:
         ipv4_address: 172.0.0.5
 
-  npm:
-    container_name: gcomx-npm
-    hostname: gcomx-npm
+  frontend:
+    container_name: gcomx-frontend
+    hostname: gcomx-frontend
     image: ubcuas/gcomxfe:latest
     build:
       context: ./frontend
@@ -77,12 +77,12 @@ services:
     ports:
       - "3000:3000"
     networks:
-      uasnet:
+      gcomnet:
         ipv4_address: 172.0.0.4
 
-  django:
-    container_name: gcomx-django
-    hostname: gcomx-django
+  backend:
+    container_name: gcomx-backend
+    hostname: gcomx-backend
     image: ubcuas/gcomxbe:latest
     build:
       context: ./backend
@@ -93,15 +93,17 @@ services:
       - "8080:8080"
     depends_on:
       - db
-      - npm
+      - frontend
       - redis
     networks:
-      uasnet:
+      gcomnet:
         ipv4_address: 172.0.0.3
+      uasnet:
 
   nginx:
     container_name: gcomx-nginx
     hostname: gcomx-nginx
+    image: ubcuas/gcomxnginx:latest
     build:
       context: ./nginx
     volumes:
@@ -109,11 +111,13 @@ services:
     ports:
       - "8089:80"
     networks:
-      uasnet:
+      gcomnet:
         ipv4_address: 172.0.0.2
 
 networks:
   uasnet:
+    driver: bridge
+  gcomnet:
     driver: bridge
     ipam:
       config:
