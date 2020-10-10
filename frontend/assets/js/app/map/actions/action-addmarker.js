@@ -1,9 +1,15 @@
-export const addMarker = (e, props, nextMarkerId, alt) =>
+export const addMarker = (lat, lng, alt) =>
 {
-    console.log(e.latlng.lat,e.latlng.lng);
+    console.log(lat, lng);
     // add marker
     return {
         type: 'ADD_MARKER',
-        payload: [...props.markers, { order: nextMarkerId, latitude: e.latlng.lat, longitude: e.latlng.lng, altitude: alt, is_generated: true , wp_type: 'none'}],
+        payload: {
+            latitude: lat,
+            longitude: lng,
+            altitude: alt,
+            is_generated: true,
+            wp_type: 'none'
+        }
     };
 };
