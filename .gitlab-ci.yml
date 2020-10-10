@@ -47,8 +47,15 @@ Test Backend:
     paths:
       - htmlcov/
 
-Final:
+Publish Images:
   stage: deploy
+  tags:
+    - docker
+    - ubcuas
   script:
-  - echo "Done!"
+    - docker login -u "$DOCKER_HUB_USER" -p "$DOCKER_HUB_PASSWORD"
+    - docker-compose build --parallel
+    - docker-compose push
   when: on_success
+  only:
+    - master
