@@ -17,7 +17,21 @@ function tableRow(key, value)
             <td>{value}</td>
         </tr>
     );
-} 
+}
+
+function valueWithUnits(value, key) {
+    switch(key){
+        case "altitude_msl":
+            value+="ft"
+            break
+        case "latitude":
+        case "longitude":
+        case "uas_heading":
+            value+="°"
+            break
+    }
+    return value
+}
 
 /*
  * Panel to display telemetry
@@ -67,7 +81,7 @@ class LeftPanel extends React.Component {
     getAllRows() {
         const arr = [];
         _.forOwn(this.props.aircraft, function(value, key) {
-            arr.push(tableRow(key, value));
+            arr.push(tableRow(key, valueWithUnits(value, key)));
         });
         return arr;
     }
@@ -78,7 +92,7 @@ class LeftPanel extends React.Component {
                 top={"30%"}
                 left={"0"}
                 title="Left Panel"
-                width={300}
+                width={310}
             >
                 <div id="left-panel">
                     {this.displayTelemetryTable()}
@@ -97,8 +111,10 @@ function mapDispatchToProps(dispatch)
 
 function mapStateToProps(state)
 {
+    console.log(state.aircraft)
     return {
         aircraft: state.aircraft,
+
     };
 }
 

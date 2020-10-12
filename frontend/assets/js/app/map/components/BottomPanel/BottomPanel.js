@@ -50,9 +50,9 @@ class BottomPanel extends React.Component
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Latitude</th>
-                            <th scope="col">Longitude</th>
-                            <th scope="col">Altitude</th>
+                            <th scope="col">Latitude (°)</th>
+                            <th scope="col">Longitude (°)</th>
+                            <th scope="col">Altitude AGL (ft)</th>
                         </tr>
                     </thead>
                     <tbody>
