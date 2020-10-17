@@ -81,7 +81,7 @@ const WaypointEditor = () => {
                             />
                         </Col>
                         <Col xs={12}>
-                            <label htmlFor="lat">Altitude AGL(ft)</label>
+                            <label htmlFor="lat">Altitude AGL (m)</label>
                             <input
                                 type="number"
                                 value={altitude}

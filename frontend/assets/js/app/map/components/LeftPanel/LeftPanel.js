@@ -22,7 +22,7 @@ function tableRow(key, value)
 function valueWithUnits(value, key) {
     switch(key){
         case "altitude_msl":
-            value+="ft"
+            value+="m"
             break
         case "latitude":
         case "longitude":
@@ -113,7 +113,6 @@ function mapStateToProps(state)
 {
     return {
         aircraft: state.aircraft,
-
     };
 }
 

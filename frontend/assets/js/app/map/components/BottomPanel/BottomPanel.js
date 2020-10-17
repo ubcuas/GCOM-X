@@ -52,7 +52,7 @@ class BottomPanel extends React.Component
                             <th scope="col">#</th>
                             <th scope="col">Latitude (°)</th>
                             <th scope="col">Longitude (°)</th>
-                            <th scope="col">Altitude AGL (ft)</th>
+                            <th scope="col">Altitude AGL (m)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,7 +131,7 @@ class BottomPanel extends React.Component
                         Undo
                     </button>
                 </div>
-                <div className="sectionTitle">New waypoint altitude (ft)</div>
+                <div className="sectionTitle">New waypoint altitude (m)</div>
                 <input
                     type={'text'}
                     defaultValue={this.props.newAltitude}
