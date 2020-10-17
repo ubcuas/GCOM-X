@@ -30,10 +30,10 @@ const WaypointEditor = () => {
             setAltitude(selectedMarker.altitude);
         }
     }, selectedMarker);
-    
+
 
     const title = !selectedMarker ? 'Edit Waypoint' : `Editing Waypoint ${selectedMarker.order}`;
-    
+
     function handleClickReset() {
         setLatitude(selectedMarker.latitude);
         setLongitude(selectedMarker.longitude);
@@ -59,7 +59,7 @@ const WaypointEditor = () => {
                 <Container id="waypoint-editor">
                     <Row>
                         <Col xs={12}>
-                            <label htmlFor="lat">Latitude</label>
+                            <label htmlFor="lat">Latitude (°)</label>
                             <input
                                 type="number"
                                 value={latitude}
@@ -70,7 +70,7 @@ const WaypointEditor = () => {
                             />
                         </Col>
                         <Col xs={12}>
-                            <label htmlFor="lat">Longitude</label>
+                            <label htmlFor="lat">Longitude (°)</label>
                             <input
                                 type="number"
                                 value={longitude}
@@ -81,7 +81,7 @@ const WaypointEditor = () => {
                             />
                         </Col>
                         <Col xs={12}>
-                            <label htmlFor="lat">Altitude</label>
+                            <label htmlFor="lat">Altitude AGL (m)</label>
                             <input
                                 type="number"
                                 value={altitude}
