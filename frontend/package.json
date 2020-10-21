@@ -68,6 +68,7 @@
     "leaflet": "^1.6.0",
     "leaflet-defaulticon-compatibility": "^0.1.1",
     "leaflet-draw": "^1.0.4",
+    "leaflet-polylinedecorator": "^1.6.0",
     "leaflet.offline": "^2.0.0-beta.3",
     "localforage": "^1.7.3",
     "lodash": "^4.17.20",

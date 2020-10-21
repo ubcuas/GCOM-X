@@ -1,7 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-import React, {useEffect, useState } from 'react';
-import { Map, Marker, LayersControl, Polyline, Circle, Polygon } from 'react-leaflet';
+import React, {useEffect, useState, useRef } from 'react';
+import { Map, Marker, LayersControl, Polyline, Circle, Polygon, withLeaflet } from 'react-leaflet';
 import L from 'leaflet';
+import "leaflet-polylinedecorator";
 import { useDispatch, useSelector } from 'react-redux';
 import { addMarker } from '../../actions/action-addmarker';
 
@@ -192,6 +193,39 @@ const MapPanel = ({ visibility }) => {
     const polyLines = points => (
         <Polyline positions={points} />
     );
+
+    /*
+
+    Somewhat problematic implementation of arrows...
+    import useRef from 'react', withLeaflet from 'react-leaflet', 'leaflet-polylinedecorator'
+    
+    const PolylineDecorator = withLeaflet(props => {
+        const polyRef = useRef();
+        useEffect(() => {
+          const polyline = polyRef.current.leafletElement; //get native Leaflet polyline
+          const { map } = polyRef.current.props.leaflet; //get native Leaflet map
+      
+          L.polylineDecorator(props.positions, {
+              patterns : props.patterns
+          }).addTo(map);
+        }, []);
+        
+        return <Polyline ref={polyRef} {...props} />;
+      });
+
+      const arrow = [
+        {
+          offset: "5%",
+          repeat: "20%",
+          symbol: L.Symbol.arrowHead({
+            pixelSize: 15,
+            polygon: false,
+            pathOptions: { stroke: true }
+          })
+        }
+      ];
+
+      */
 
     const consoleLogGPS = (e) => {
         const latlon = e.latlng;
