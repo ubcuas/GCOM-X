@@ -8,5 +8,5 @@
 - Jonathan Hirsch
 - Liang Liu
 - Isabelle Andre
+- Niko Andrianos
 - Yekta Ataozden
-
