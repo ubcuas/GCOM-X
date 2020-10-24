@@ -19,10 +19,14 @@ function tableRow(key, value)
     );
 }
 
+function valueToFeet(value){
+    return value*3.2808
+}
+
 function valueWithUnits(value, key) {
     switch(key){
         case "altitude_msl":
-            value+="m"
+            value+="m | "+valueToFeet(value)+"ft"
             break
         case "latitude":
         case "longitude":
