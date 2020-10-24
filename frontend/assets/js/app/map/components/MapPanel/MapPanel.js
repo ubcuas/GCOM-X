@@ -2,6 +2,7 @@
 import React, {useEffect, useState } from 'react';
 import { Map, Marker, LayersControl, Polyline, Circle, Polygon } from 'react-leaflet';
 import L from 'leaflet';
+import "leaflet-polylinedecorator";
 import { useDispatch, useSelector } from 'react-redux';
 import { addMarker } from '../../actions/action-addmarker';
 
@@ -74,6 +75,14 @@ const defaultIcon = L.icon({
     iconAnchor: [12.5, 41],
 });
 
+const numberedIcon = (num, colour="#ffffff") => (
+    L.divIcon({
+        className: '',
+        html: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"<style type="text/css">.st0{fill:' + colour + ';}</style><path fill="' + colour + '" class="st0" d="M256,0C145.39,0,55.73,89.66,55.73,200.27c0,48.39,17.16,92.77,45.73,127.39h-0.81L256,512l154.54-184.34c28.57-34.62,45.73-79,45.73-127.39C456.27,89.66,366.61,0,256,0z"/><text style="font-size:200px" dominant-baseline="middle" text-anchor="middle" x="50%" y="40%">' + num + '</text></svg>',
+        iconSize: new L.Point(41, 41),
+        iconAnchor: [20.5, 41],
+}));
+
 function flattenWaypointsToCoords(waypoints)
 {
     return waypoints.map(marker => [marker.latitude, marker.longitude]);
@@ -121,11 +130,11 @@ const MapPanel = ({ visibility }) => {
 
     function switchMarker(marker) {
         if (marker.order === selectedMarker) {
-            return regularBlueIcon;
+            return numberedIcon(marker.order, "#00a2ff");
         }
 
         if (!marker.is_generated)
-            return defaultIcon;
+            return numberedIcon(marker.order, "#cccccc");
 
         switch(marker.wp_type) {
             case "search_grid":
@@ -135,7 +144,7 @@ const MapPanel = ({ visibility }) => {
             case "off_axis":
                 return axisBlueIcon;
             default:
-                return defaultIcon;
+                return numberedIcon(marker.order, "#cccccc");
         }
     }
 
