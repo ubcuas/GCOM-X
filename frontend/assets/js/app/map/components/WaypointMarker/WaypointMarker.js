@@ -24,9 +24,7 @@ const WaypointMarker = ({ marker, icon }) => {
             onMoveend={handleMoveEnd}
             onclick={handleClick}
             icon={icon}
-        >
-            <Tooltip permanent="true">{marker.order}</Tooltip>
-        </Marker>
+        />
     )
 };
 
