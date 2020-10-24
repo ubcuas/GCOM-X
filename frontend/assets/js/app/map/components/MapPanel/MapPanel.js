@@ -130,11 +130,11 @@ const MapPanel = ({ visibility }) => {
 
     function switchMarker(marker) {
         if (marker.order === selectedMarker) {
-            return numberedIcon(marker.order, colour="#00a2ff");
+            return numberedIcon(marker.order, "#00a2ff");
         }
 
         if (!marker.is_generated)
-            return numberedIcon(marker.order, colour="#cccccc");
+            return numberedIcon(marker.order, "#cccccc");
 
         switch(marker.wp_type) {
             case "search_grid":
@@ -144,7 +144,7 @@ const MapPanel = ({ visibility }) => {
             case "off_axis":
                 return axisBlueIcon;
             default:
-                return numberedIcon(marker.order, colour="#cccccc");
+                return numberedIcon(marker.order, "#cccccc");
         }
     }
 
