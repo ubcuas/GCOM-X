@@ -1,20 +1,22 @@
 import json
 import logging
 
+import time
+
+
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from interop.models import UasMission, UasTelemetry
-from interop.telemetry import telemThread
 
 from interop.client import Client
 
 from pylibuuas.telem import deserialize_telem_msg
 
 logger = logging.getLogger(__name__)
-
+        
 """
 Uas_client connection status
 0 - Disconnected
@@ -22,6 +24,7 @@ Uas_client connection status
 2 - Connected Sending data
 3 - Connected Sending data Failed
 """
+
 connect_stat = 0
 current_mission_id = -1
 
@@ -35,6 +38,30 @@ def get_telemetrythread():
     global telemetrythread
     return telemetrythread
 
+
+def sendTelemetry(uasclient):
+    connected = get_connect_stat()
+    if connected > 0:
+        if UasTelemetry.objects.count() != 0:
+
+            uas_telem = UasTelemetry.objects.latest('created_at')
+            if not uas_telem.uploaded:
+                try:
+                    uasclient.post_telemetry(uas_telem.marshal())
+                    connect_stat = 2
+                    uas_telem.uploaded = True
+                    uas_telem.save()
+                    logger.debug('Posted telemtry data')
+                    return True
+                except Exception as error:
+                    connect_stat = 3
+                    logger.exception('Unable to send telemtry data error: %s' % error)
+            else:
+                logger.debug("No new telemtry!")
+    else:
+        logger.debug('UBC uas interop not connected or smurf not connected')
+    return False
+
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def telemetry(request):
@@ -45,63 +72,19 @@ def telemetry(request):
         else:
             return HttpResponse(status=204)  # No content
 
-    if request.method == 'POST':
+    if request.method == 'POST':        
         telem = deserialize_telem_msg(request.body)
         new_telem = UasTelemetry(latitude=telem.latitude_dege7 / 1.0E7,
                                  longitude=telem.longitude_dege7 / 1.0E7,
                                  altitude_msl=telem.altitude_msl_m,
                                  uas_heading=telem.heading_deg)
         new_telem.save()
+        gcom_client = Client()
+        sendTelemetry(gcom_client)
         return HttpResponse(status=200)
 
     return HttpResponse(status=400)  # Bad request
 
-@csrf_exempt
-@require_http_methods(["GET", "POST", "PUT", "DELETE"])
-def telemetrythread_control(request):
-    global telemetrythread
-    global uasclient
-
-    ## Start thread with conf
-    if request.method == 'POST':
-        if telemetrythread and telemetrythread.is_alive():
-            logger.warning("telemetrythread has already started!")
-            return HttpResponse(status=400)  # Bad request
-
-        conf = json.loads(request.body)
-        telemetrythread = telemThread(conf=conf)
-        logger.info("Telem thread starting")
-        telemetrythread.start()
-
-    ## Update configuration in running thread
-    if request.method == 'PUT':
-        if not telemetrythread:
-            logger.warning("telemetrythread has NOT started! Can't update")
-            return HttpResponse(status=400)  # Bad request
-
-        conf = json.loads(request.body)
-        telemetrythread.update_conf(conf)
-
-    ## Stop the thread
-    if request.method == 'DELETE':
-        if not telemetrythread:
-            logger.warning("telemetrythread Already stopped")
-        else:
-            telemetrythread.stop()
-
-    ## Get status and configuration
-    if request.method == 'GET':
-        pass
-
-    ## Return the status and thread conf
-    if telemetrythread:
-        payload = {
-                'status': telemetrythread.is_alive(),
-                'conf': telemetrythread.conf,
-            }
-        return JsonResponse(payload)
-    else:
-        return HttpResponse(status=400)  # Bad request
 
 @csrf_exempt
 @require_http_methods(["POST"])
