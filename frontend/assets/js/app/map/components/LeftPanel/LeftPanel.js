@@ -52,7 +52,6 @@ class LeftPanel extends React.Component {
     {
         return (
             <div className="displayTelemetryTable">
-                {/* <div className="sectionTitle">Aircraft Telemetry</div> */}
                 <table className="table table-condensed table-striped">
                     <thead>
                         <tr>
