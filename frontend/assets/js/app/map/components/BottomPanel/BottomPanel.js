@@ -147,7 +147,7 @@ class BottomPanel extends React.Component
             <DraggableContainer
                 bottom="0"
                 left="20%"
-                title="Bottom Panel"
+                title="Mission Status"
                 width={900}
             >
                 <div className="bottomPanel">
