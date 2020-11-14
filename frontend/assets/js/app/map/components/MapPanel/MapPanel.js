@@ -2,7 +2,6 @@
 import React, {useEffect, useState } from 'react';
 import { Map, Marker, LayersControl, Polyline, Circle, Polygon } from 'react-leaflet';
 import L from 'leaflet';
-import "leaflet-polylinedecorator";
 import { useDispatch, useSelector } from 'react-redux';
 import { addMarker } from '../../actions/action-addmarker';
 
