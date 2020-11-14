@@ -55,7 +55,6 @@
             padding: 7px;
         }
     }
-    
     .displayWaypointTable {
         padding-left: 10px;
         padding-right: 0;
@@ -72,17 +71,18 @@
             width: 100%;
             table-layout: fixed;
         }
-        
         tbody {
             display: block;
             max-height: 120px;
             overflow-x: hidden;
             overflow-y: scroll;
         }
-        
         td {
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        thead tr:first-child th:first-child, tbody th{
+            width: 50px; // width of first column
         }
     }
 

@@ -8,6 +8,9 @@ import _ from 'lodash';
 import './style.scss';
 import WaypointEditor from '../WaypointEditor';
 import DraggableContainer from '../DraggableContainer';
+import UnitConverter from '../../../../utils/UnitConverter'
+
+const uc = new UnitConverter()
 
 function tableRow(key, value)
 {
@@ -22,7 +25,7 @@ function tableRow(key, value)
 function valueWithUnits(value, key) {
     switch(key){
         case "altitude_msl":
-            value+="m"
+            value+="m | "+uc.metersToFeet(value)+"ft"
             break
         case "latitude":
         case "longitude":
