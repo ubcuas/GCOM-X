@@ -13,10 +13,9 @@ import 'react-dropdown/style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './style.scss';
 import DraggableContainer from '../DraggableContainer';
+import UnitConverter from '../../../../utils/UnitConverter'
 
-function valueToFeet(value){
-    return value*3.2808
-}
+const uc = new UnitConverter()
 
 /*
  * Panel to manage waypoints, obstacles, etc
@@ -41,7 +40,7 @@ class BottomPanel extends React.Component
                 <th scope="row">{marker.order}</th>
                 <td>{marker.latitude.toFixed(5)}</td>
                 <td>{marker.longitude.toFixed(5)}</td>
-                <td>{marker.altitude + ", "+valueToFeet(marker.altitude).toFixed(2)}</td>
+                <td>{marker.altitude + ", "+uc.metersToFeet(marker.altitude).toFixed(2)}</td>
             </tr>
         );
     }
