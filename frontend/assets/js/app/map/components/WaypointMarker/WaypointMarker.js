@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { updateMarker } from '../../actions/action-updatemarker';
 import { useDispatch } from 'react-redux';
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, Popup, Tooltip } from 'react-leaflet';
 import { selectMarker } from '../../actions/action-selectmarker';
 
 const WaypointMarker = ({ marker, icon }) => {
@@ -24,8 +24,7 @@ const WaypointMarker = ({ marker, icon }) => {
             onMoveend={handleMoveEnd}
             onclick={handleClick}
             icon={icon}
-        >
-        </Marker>
+        />
     )
 };
 
