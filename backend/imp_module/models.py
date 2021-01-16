@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.forms import model_to_dict
 
 from interop import odlc as interop_odlc
-from .image_utils import average_angle, orientation_number_to_letter, gps_centroid
+from imp_module.image_utils import average_angle, orientation_number_to_letter, gps_centroid
 
 
 class ImpImage(models.Model):
@@ -64,7 +64,7 @@ class ImpODLC(models.Model):
     )
 
     image_source = models.TextField(default="")
-    image_source_model = models.ForeignKey('ImpImage', on_delete=None, null=True)
+    image_source_model = models.ForeignKey('ImpImage', on_delete=models.SET_NULL, null=True)
     x = models.DecimalField(default=0, max_digits=6, decimal_places=5)
     y = models.DecimalField(default=0, max_digits=6, decimal_places=5)
     w = models.DecimalField(default=0, max_digits=6, decimal_places=5)
