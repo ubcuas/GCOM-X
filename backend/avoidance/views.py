@@ -57,7 +57,7 @@ def upload_to_acom(request, mission_id):
         mission = UasMission.objects.get(id=mission_id)
         route =  OrderedRouteWayPoint.objects.filter(mission=mission).order_by('order')
         waypoints = _serialize_orwp_to_acomjson(route)
-        acom_payload = {'wps' : waypoints, 'takeoffAlt': 31,'rtl': False} # not sure   
+        acom_payload = {'wps' : waypoints, 'takeoffAlt': 31,'rtl': False}  
         r = requests.post(settings.ACOM_HOSTNAME + '/aircraft/mission', json=acom_payload)
 
         if not r.ok:
