@@ -58,7 +58,7 @@ def upload_to_acom(request, mission_id):
         route =  OrderedRouteWayPoint.objects.filter(mission=mission).order_by('order')
         waypoints = _serialize_orwp_to_acomjson(route)
         acom_payload = {'wps' : waypoints, 'takeoffAlt': 31,'rtl': False} # not sure   
-        r = requests.post(settings.ACOM_HOSTNAME + '/mission', json=acom_payload)
+        r = requests.post(settings.ACOM_HOSTNAME + '/aircraft/mission', json=acom_payload)
 
         if not r.ok:
             raise Exception('Failed to POST /api/upload_to_acom: [%s] %s' % (r.status_code, r.content))

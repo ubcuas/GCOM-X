@@ -104,8 +104,8 @@ class BottomPanel extends React.Component
         {
             const UPLOAD_ENDPOINT = "/avoidance/api/upload_to_acom/";
             // check if using the same props
-            axios.post(UPLOAD_ENDPOINT + this.props.currentMission + "/", { waypoints: this.props.markers })
             alert("uploaded")
+            axios.post(UPLOAD_ENDPOINT + this.props.currentMission + "/", { waypoints: this.props.markers })
             .then(response => {
                 alert('The mission was successfully uploaded');
             }).catch(() => {
@@ -148,14 +148,7 @@ class BottomPanel extends React.Component
                     </button>
                 </div>
                 <div className="displayFlex">
-                    <div className="col s10">
-                        <input
-                            type={'text'}
-                            placeholder='acom url'
-                            onChange={onUrlValChange}
-                            //not finished
-                        />
-                    </div>
+                    
                     <div className="col s5">                                            
                         <button type="button" className="btn btn-primary btn-upload" onClick={uploadRoute}>
                             Upload Mission
