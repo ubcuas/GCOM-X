@@ -103,10 +103,9 @@ class BottomPanel extends React.Component
         const uploadRoute = () =>
         {
             const UPLOAD_ENDPOINT = "/avoidance/api/upload_to_acom/";
-            alert("uploaded")
             axios.post(UPLOAD_ENDPOINT + this.props.currentMission + "/", { waypoints: this.props.markers })
             .then(response => {
-                alert('The mission was successfully uploaded');
+                alert('The mission was successfully uploaded.');
             }).catch(() => {
                 alert('There was an error uploading mission.');
             });
