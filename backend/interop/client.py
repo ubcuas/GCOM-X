@@ -204,3 +204,20 @@ class Client():
             raise Exception('Failed to POST /api/telemetry: [%s] %s' % (r.status_code, r.content))
 
         return r.content
+
+    def get_teams_telemetry(self):
+        """
+        GET /api/teams
+        """
+        logger.debug("GET interop-server /api/teams")
+        session = self.get_ClientSession()
+        cookies = self.get_cookies(session)
+
+        request_url = session.url + "/api/teams"
+
+        r = requests.get(request_url, cookies=cookies)
+
+        if not r.ok:
+            raise Exception('Failed to GET /api/teams: [%s] %s' % (r.status_code, r.content))
+
+        return r.json()

@@ -28,6 +28,8 @@ Uas_client connection status
 connect_stat = 0
 current_mission_id = -1
 
+UAS_team_id = 1
+
 telemetrythread = None
 
 def get_connect_stat():
@@ -74,7 +76,8 @@ def telemetry(request):
 
     if request.method == 'POST':        
         telem = deserialize_telem_msg(request.body)
-        new_telem = UasTelemetry(latitude=telem.latitude_dege7 / 1.0E7,
+        new_telem = UasTelemetry(team_id=UAS_team_id,
+                                 latitude=telem.latitude_dege7 / 1.0E7,
                                  longitude=telem.longitude_dege7 / 1.0E7,
                                  altitude_msl=telem.altitude_msl_m,
                                  uas_heading=telem.heading_deg)
@@ -85,6 +88,85 @@ def telemetry(request):
 
     return HttpResponse(status=400)  # Bad request
 
+@csrf_exempt
+@require_http_methods(["GET"])
+def teams(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+
+    try:
+        gcomclient = Client()
+
+        teams = gcomclient.get_teams_telemetry()
+        clientsession  = gcomclient.get_clientSession()
+
+        logger.debug(teams)
+
+    except Exception as e:
+        logger.exception(e)
+        return HttpResponseServerError(e)
+
+    response_payload = []
+
+    for team in teams:
+        if (team['username'] != clientsession.username):
+            telem = deserialize_telem_msg(request.body)
+            team_telem = UasTelemetry(team_id=team['id'],
+                                    latitude=telem.latitude_dege7 / 1.0E7,
+                                    longitude=telem.longitude_dege7 / 1.0E7,
+                                    altitude_msl=telem.altitude_msl_m,
+                                    uas_heading=telem.heading_deg)
+            team_telem.save()
+            response_payload.append(team_telem.marshall())
+
+    return JsonResponse(response_payload)
+
+@csrf_exempt
+@require_http_methods(["GET", "POST", "PUT", "DELETE"])
+def telemetrythread_control(request):
+    global telemetrythread
+    global uasclient
+
+    ## Start thread with conf
+    if request.method == 'POST':
+        if telemetrythread and telemetrythread.is_alive():
+            logger.warning("telemetrythread has already started!")
+            return HttpResponse(status=400)  # Bad request
+
+        conf = json.loads(request.body)
+        telemetrythread = telemThread(conf=conf)
+        logger.info("Telem thread starting")
+        telemetrythread.start()
+
+    ## Update configuration in running thread
+    if request.method == 'PUT':
+        if not telemetrythread:
+            logger.warning("telemetrythread has NOT started! Can't update")
+            return HttpResponse(status=400)  # Bad request
+
+        conf = json.loads(request.body)
+        telemetrythread.update_conf(conf)
+
+    ## Stop the thread
+    if request.method == 'DELETE':
+        if not telemetrythread:
+            logger.warning("telemetrythread Already stopped")
+        else:
+            telemetrythread.stop()
+
+    ## Get status and configuration
+    if request.method == 'GET':
+        pass
+
+    ## Return the status and thread conf
+    if telemetrythread:
+        payload = {
+                'status': telemetrythread.is_alive(),
+                'conf': telemetrythread.conf,
+            }
+        return JsonResponse(payload)
+    else:
+        return HttpResponse(status=400)  # Bad request
 
 @csrf_exempt
 @require_http_methods(["POST"])

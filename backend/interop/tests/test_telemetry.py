@@ -43,7 +43,8 @@ class InteropTelemetryCase(TestCase):
         from interop import views
         mock_Client = MagicMock()
 
-        test_telem = UasTelemetry(latitude=24.0,
+        test_telem = UasTelemetry(team_id=0,
+                                  latitude=24.0,
                                   longitude=23.0,
                                   altitude_msl=100,
                                   uas_heading=123)
