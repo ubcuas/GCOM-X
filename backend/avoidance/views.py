@@ -44,6 +44,23 @@ def _route(request, mission_id):
     return JsonResponse(payload)
 
 @csrf_exempt
+@require_http_methods(["POST"])
+def upload_to_acom(request, mission_id):
+    """
+    POST:
+        - pulls the requested route from database, format to ACOM specs,
+          then posted to ACOM
+    """
+    if request.method == "POST":
+        mission = UasMission.objects.get(id=mission_id)
+        route =  OrderedRouteWayPoint.objects.filter(mission=mission).order_by('order')
+        waypoints = _serialize_orwp_to_acomjson(route)
+        request = {'wps' : waypoints, 'takeoffAlt': 31,'rtl': False} # not sure
+        # TODO: to actually post to acom
+    return
+
+
+@csrf_exempt
 @require_http_methods(["GET", "POST"])
 def reroute(request, mission_id):
     """
@@ -126,6 +143,15 @@ def _call_routing(mission):
                                                 wp_type=new_wp["wp_type"])
         db_new_wp.save()
     return OrderedRouteWayPoint.objects.filter(mission=mission.id).order_by('order')
+
+def _serialize_orwp_to_acomjson(orwp_list):
+    """
+    Takes in a mission object and returns a list of all the waypoints formatted to acom spec 
+    """
+    acom_wps = []
+    for wp in orwp_list:
+        acom_wps.append({'hold': 0, 'radius': 1, 'lat': wp.latitude, 'lng': wp.longitude, 'alt' : wp.altitude_msl})    
+    return acom_wps
 
 def _parse_waypoints_to_dict(orwp_list):
     """
