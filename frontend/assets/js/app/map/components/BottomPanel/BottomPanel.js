@@ -103,7 +103,6 @@ class BottomPanel extends React.Component
         const uploadRoute = () =>
         {
             const UPLOAD_ENDPOINT = "/avoidance/api/upload_to_acom/";
-            // check if using the same props
             alert("uploaded")
             axios.post(UPLOAD_ENDPOINT + this.props.currentMission + "/", { waypoints: this.props.markers })
             .then(response => {
