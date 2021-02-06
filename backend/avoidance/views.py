@@ -57,12 +57,12 @@ def upload_to_acom(request, mission_id):
         mission = UasMission.objects.get(id=mission_id)
         route =  OrderedRouteWayPoint.objects.filter(mission=mission).order_by('order')
         waypoints = _serialize_orwp_to_acomjson(route)
-        acom_payload = {'wps' : waypoints, 'takeoffAlt': 31,'rtl': False}  
+        acom_payload = {'wps' : waypoints, 'takeoffAlt': 31,'rtl': False}
         r = requests.post(settings.ACOM_HOSTNAME + '/aircraft/mission', json=acom_payload)
 
         if not r.ok:
             raise Exception('Failed to POST /api/upload_to_acom: [%s] %s' % (r.status_code, r.content))
-        return r.json()
+        return JsonResponse(r.json())
     return
 
 
@@ -152,11 +152,11 @@ def _call_routing(mission):
 
 def _serialize_orwp_to_acomjson(orwp_list):
     """
-    Takes in a mission object and returns a list of all the waypoints formatted to acom spec 
+    Takes in a mission object and returns a list of all the waypoints formatted to acom spec
     """
     acom_wps = []
     for wp in orwp_list:
-        acom_wps.append({'hold': 0, 'radius': 1, 'lat': wp.latitude, 'lng': wp.longitude, 'alt' : wp.altitude_msl})    
+        acom_wps.append({'hold': 0, 'radius': 1, 'lat': wp.latitude, 'lng': wp.longitude, 'alt' : wp.altitude_msl})
     return acom_wps
 
 def _parse_waypoints_to_dict(orwp_list):
