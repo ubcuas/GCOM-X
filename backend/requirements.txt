@@ -30,7 +30,6 @@ Pillow==8.1.0
 preconditions==0.1
 psycopg2-binary==2.8.6
 pyexiv2==2.4.1
-pylint==2.4.1
 pylint-celery==0.3
 pylint-django==2.4.2
 pylint-plugin-utils==0.6
