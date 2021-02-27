@@ -121,52 +121,7 @@ def teams(request):
 
     return JsonResponse(response_payload)
 
-@csrf_exempt
-@require_http_methods(["GET", "POST", "PUT", "DELETE"])
-def telemetrythread_control(request):
-    global telemetrythread
-    global uasclient
-
-    ## Start thread with conf
-    if request.method == 'POST':
-        if telemetrythread and telemetrythread.is_alive():
-            logger.warning("telemetrythread has already started!")
-            return HttpResponse(status=400)  # Bad request
-
-        conf = json.loads(request.body)
-        telemetrythread = telemThread(conf=conf)
-        logger.info("Telem thread starting")
-        telemetrythread.start()
-
-    ## Update configuration in running thread
-    if request.method == 'PUT':
-        if not telemetrythread:
-            logger.warning("telemetrythread has NOT started! Can't update")
-            return HttpResponse(status=400)  # Bad request
-
-        conf = json.loads(request.body)
-        telemetrythread.update_conf(conf)
-
-    ## Stop the thread
-    if request.method == 'DELETE':
-        if not telemetrythread:
-            logger.warning("telemetrythread Already stopped")
-        else:
-            telemetrythread.stop()
-
-    ## Get status and configuration
-    if request.method == 'GET':
-        pass
-
-    ## Return the status and thread conf
-    if telemetrythread:
-        payload = {
-                'status': telemetrythread.is_alive(),
-                'conf': telemetrythread.conf,
-            }
-        return JsonResponse(payload)
-    else:
-        return HttpResponse(status=400)  # Bad request
+# some endpoint to get status
 
 @csrf_exempt
 @require_http_methods(["POST"])
