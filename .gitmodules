@@ -1,6 +1,3 @@
-[submodule "tools/GeoTag"]
-	path = tools/GeoTag
-	url = ../GeoTag.git
 [submodule "smurfette"]
 	path = smurfette
 	url = ../smurfette.git

@@ -19,7 +19,7 @@ from imp_module import image_utils
 
 from gcomx.settings.local import MEDIA_ROOT
 
-import imp_module.geotag as geotag
+import pylibuuas.geotag as geotag
 
 logger = logging.getLogger(__name__)
 
@@ -127,16 +127,17 @@ class ImageFileHandler(FileSystemEventHandler):
                 return False
 
             # We already made sure that the image is JPEG format
-            geotags = geotag.read_geo_tag(IMAGES_DIR + name)
-            latitude = geotags['lat']
-            longitude = geotags['lon']
-            altitude = geotags['alt']
-            heading = geotags['hdg']
-            roll = geotags['roll'] if geotags['roll'] else 0
-            yaw = geotags['yaw'] if geotags['yaw'] else 0
+            geotags = geotag.getImageGeotag(IMAGES_DIR + name)
+            
+            latitude = geotags['latitude_dege7']
+            longitude = geotags['longitude_dege7']
+            altitude_msl = geotags['altitude_msl_m']
+            heading = geotags['heading_deg']
+            roll = geotags['roll_rad'] if geotags['roll'] else 0
+            yaw = geotags['yaw_rad'] if geotags['yaw'] else 0
 
             # Images must have valid GPS data
-            attributes = (latitude, longitude, altitude, heading)
+            attributes = (latitude, longitude, altitude_msl, heading)
             if any([a is None for a in attributes]):
                 logger.error(f"Image {name} does not contain valid GPS data. Data: {attributes}")
                 return False
@@ -150,7 +151,7 @@ class ImageFileHandler(FileSystemEventHandler):
             image_utils.nuke_exif_orientation_tag(IMAGES_DIR + name)
 
             imp = ImpImage(name=name, processed_flag=0, latitude=latitude, longitude=longitude,
-                            altitude=altitude, heading=heading, roll=roll, yaw=yaw)
+                            altitude=altitude_msl, heading=heading, roll=roll, yaw=yaw)
 
             try:
                 imp.save()

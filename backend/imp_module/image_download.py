@@ -11,7 +11,7 @@ from time import sleep
 
 try:
     from gcomx.settings.local import MEDIA_ROOT
-    from imp_module import geotag
+    import pylibuuas.geotag as geotag
 except ModuleNotFoundError:
     MEDIA_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/mediafiles'
     import geotag
@@ -66,16 +66,29 @@ class ImageDownloader(threading.Thread):
                     try:
                         webp.save_image(Image.open(SRC_DIR + image), SRC_DIR + name + '.webp')
 
-                        geotags = geotag.read_geo_tag(SRC_DIR + image)
-                        latitude = geotags['lat']
-                        longitude = geotags['lon']
-                        altitude = geotags['alt']
-                        heading = geotags['hdg']
-                        roll = geotags['roll']
+                        geotags = geotag.getImageGeotag(SRC_DIR + image)
 
-                        geotag.write_geo_tag(SRC_DIR + name + '.webp',
-                                            latitude, longitude, altitude,
-                                            hdg=heading, roll=roll)
+                        latitude = geotags['latitude_dege7']
+                        longitude = geotags['longitude_dege7']
+                        altitude_agl = geotags['altitude_agl_m']
+                        altitude_msl = geotags['altitude_msl_m']
+                        heading = geotags['heading_deg']
+                        velocityx = geotags['velocityx_m_s']
+                        velocityy = geotags['velocityy_m_s']
+                        velocityz = geotags['velocityz_m_s']
+                        roll = geotags['roll_rad']
+                        pitch = geotags['pitch_rad']
+                        yaw = geotags['yaw_rad']
+                        rollspeed = geotags['rollspeed_rad_s']
+                        pitchspeed = geotags['pitchspeed_rad_s']
+                        yawspeed = geotags['yawspeed_rad_s']
+                        timestamp_pixhawk = geotags['teimstamp_pixhawk_ms']
+                        timestamp_msg = geotags['timestamp_msg_ms']
+
+                        geotag.geotagImage(SRC_DIR + name + '.webp',
+                                            [latitude, longitude, altitude_agl, altitude_msl, heading,
+                                            velocityx, velocityy, velocityz, roll, pitch, yaw, rollspeed,
+                                            pitchspeed, yawspeed, timestamp_pixhawk, timestamp_msg])
 
                         jpg_metadata = pyexiv2.metadata.ImageMetadata(SRC_DIR + image)
                         jpg_metadata.read()
