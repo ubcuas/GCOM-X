@@ -1,0 +1,34 @@
+.marker-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.marker-element {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #aaa;
+  padding: 10px;
+}
+
+.marker-num {
+  display: inline;
+  margin: 0;
+}
+
+.marker-coord {
+  display: inline;
+  margin: 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.clear-calc {
+  margin: 0 10px;
+  flex: 1;
+}
