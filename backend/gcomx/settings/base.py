@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'imp_module.apps.ImpModuleConfig',
     'interop.apps.InteropConfig',
     'avoidance.apps.AvoidanceConfig',
+    'surveyopti.apps.SurveyoptiConfig',
 
     'background_task',
     'channels',
