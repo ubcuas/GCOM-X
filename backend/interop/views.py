@@ -1,7 +1,7 @@
 import json
 import logging
 
-import time
+from datetime import datetime   
 
 
 from django.shortcuts import render
@@ -30,16 +30,9 @@ current_mission_id = -1
 
 UAS_team_id = 1
 
-telemetrythread = None
-
 def get_connect_stat():
     global connect_stat
     return connect_stat
-
-def get_telemetrythread():
-    global telemetrythread
-    return telemetrythread
-
 
 def sendTelemetry(uasclient):
     connected = get_connect_stat()
@@ -50,6 +43,7 @@ def sendTelemetry(uasclient):
             if not uas_telem.uploaded:
                 try:
                     uasclient.post_telemetry(uas_telem.marshal())
+                    global connect_stat
                     connect_stat = 2
                     uas_telem.uploaded = True
                     uas_telem.save()
@@ -121,52 +115,56 @@ def teams(request):
 
     return JsonResponse(response_payload)
 
+# -1 error, 0 stopped, 1 sending 
 @csrf_exempt
-@require_http_methods(["GET", "POST", "PUT", "DELETE"])
-def telemetrythread_control(request):
-    global telemetrythread
-    global uasclient
-
-    ## Start thread with conf
-    if request.method == 'POST':
-        if telemetrythread and telemetrythread.is_alive():
-            logger.warning("telemetrythread has already started!")
-            return HttpResponse(status=400)  # Bad request
-
-        conf = json.loads(request.body)
-        telemetrythread = telemThread(conf=conf)
-        logger.info("Telem thread starting")
-        telemetrythread.start()
-
-    ## Update configuration in running thread
-    if request.method == 'PUT':
-        if not telemetrythread:
-            logger.warning("telemetrythread has NOT started! Can't update")
-            return HttpResponse(status=400)  # Bad request
-
-        conf = json.loads(request.body)
-        telemetrythread.update_conf(conf)
-
-    ## Stop the thread
-    if request.method == 'DELETE':
-        if not telemetrythread:
-            logger.warning("telemetrythread Already stopped")
-        else:
-            telemetrythread.stop()
-
-    ## Get status and configuration
-    if request.method == 'GET':
-        pass
-
-    ## Return the status and thread conf
-    if telemetrythread:
-        payload = {
-                'status': telemetrythread.is_alive(),
-                'conf': telemetrythread.conf,
-            }
-        return JsonResponse(payload)
+@require_http_methods(["GET"])
+def telem_status(request):
+    # the connection errors out so we show error here
+    if connect_stat == 3: 
+        response = {
+            'status': -1,
+            'mission_id': current_mission_id,
+        }
+        return JsonResponse(response)
+    # no error
     else:
-        return HttpResponse(status=400)  # Bad request
+        last_uas_telem = UasTelemetry.objects.filter(team_id=UAS_team_id).order_by('-created_at')[0]
+        if last_uas_telem:
+            stat = 1
+            delta = datetime.now(datetime.timezone.utc) - last_uas_telem.created_at
+            if delta.seconds <= 5:
+                stat = 1
+            else:
+                stat = 0
+        else:
+            stat = -1
+        response = {
+        'status': stat,
+        'mission_id': current_mission_id,
+        }        
+        return JsonResponse(response)       
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def team_telem_status(request):
+    last_team_telem = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')[0]
+    if last_team_telem:
+        delta = datetime.now(datetime.timezone.utc) - last_team_telem.created_at
+        if delta.seconds <= 5:
+            stat = 1
+        else:
+            stat = 0
+    else:
+        stat = -1
+    response = {
+    'status': stat,
+    'mission_id': current_mission_id,
+    }        
+    return JsonResponse(response)
+
+
+
 
 @csrf_exempt
 @require_http_methods(["POST"])

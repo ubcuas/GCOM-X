@@ -9,38 +9,12 @@ from django.views.decorators.http import require_http_methods
 
 from imp_module.GPS_adjust import GPS_Image_Projector
 from imp_module.models import ImpImage
-from imp_module.image_download import ImageDownloader
 
 from gcomx.settings.local import MEDIA_ROOT
 
 IMAGES_DIR = MEDIA_ROOT + "/images/"
 
 logger = logging.getLogger(__name__)
-
-
-@csrf_exempt
-@require_http_methods(['POST', 'DELETE', 'GET'])
-def image_download(request):
-    """Request to download images
-
-    Returns:
-        JsonResponse -- status true if downloading
-    """
-    if request.method == 'POST':
-        if not image_download.download_thread or not image_download.download_thread.is_running():
-            image_download.download_thread = ImageDownloader()
-            image_download.download_thread.start()
-
-    elif request.method == 'DELETE':
-        if image_download.download_thread and image_download.download_thread.is_running():
-            image_download.download_thread.stop()
-
-    return JsonResponse({
-        'status': image_download.download_thread and image_download.download_thread.is_running()
-    })
-
-
-image_download.download_thread = None
 
 
 @csrf_exempt
