@@ -1,11 +1,7 @@
-import time
-
 from pylibuuas.telem import TelemetryArgs, new_telem_msg
 from django.test import Client, TestCase
 from django.urls import reverse
 from unittest.mock import patch, MagicMock
-
-from interop.views import get_telemetrythread
 
 class InteropTelemetryCase(TestCase):
     @patch('interop.views.sendTelemetry')

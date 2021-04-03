@@ -23,10 +23,12 @@ const ConnectionStatus = Object.freeze({
 const INTEROP_LOGIN_ENDPOINT = 'api/interop/login';
 const INTEROP_MISSION_ENDPOINT = 'api/interop/mission';
 const INTEROP_STATUS_ENDPOINT = 'api/interop/status';
-const TELEMETRY_ENDPOINT = 'api/interop/telemetrythread';
+const TELEMETRY_ENDPOINT = 'api/interop/telemstatus';
+const TEAM_TELEMETRY_ENDPOINT = 'api/interop/teamtelemstatus';
 
 const Interop = (props) => {
     const [telemetryStatus, setTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
+    const [teamTelemetryStatus, setTeamTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
     const [needsRelogin, setNeedsRelogin] = useState(false);
     const [currentMissionID, setCurrentMissionID] = useState(-1);
 
@@ -70,9 +72,18 @@ const Interop = (props) => {
         }
     }
 
-    async function getTelemetryStatus() {
+    async function getTelemetryStatus() { 
         try {
             let res = await axios.get(TELEMETRY_ENDPOINT)
+            return res.data.status;
+        } catch (err) {
+            return TelemetryStatus.ERROR;
+        }
+    }
+
+    async function getTeamTelemetryStatus() { 
+        try {
+            let res = await axios.get(TEAM_TELEMETRY_ENDPOINT)
             return res.data.status;
         } catch (err) {
             return TelemetryStatus.ERROR;
@@ -84,9 +95,15 @@ const Interop = (props) => {
         setTelemetryStatus(Number(telemetryStatus));
     }
 
+    async function updateTeamTelemetry() {
+        let teamTelemetryStatus = await getTeamTelemetryStatus();
+        setTeamTelemetryStatus(Number(teamTelemetryStatus));
+    }
+
     function refresh() {
         updatePage();
         updateTelemetry();
+        updateTeamTelemetry();
     }
 
     async function login(params) {
@@ -111,27 +128,6 @@ const Interop = (props) => {
             setCurrentMissionID(response.data.mission_id);
         } catch (err) {
             alert(err);
-        }
-    }
-
-    function sendTelemetry() {
-        if (telemetryStatus !== TelemetryStatus.SENDING)
-        {
-            axios.post(TELEMETRY_ENDPOINT, {})
-            .then(() =>
-            {
-                setTelemetryStatus(TelemetryStatus.SENDING);
-            })
-            .catch(e => alert(e));
-        }
-        else
-        {
-            axios.delete(TELEMETRY_ENDPOINT, {})
-            .then(() =>
-            {
-                setTelemetryStatus(TelemetryStatus.STOPPED);
-            })
-            .catch(e => alert(e));
         }
     }
 
@@ -163,9 +159,9 @@ const Interop = (props) => {
                     exact
                     render={() => (
                         <Status
-                            sendTelemetry={sendTelemetry}
                             grabInteropMission={grabInteropMission}
                             telemetryStatus={telemetryStatus}
+                            teamTelemetryStatus={teamTelemetryStatus}
                             currentMissionID={currentMissionID}
                             relogin={relogin}
                         />
