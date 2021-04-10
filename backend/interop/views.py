@@ -1,7 +1,7 @@
 import json
 import logging
 
-import time
+from datetime import datetime   
 
 
 from django.shortcuts import render
@@ -30,16 +30,9 @@ current_mission_id = -1
 
 UAS_team_id = 1
 
-telemetrythread = None
-
 def get_connect_stat():
     global connect_stat
     return connect_stat
-
-def get_telemetrythread():
-    global telemetrythread
-    return telemetrythread
-
 
 def sendTelemetry(uasclient):
     connected = get_connect_stat()
@@ -50,6 +43,7 @@ def sendTelemetry(uasclient):
             if not uas_telem.uploaded:
                 try:
                     uasclient.post_telemetry(uas_telem.marshal())
+                    global connect_stat
                     connect_stat = 2
                     uas_telem.uploaded = True
                     uas_telem.save()
@@ -70,7 +64,7 @@ def telemetry(request):
     if request.method == 'GET':
         uas_telem = UasTelemetry.objects.all().order_by('-created_at')
         if uas_telem:
-            return JsonResponse(uas_telem[0].marshal())
+           return JsonResponse(uas_telem[0].marshal())
         else:
             return HttpResponse(status=204)  # No content
 
@@ -121,7 +115,78 @@ def teams(request):
 
     return JsonResponse(response_payload)
 
-# some endpoint to get status
+# TODO is this how you access the body? 
+# this allows AAA to grab the desired amount of telemetry data points
+@csrf_exempt
+@require_http_methods(["GET"])
+def uas_telem_history(request):
+    num_telem = request.body["num_telem"]
+    uas_telem = UasTelemetry.objects.filter(team_id=UAS_team_id).order_by('-created_at')
+    if uas_telem:
+        return JsonResponse(uas_telem[:min(num_telem, len(uas_telem))].marshal())
+    else:
+        return HttpResponse(status=204)  # No content
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def team_telem_history(request):
+    num_telem = request.body["num_telem"]
+    team_telem = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')
+    if team_telem:
+        return JsonResponse(team_telem[:min(num_telem, len(team_telem))].marshal())
+    else:
+        return HttpResponse(status=204)  # No content
+
+# -1 error, 0 stopped, 1 sending 
+@csrf_exempt
+@require_http_methods(["GET"])
+def telem_status(request):
+    # the connection errors out so we show error here
+    if connect_stat == 3: 
+        response = {
+            'status': -1,
+            'mission_id': current_mission_id,
+        }
+        return JsonResponse(response)
+    # no error
+    else:
+        last_uas_telem = UasTelemetry.objects.filter(team_id=UAS_team_id).order_by('-created_at')[0]
+        if last_uas_telem:
+            stat = 1
+            delta = datetime.now(datetime.timezone.utc) - last_uas_telem.created_at
+            if delta.seconds <= 5:
+                stat = 1
+            else:
+                stat = 0
+        else:
+            stat = -1
+        response = {
+        'status': stat,
+        'mission_id': current_mission_id,
+        }        
+        return JsonResponse(response)       
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def team_telem_status(request):
+    last_team_telem = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')[0]
+    if last_team_telem:
+        delta = datetime.now(datetime.timezone.utc) - last_team_telem.created_at
+        if delta.seconds <= 5:
+            stat = 1
+        else:
+            stat = 0
+    else:
+        stat = -1
+    response = {
+    'status': stat,
+    'mission_id': current_mission_id,
+    }        
+    return JsonResponse(response)
+
+
+
 
 @csrf_exempt
 @require_http_methods(["POST"])

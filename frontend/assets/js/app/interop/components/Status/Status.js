@@ -7,7 +7,7 @@ import './style.scss';
 
 const WAYPOINT_FILE_ENDPOINT = '/avoidance/file/route/';
 
-const Status = ({ sendTelemetry, telemetryStatus, relogin, currentMissionID, grabInteropMission }) => {
+const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID, grabInteropMission }) => {
     const [newMissionID, setNewMissionID] = useState(1);
 
     function telemetryStatusToText(status) {
@@ -63,18 +63,23 @@ const Status = ({ sendTelemetry, telemetryStatus, relogin, currentMissionID, gra
             >
                 Grab Interop mission
             </button>
-
-            <h5>Telemetry Status</h5>
-            <div className="card status-card"><h5>
-                { telemetryStatusToText(telemetryStatus) }
-            </h5></div>
-            <button
-                className="btn btn-primary flush-right"
-                onClick={() => sendTelemetry()}
-            >
-                Toggle Telemetry
-            </button>
-        </div>
+            <div className="row">
+                <div className="col s6">
+                <h5>Telemetry Status</h5>
+                <div className="card status-card"><h5>
+                    { telemetryStatusToText(telemetryStatus) }
+                </h5>  
+                </div>
+                </div>
+                <div className="col s6">
+                    <h5>Other Team Telemetry Status</h5>
+                    <div className="card status-card"><h5>
+                        { telemetryStatusToText(teamTelemetryStatus) }
+                    </h5>
+                    </div>
+                </div>
+            </div>                     
+    </div>
     );
 }
 
