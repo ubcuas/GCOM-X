@@ -6,7 +6,7 @@ See `test-mission.json` for an example
 
 * all elements in `test-mission.json` must exist
 * `odlcs` is currently not supported and will be ignored
-* All 2-element lists represent GPS data in the form of `lat, lon`, except for `altitudes`, which is in the form `alt_min, alt_max` 
+* All 2-element lists represent GPS data in the form of `lat, lon`, except for `altitudes`, which is in the form `alt_min, alt_max`
 * All 3-element lists represent `AerialPosition` data in the form of `lat, lon, alt`
 * All 4-element lists represent `Obstacle` data in the form of `cylinder_height, cylinder_radius, lat, lon`
 
