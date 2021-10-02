@@ -75,7 +75,14 @@ class LeftPanel extends React.Component {
                     enabled={this.state.checked}
                     repeat={true}
                 />
-                <Switch onChange={this.handleChange} checked={this.state.checked} />
+                <p id="Tele-label">Recieve Telemetry
+                    <Switch
+                        className="react-switch"
+                        onChange={this.handleChange}
+                        checked={this.state.checked}
+                        aria-labelledby="Tele-label"
+                    />
+                </p>
             </div>
         );
     }
