@@ -18,7 +18,7 @@
 
 
 ## Installation
-The images can be directly pulled from DockerHub:
+Navigate into your local repository for GCOM-X in the command line and then run the following command to pull the image directly from DockerHub:
 ```
 docker-compose pull
 ```
