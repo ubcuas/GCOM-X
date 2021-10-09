@@ -40,5 +40,5 @@ Shapely==1.7.1
 utm==0.7.0
 vine==5.0.0
 watchdog==1.0.2
-webp==0.1.0
+webp==0.1.2
 whitenoise==5.2.0
