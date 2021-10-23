@@ -4,9 +4,10 @@ from datetime import datetime, timezone
 from unittest.mock import patch
 from unittest import skip
 
+from interop.models import Team
+
 
 class Test_Status_Route(TestCase):
-
     fixtures = ['telem.json']
 
     @patch('interop.views.datetime')
@@ -14,8 +15,7 @@ class Test_Status_Route(TestCase):
         """
            last uas telemetry within 5 seconds
         """
-        mock_datetime.now.return_value = datetime(2021, 3, 13, 21, 58, 29, 2, tzinfo=timezone.utc)  
-          
+        mock_datetime.now.return_value = datetime(2021, 3, 13, 21, 58, 29, 2, tzinfo=timezone.utc)
 
         c = Client()
         url = "/api/interop/telemstatus"
@@ -29,8 +29,7 @@ class Test_Status_Route(TestCase):
         """
            last uas telemetry within 5 seconds
         """
-        mock_datetime.now.return_value = datetime(2021, 3, 13, 21, 58, 33, 0, tzinfo=timezone.utc)  
-          
+        mock_datetime.now.return_value = datetime(2021, 3, 13, 21, 58, 33, 0, tzinfo=timezone.utc)
 
         c = Client()
         url = "/api/interop/telemstatus"
@@ -44,8 +43,7 @@ class Test_Status_Route(TestCase):
         """
            last uas telemetry more than 5 seconds ago
         """
-        mock_datetime.now.return_value = datetime(2021, 3, 14, 21, 59, 33, 0, tzinfo=timezone.utc)  
-          
+        mock_datetime.now.return_value = datetime(2021, 3, 14, 21, 59, 33, 0, tzinfo=timezone.utc)
 
         c = Client()
         url = "/api/interop/telemstatus"
@@ -54,8 +52,8 @@ class Test_Status_Route(TestCase):
 
         self.assertEqual(0, response.json()["status"])
 
-class Test_Team_Status_Route(TestCase):
 
+class Test_Team_Status_Route(TestCase):
     fixtures = ['telem.json']
 
     @patch('interop.views.datetime')
@@ -63,8 +61,7 @@ class Test_Team_Status_Route(TestCase):
         """
            last team telemetry within 5 seconds
         """
-        mock_datetime.now.return_value = datetime(2021, 3, 20, 17, 34, 54, 718347, tzinfo=timezone.utc)  
-          
+        mock_datetime.now.return_value = datetime(2021, 3, 20, 17, 34, 54, 718347, tzinfo=timezone.utc)
 
         c = Client()
         url = "/api/interop/teamtelemstatus"
@@ -78,8 +75,7 @@ class Test_Team_Status_Route(TestCase):
         """
            last team telemetry within 5 seconds
         """
-        mock_datetime.now.return_value = datetime(2021, 3, 20, 17, 34, 57, 0, tzinfo=timezone.utc)  
-          
+        mock_datetime.now.return_value = datetime(2021, 3, 20, 17, 34, 57, 0, tzinfo=timezone.utc)
 
         c = Client()
         url = "/api/interop/teamtelemstatus"
@@ -93,8 +89,7 @@ class Test_Team_Status_Route(TestCase):
         """
            last team telemetry more than 5 seconds ago
         """
-        mock_datetime.now.return_value = datetime(2021, 3, 20, 17, 35, 33, 0, tzinfo=timezone.utc)  
-          
+        mock_datetime.now.return_value = datetime(2021, 3, 20, 17, 35, 33, 0, tzinfo=timezone.utc)
 
         c = Client()
         url = "/api/interop/teamtelemstatus"

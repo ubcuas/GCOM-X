@@ -37,9 +37,9 @@ class Client():
 
         request_url = url + "/api/login"
         request_payload = {
-                        "username": username,
-                        "password": password
-                    }
+            "username": username,
+            "password": password
+        }
 
         session = requests.Session()
         r = session.post(request_url, json=request_payload)
@@ -50,11 +50,11 @@ class Client():
         # Create a new local session object
         cookies = r.cookies.get_dict()
         gcom_session = ClientSession(username=username,
-                                    password=password,
-                                    url=url,
-                                    session_id=cookies['sessionid'],
-                                    expires=None,
-                                    active=True)
+                                     password=password,
+                                     url=url,
+                                     session_id=cookies['sessionid'],
+                                     expires=None,
+                                     active=True)
 
         # Deactivate previous sessions
         prev_sessions = ClientSession.objects.filter()
@@ -176,10 +176,10 @@ class Client():
         logger.debug("POST interop-server /api/odlcs/%s/image" % odlc_json['id'])
         session = self.get_ClientSession()
         cookies = self.get_cookies(session)
-        headers = {'Content-Type' : 'image/jpeg'}
+        headers = {'Content-Type': 'image/jpeg'}
 
         request_url = session.url + "/api/odlcs/%s/image" % odlc_json['id']
-        img_data = open(thumbnail_filename,'rb').read()
+        img_data = open(thumbnail_filename, 'rb').read()
 
         r = requests.post(request_url, data=img_data, cookies=cookies, headers=headers)
 
