@@ -4,15 +4,20 @@ from unittest.mock import MagicMock, patch
 
 from interop import client as gcom_client
 
+from interop.models import Team
+
+
 class GcomClientGeneralTests(TestCase):
+
     def test_get_ClientSession(self):
         from interop.models import ClientSession
+
         test_session = ClientSession(username="test",
-                                    password="password",
-                                    url="172.0.0.6:80",
-                                    session_id="fakesessionid",
-                                    expires=None,
-                                    active=True)
+                                     password="password",
+                                     url="172.0.0.6:80",
+                                     session_id="fakesessionid",
+                                     expires=None,
+                                     active=True)
         test_session.save()
 
         test_client = gcom_client.Client()
@@ -20,6 +25,7 @@ class GcomClientGeneralTests(TestCase):
 
         self.assertEqual(result.session_id, "fakesessionid")
         self.assertTrue(result.active)
+
 
 class GcomClientLoginTests(TestCase):
     @patch('interop.client.requests.Session')
@@ -56,7 +62,9 @@ class GcomClientLoginTests(TestCase):
         test_session = ClientSession.objects.get(active=True)
         self.assertEqual(test_session.session_id, test_session_id)
 
+
 class GcomClientGetMissionsTests(TestCase):
+
     @classmethod
     def setUpClass(cls):
         cls.patcher = patch('interop.client.Client.get_ClientSession')
@@ -69,6 +77,7 @@ class GcomClientGetMissionsTests(TestCase):
     @patch('interop.client.requests.get')
     @patch('interop.client.requests')
     def test_default_get_mission(self, mock_requests, mock_result):
+
         mock_result.return_value.json.return_value = {'test_mission': "TheCakeWasALie"}
 
         test_client = gcom_client.Client()
@@ -76,6 +85,7 @@ class GcomClientGetMissionsTests(TestCase):
 
         self.assertTrue('test_mission' in result)
         self.assertEqual(result['test_mission'], "TheCakeWasALie")
+
 
 class GcomClientGetObstaclesTests(TestCase):
     @classmethod
@@ -97,6 +107,7 @@ class GcomClientGetObstaclesTests(TestCase):
 
         self.assertTrue('test_obstacles' in result)
         self.assertEqual(result['test_obstacles'], "TheCakeWasALie")
+
 
 class GcomClientODLCTests(TestCase):
     @classmethod
@@ -136,7 +147,7 @@ class GcomClientODLCTests(TestCase):
         mock_result.return_value.json.return_value = {'test_odlc': "TheCakeWasALie"}
 
         test_client = gcom_client.Client()
-        result = test_client.put_odlc({'id':1, 'test_odlc': "TheCakeWasALie"})
+        result = test_client.put_odlc({'id': 1, 'test_odlc': "TheCakeWasALie"})
 
         self.assertTrue('test_odlc' in result)
         self.assertEqual(result['test_odlc'], "TheCakeWasALie")

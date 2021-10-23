@@ -8,12 +8,12 @@ class GpsPosition_admin(admin.ModelAdmin):
 admin.site.register(GpsPosition, GpsPosition_admin)
 
 class UasTelemetry_admin(admin.ModelAdmin):
-    list_display = ('team_id', 'latitude', 'longitude', 'altitude_msl', 'uas_heading', 'created_at', 'uploaded')
+    list_display = ('team', 'gps', 'altitude_msl', 'uas_heading', 'created_at', 'uploaded')
 admin.site.register(UasTelemetry, UasTelemetry_admin)
 
-class Teams_admin(admin.ModelAdmin):
+class Team_admin(admin.ModelAdmin):
     list_display = ('team_id', 'username', 'name', 'university')
-admin.site.register(Teams, Teams_admin)
+admin.site.register(Team, Team_admin)
 
 class UasMission_admin(admin.ModelAdmin):
     list_display = ('id', 'active')
