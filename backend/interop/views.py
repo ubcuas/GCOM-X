@@ -191,7 +191,8 @@ def telem_status(request):
         last_uas_telem = UasTelemetry.objects.filter(team=Team.objects.get(team_id=UAS_team_id)).latest('created_at')
         if last_uas_telem:
             stat = 1
-            delta = datetime.now(datetime.timezone.utc) - last_uas_telem.created_at
+            # Set timezone to UTC, strip timezone info to get difference
+            delta = datetime.utcnow().replace(tzinfo=None) - last_uas_telem.created_at.replace(tzinfo=None)
             if delta.seconds <= 5:
                 stat = 1
             else:
@@ -211,7 +212,8 @@ def team_telem_status(request):
     # fetch the most recent telemetry from other teams
     last_team_telem = UasTelemetry.objects.exclude(team=Team.objects.get(team_id=UAS_team_id)).latest('created_at')
     if last_team_telem:
-        delta = datetime.now(datetime.timezone.utc) - last_team_telem.created_at
+        # Calculate time since last team telem by first getting it in UTC, and then stripping the datetime info
+        delta = datetime.utcnow().replace(tzinfo=None) - last_team_telem.created_at.replace(tzinfo=None)
         if delta.seconds <= 5:
             stat = 1
         else:
