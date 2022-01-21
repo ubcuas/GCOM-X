@@ -1,0 +1,130 @@
+version: "2"
+
+services:
+  ### This is for development purposes ONLY ###
+  ### And should not be in prod ###
+  interop-db:
+    container_name: interop-db
+    hostname: interop-db
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=auvsi_suas_db
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      interopnet:
+        ipv4_address: 172.170.0.21
+
+  ### This is for development purposes ONLY ###
+  ### And should not be in prod ###
+  interop-server:
+    container_name: interop-server
+    hostname: interop-server
+    image: auvsisuas/interop-server:latest
+    ports:
+      - "8000:80"
+    depends_on:
+      - interop-db
+    links:
+      - interop-db
+    networks:
+      gcomnet:
+        ipv4_address: 172.0.0.22
+      interopnet:
+        ipv4_address: 172.170.0.22
+
+  golden-retriever:
+    container_name: gcomx-golden-retriever
+    hostname: gcomx-golden-retriever
+    image: ubcuas/golden:latest
+    volumes:
+      - ./backend/mediafiles/images:/uas/golden/images
+    networks:
+      gcomnet:
+        ipv4_address: 172.0.0.7
+
+  db:
+    container_name: gcomx-db
+    hostname: gcomx-db
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    networks:
+      gcomnet:
+        ipv4_address: 172.0.0.6
+
+  redis:
+    container_name: gcomx-redis
+    hostname: gcomx-redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      gcomnet:
+        ipv4_address: 172.0.0.5
+
+  frontend:
+    container_name: gcomx-frontend
+    hostname: gcomx-frontend
+    image: ubcuas/gcomxfe:latest
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/uas/gcomx/frontend
+      - /uas/gcomx/frontend/node_modules
+    working_dir: /uas/gcomx/frontend
+    ports:
+      - "3000:3000"
+    networks:
+      gcomnet:
+        ipv4_address: 172.0.0.4
+
+  backend:
+    container_name: gcomx-backend
+    hostname: gcomx-backend
+    image: ubcuas/gcomxbe:latest
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/uas/gcomx/api
+      - ./frontend:/uas/gcomx/api/frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - frontend
+      - redis
+    networks:
+      gcomnet:
+        ipv4_address: 172.0.0.3
+      uasnet:
+
+  nginx:
+    container_name: gcomx-nginx
+    hostname: gcomx-nginx
+    image: ubcuas/gcomxnginx:latest
+    build:
+      context: ./nginx
+    volumes:
+      - .:/uas/gcomx/nginx
+    ports:
+      - "8089:80"
+    networks:
+      gcomnet:
+        ipv4_address: 172.0.0.2
+
+networks:
+  uasnet:
+    driver: bridge
+  gcomnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.0.0.0/16
+          gateway: 172.0.0.1
+  interopnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.170.0.0/16
