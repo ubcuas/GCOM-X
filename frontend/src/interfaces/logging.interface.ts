@@ -13,14 +13,16 @@ export enum UniversalLogOrigin {
     SKYPASTA = "SPST",
     SUNFLOWER = "SUNF",
     ACTIVE_AIRCRAFT_AVOIDANCE = "AAA",
-    VULCAN = "VULC"
+    VULCAN = "VULC",
+    UNKNOWN = "UNKN"
 }
 
 export enum UniversalLogType {
     ERROR = "error",
     WARNING = "warning",
     INFO = "info",
-    SUCCESS = "success"
+    SUCCESS = "success",
+    UNKNOWN = "unknown"
 }
 
 /**
@@ -37,4 +39,17 @@ export interface UniversalLog {
     type: UniversalLogType,
     content: string,
     timestamp: Date
+}
+
+export class UASUniversalLog implements UniversalLog {
+    origin: UniversalLogOrigin = UniversalLogOrigin.UNKNOWN;
+    type: UniversalLogType = UniversalLogType.UNKNOWN;
+    content: string = "";
+    timestamp: Date = new Date();
+
+    constructor(origin: UniversalLogOrigin, type: UniversalLogType, content: string) {
+        this.origin = origin;
+        this.type = type;
+        this.content = content;
+    }
 }

@@ -8,12 +8,15 @@ import TableHead from '@mui/material/TableHead';
 import Paper from '@mui/material/Paper';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 
+//TODO: read pallete and colour rows using that data
+/*
 let pallete;
 try {
   pallete = window.theme.pallete
 } catch (err) {
   //could not find a pallete
 }
+*/
 
 const styles = (theme) => ({
   flexContainer: {
@@ -66,11 +69,16 @@ class MuiVirtualizedTable extends React.PureComponent {
   cellRenderer = ({ cellData, columnIndex }) => {
     const { columns, classes, rowHeight, onRowClick } = this.props;
 
+    //TODO: render cells in diff colours according to log type
+    // use pallete to colour, DO NOT HARDCODE IT
+    /*
     if (pallete) {
 
     } else {
 
     }
+    */
+
     return (
       <TableCell
         component="div"
@@ -165,7 +173,7 @@ export default function ReactVirtualizedTable(props) {
       timestamp: row.timestamp.toLocaleTimeString()
     }
   }) || [];
-  console.log(rows)
+
   return (
     <Paper style={{ height: "calc(100vh - 300px)", width: '100%' }}>
       <VirtualizedTable

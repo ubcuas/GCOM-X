@@ -62,5 +62,5 @@ const BUMBLEBEE_THEME = createTheme({
 
 export const THEMES = {
     'bumblebee': BUMBLEBEE_THEME,
-    'cloud': CLOUD_THEME
+    'original': CLOUD_THEME
 };

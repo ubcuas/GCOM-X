@@ -8,20 +8,11 @@ import UploadIcon from "@mui/icons-material/Upload"
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
-import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
-import VibrationIcon from '@mui/icons-material/Vibration';
-import SpeedIcon from '@mui/icons-material/Speed';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import Battery90Icon from '@mui/icons-material/Battery90';
-import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
-import SdStorageIcon from '@mui/icons-material/SdStorage';
-import TimerIcon from '@mui/icons-material/Timer';
-import ExploreIcon from '@mui/icons-material/Explore';
-import BatteryChargingFullIcon from '@mui/icons-material/BatteryChargingFull';
-import HeightIcon from '@mui/icons-material/Height';
+import { TelemetryIcon } from "./TelemetryIcon";
 
 import { useState } from "react";
 import Settings from "@mui/icons-material/Settings";
+import { UASTelemetry, UASTelemetryKey } from "../../interfaces/telemetry.interface";
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -30,67 +21,26 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const TelemWidth = 2;
 
-const TelemetryData = [
-    {
-        icon: <GpsFixedIcon />,
-        value: "49.252219, -123.238290",
-        unit: "",
-        width: 4
-    },
-    {
-        icon: <HeightIcon />,
-        value: "153",
-        unit: "m"
-    },
-    {
-        icon: <TimerIcon />,
-        value: "00:03:15",
-        unit: "",
-        width: 2
-    },
-    {
-        icon: <VibrationIcon />,
-        value: "1.35",
-        unit: "g"
-    },
-    {
-        icon: <Battery90Icon />,
-        value: "87.93",
-        unit: "%"
-    },
-    {
-        icon: <ExploreIcon />,
-        value: "153.5",
-        unit: "°"
-    },
-    {
-        icon: <DeviceThermostatIcon />,
-        value: "11.7",
-        unit: "°C"
-    },
-    {
-        icon: <SpeedIcon />,
-        value: "30.4",
-        unit: "m/s"
-    },
-    {
-        icon: <SdStorageIcon />,
-        value: "45.6",
-        unit: "%"
-    },
-    {
-        icon: <NetworkCheckIcon />,
-        value: "62",
-        unit: "Mbps"
-    },
-    {
-        icon: <BatteryChargingFullIcon />,
-        value: "24.90",
-        unit: "V"
-    }
+//TODO: fetch these from somewhere
+let TelemetryData: UASTelemetry[] = [
+    new UASTelemetry(UASTelemetryKey.GPS_POSITION, "43.231342343, -123.34234324"),
+    new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, "153", "m"),
+    new UASTelemetry(UASTelemetryKey.RUNTIME, "00:03:15"),
+    new UASTelemetry(UASTelemetryKey.VIBRATION, "1.35", "g"),
+    new UASTelemetry(UASTelemetryKey.BATTERY_CAPACITY, "87.93", "%"),
+    new UASTelemetry(UASTelemetryKey.HEADING, "153.5", "°"),
+    new UASTelemetry(UASTelemetryKey.TEMPERATURE, "11.7", "°C"),
+    new UASTelemetry(UASTelemetryKey.SPEED, "30.4", "m/s"),
+    new UASTelemetry(UASTelemetryKey.STORAGE, "45.6", "%"),
+    new UASTelemetry(UASTelemetryKey.NETWORK_SPEED, "153.5", "Mbps"),
+    new UASTelemetry(UASTelemetryKey.BATTERY_VOLTAGE, "24.9", "V")
 ]
+
+function calculateTelemContainerWidth(t: UASTelemetry): number {
+    let l = t.value.length + t.unit.length;
+    return (l > 40) ? 6 : (l > 20) ? 4 : (l > 12) ? 3 : 2;
+}
 
 const Telemetry = () => {
     const [allMisions, setAllMissions] = useState(["USC Task 2", "AUVSI Task 1", "AUVSI Task 2"]);
@@ -101,17 +51,17 @@ const Telemetry = () => {
             <Grid container spacing={1} alignItems="center" justifyContent="center">
                 <Grid item container xs={6} spacing={1}>
                     <Grid item xs={12}>
-                        <Typography variant="p" fontSize={20} fontWeight={700}>System Telemetry</Typography>
+                        <Typography fontSize={20} fontWeight={700}>System Telemetry</Typography>
                     </Grid>
                     <Grid item container xs={12} spacing={1} justifyContent="center" alignItems="center">
                         {TelemetryData.map((telemetry) => {
-                            return <Grid item container xs={telemetry.width ? telemetry.width : TelemWidth} alignItems="center" justifyContent="center">
+                            return <Grid item container xs={calculateTelemContainerWidth(telemetry)} alignItems="center" justifyContent="center">
                                 <Grid item container xs={12}>
                                     <Grid item xs={2} alignItems="center" justifyContent="center">
-                                        {telemetry.icon}
+                                        <TelemetryIcon telemetryKey={telemetry.telemetryKey} />
                                     </Grid>
                                     <Grid item xs={10} alignItems="center" justifyContent="center">
-                                        <Typography variant="p" fontWeight={100}>{telemetry.value} {telemetry.unit}</Typography>
+                                        <Typography fontWeight={100}>{telemetry.value} {telemetry.unit}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -120,7 +70,7 @@ const Telemetry = () => {
                 </Grid>
                 <Grid item container xs={6} spacing={1}>
                     <Grid item xs={12}>
-                        <Typography variant="p" fontSize={20} fontWeight={700}>Mission Control</Typography>
+                        <Typography fontSize={20} fontWeight={700}>Mission Control</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl fullWidth>

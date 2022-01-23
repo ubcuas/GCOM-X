@@ -3,78 +3,23 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import ReactVirtualizedTable from "./VirtualizedTable";
-import { UniversalLog, UniversalLogOrigin, UniversalLogType } from '../../interfaces/logging.interface';
+import { UASUniversalLog, UniversalLogOrigin, UniversalLogType } from '../../interfaces/logging.interface';
 
 const Logs = () => {
     let [autoscroll, setAutoscroll] = useState(true);
     // let logs = useSelector((state) => state.logger.logs);
-    let logs: UniversalLog[] = [
-        {
-            origin: UniversalLogOrigin.GCOM,
-            type: UniversalLogType.SUCCESS,
-            content: "Started Successfully",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.GCOM,
-            type: UniversalLogType.ERROR,
-            content: "Interop connection refused",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.ACTIVE_AIRCRAFT_AVOIDANCE,
-            type: UniversalLogType.INFO,
-            content: "Waiting for mission upload...",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.SUNFLOWER,
-            type: UniversalLogType.INFO,
-            content: "GPS waiting for satellite fix",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.SKYPASTA,
-            type: UniversalLogType.WARNING,
-            content: "Missing ENV variable: SPINNAKER_OPERATION_MODE",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.ACOM,
-            type: UniversalLogType.SUCCESS,
-            content: "EKF3 IMU1 tilt alignment complete",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.STALKER,
-            type: UniversalLogType.INFO,
-            content: "Gimbal connection pending...",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.STALKER,
-            type: UniversalLogType.SUCCESS,
-            content: "Gimbal connection complete",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.SUNFLOWER,
-            type: UniversalLogType.SUCCESS,
-            content: "GPS satellite fix acquired",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.KRAKEN,
-            type: UniversalLogType.INFO,
-            content: "8 clients connected",
-            timestamp: new Date()
-        },
-        {
-            origin: UniversalLogOrigin.SKYPASTA,
-            type: UniversalLogType.WARNING,
-            content: "Low memory [45%]",
-            timestamp: new Date()
-        }
+    let logs: UASUniversalLog[] = [
+        new UASUniversalLog(UniversalLogOrigin.GCOM, UniversalLogType.SUCCESS, "Started Successfully"),
+        new UASUniversalLog(UniversalLogOrigin.GCOM, UniversalLogType.ERROR, "Interop connection refused"),
+        new UASUniversalLog(UniversalLogOrigin.ACTIVE_AIRCRAFT_AVOIDANCE, UniversalLogType.INFO, "Waiting for mission upload..."),
+        new UASUniversalLog(UniversalLogOrigin.SUNFLOWER, UniversalLogType.INFO, "GPS waiting for satellite fix"),
+        new UASUniversalLog(UniversalLogOrigin.SKYPASTA, UniversalLogType.WARNING, "Missing ENV variable: SPINNAKER_OPERATION_MODE"),
+        new UASUniversalLog(UniversalLogOrigin.ACOM, UniversalLogType.SUCCESS, "EKF3 IMU1 tilt alignment complete"),
+        new UASUniversalLog(UniversalLogOrigin.STALKER, UniversalLogType.INFO, "Gimbal connection pending..."),
+        new UASUniversalLog(UniversalLogOrigin.STALKER, UniversalLogType.SUCCESS, "Gimbal connection complete"),
+        new UASUniversalLog(UniversalLogOrigin.SUNFLOWER, UniversalLogType.SUCCESS, "GPS satellite fix acquired"),
+        new UASUniversalLog(UniversalLogOrigin.KRAKEN, UniversalLogType.INFO, "8 clients connected"),
+        new UASUniversalLog(UniversalLogOrigin.SKYPASTA, UniversalLogType.WARNING, "Low memory [45%]")
     ];
     let logContainerRef = useRef<any>(null);
 
@@ -100,9 +45,6 @@ const Logs = () => {
             </Grid>
         </Grid>
         <Box style={{ maxHeight: "calc(100vh - 300px)", padding: 0 }} ref={logContainerRef}>
-            {/* {logs.length > 0 ? (logs.map((log) => {
-                return <Alert severity={log.type}>{log.content}</Alert>
-            })) : null} */}
             <ReactVirtualizedTable rows={logs} />
         </Box>
     </Box>

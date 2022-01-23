@@ -1,11 +1,14 @@
 import { createStore } from "redux";
 import rootReducer from "./reducers";
+import { THEMES } from "../utils/constants/THEMES";
 
 const localStorageKey = "theme";
 const persistedTheme = localStorage.getItem(localStorageKey);
 
 const initialState: any = {
-    preferences: {},
+    preferences: {
+        selectedTheme: Object.keys(THEMES)[0]
+    },
     logs: []
 }
 
