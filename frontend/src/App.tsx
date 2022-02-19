@@ -10,6 +10,7 @@ import Logs from "./components/logs/Logs";
 import { RootState } from "./store/reducers";
 
 import { ThemeProvider } from '@mui/material/styles';
+import { HelpOutlineTwoTone } from "@mui/icons-material";
 
 const ThemedApp = () => {
 

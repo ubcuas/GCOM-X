@@ -7,6 +7,7 @@ import StopCircleIcon from "@mui/icons-material/StopCircle"
 import UploadIcon from "@mui/icons-material/Upload"
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { TelemetryIcon } from "./TelemetryIcon";
 
@@ -72,7 +73,10 @@ const Telemetry = () => {
                     <Grid item xs={12}>
                         <Typography fontSize={20} fontWeight={700}>Mission Control</Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={1}>
+                        <IconButton style={{ height: 35 }}> <RefreshIcon /></IconButton>
+                    </Grid>
+                    <Grid item xs={11}>
                         <FormControl fullWidth>
                             <InputLabel id="theme-select-label">Mission</InputLabel>
                             <Select
