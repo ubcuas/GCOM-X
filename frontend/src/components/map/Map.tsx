@@ -5,12 +5,13 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import droneIcon from "../../assets/img/droneicon.png"
 import { Icon } from 'leaflet'
 import './Map.css';
+import { LAYOUT } from "../../utils/constants/LAYOUT.js"
 
 const Map = () => {
     const DEFAULT_PROVIDER = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
     // Dark tiles: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
 
-    return <MapContainer center={[38.147, -76.427956]} zoom={16} scrollWheelZoom={true} style={{ height: "calc(100vh - 64px)", width: "calc(100vw - 400px)" }}>
+    return <MapContainer center={[38.147, -76.427956]} zoom={16} scrollWheelZoom={true} style={{ height: `calc(100vh - 64px)`, width: `calc(100vw - ${LAYOUT.sidebar_width})` }}>
         <TileLayer
             url={DEFAULT_PROVIDER}
         />
