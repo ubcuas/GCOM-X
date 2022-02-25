@@ -61,8 +61,8 @@ const Navbar = () => {
                         <Tooltip title="Open Mission Map">
                             <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<MapIcon />}>MAP</Button>
                         </Tooltip>
-                        <Tooltip title="Open ODLC Panel">
-                            <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<CameraIcon />}>ODLC</Button>
+                        <Tooltip title="Open ODCL Panel">
+                            <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<CameraIcon />}>ODCL</Button>
                         </Tooltip>
                         <Tooltip title="Open Map Tracing Panel">
                             <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<VisibilityIcon />}>Tracking</Button>

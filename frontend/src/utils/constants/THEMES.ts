@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/styles';
-require('typeface-source-sans-pro');
 
 // Module Augmentation [BEGIN]
 // See details under TypeScript in https://mui.com/customization/theming/

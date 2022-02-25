@@ -75,7 +75,7 @@ services:
       - /uas/gcomx/frontend/node_modules
     working_dir: /uas/gcomx/frontend
     ports:
-      - "3000:3000"
+      - "3000:8080"
     networks:
       gcomnet:
         ipv4_address: 172.0.0.4

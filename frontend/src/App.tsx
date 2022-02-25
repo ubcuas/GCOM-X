@@ -1,15 +1,19 @@
+import * as React from "react";
+import { Fragment } from "react";
+
 import { Provider, useSelector } from "react-redux";
 import store from "./store/store";
+import { RootState } from "./store/reducers";
+
 import { CssBaseline, Grid, Theme } from "@mui/material";
-import { THEMES } from './utils/constants/THEMES';
+import { ThemeProvider } from '@mui/material/styles';
+
 import Navbar from "./components/navbar/Navbar";
 import Map from "./components/map/Map";
 import Telemetry from "./components/telemetry/Telemetry";
-import { Fragment } from "react";
 import Logs from "./components/logs/Logs";
-import { RootState } from "./store/reducers";
 
-import { ThemeProvider } from '@mui/material/styles';
+import { THEMES } from './utils/constants/THEMES';
 
 const ThemedApp = () => {
 

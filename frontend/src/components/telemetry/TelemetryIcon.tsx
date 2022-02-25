@@ -1,3 +1,5 @@
+import * as React from "react";
+
 //Icons representing telemetry
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 import VibrationIcon from '@mui/icons-material/Vibration';

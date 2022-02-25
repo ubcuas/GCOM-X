@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 // import { navIcon } from './navIcon';
 import droneIcon from "../../assets/img/droneicon.png"
