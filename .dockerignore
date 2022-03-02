@@ -1,4 +1,7 @@
 build
 .dockerignore
+# package-lock.json
 Dockerfile
+# node_modules
 Dockerfile.prod
+.DS_Store

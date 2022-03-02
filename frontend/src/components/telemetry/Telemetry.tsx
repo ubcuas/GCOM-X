@@ -46,7 +46,7 @@ function calculateTelemContainerWidth(t: UASTelemetry): number {
 }
 
 const Telemetry = () => {
-    const [allMisions, setAllMissions] = useState(["USC Task 2", "AUVSI Task 1", "AUVSI Task 2"]);
+    const [allMisions, setAllMissions] = useState(["USC Task 2", "AUVSI Survey", "AUVSI Waypoints"]);
     const [mission, setMission] = useState(allMisions[0])
 
     return <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 1000 }}>
