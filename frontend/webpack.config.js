@@ -7,7 +7,7 @@ module.exports = {
     mode: "development",
     output: {
         path: path.resolve(__dirname, "build"),
-        filename: "bundle.js",
+        filename: "main.js",
     },
     resolve: {
         extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
@@ -28,6 +28,17 @@ module.exports = {
             {
                 test: /\.css$/,
                 loader: "css-loader",
+            },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    // Creates `style` nodes from JS strings
+                    "style-loader",
+                    // Translates CSS into CommonJS
+                    "css-loader",
+                    // Compiles Sass to CSS
+                    "sass-loader",
+                ],
             },
             {
                 test: /\.(woff(2)?)$/,

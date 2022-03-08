@@ -17,8 +17,11 @@ RUN webpack --json > /uas/gcomx/frontend/webpack-stats.json
 
 EXPOSE 8080
 
-CMD ["npm", "start"]
+# for backend bundle
+RUN npm run build
 
 # for production
-# RUN npm run build
 # CMD ["npm", "run", "production"]
+
+# for hot-reloadable dev
+CMD ["npm", "start"]

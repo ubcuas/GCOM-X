@@ -8,10 +8,10 @@ import { RootState } from "./store/reducers";
 import { CssBaseline, Grid, Theme } from "@mui/material";
 import { ThemeProvider } from '@mui/material/styles';
 
-import Navbar from "./components/navbar/Navbar";
-import Map from "./components/map/Map";
-import Telemetry from "./components/telemetry/Telemetry";
-import Logs from "./components/logs/Logs";
+import Navbar from "./components/Navbar";
+import MapView from "./components/MapView";
+import TelemetryPanel from "./components/TelemetryPanel";
+import LogsPanel from "./components/LogsPanel";
 
 import { THEMES } from './utils/constants/THEMES';
 
@@ -27,10 +27,10 @@ const ThemedApp = () => {
       <CssBaseline />
       <Navbar />
       <Fragment>
-        <Logs />
-        <Map />
+        <LogsPanel />
+        <MapView visibility={true} />
       </Fragment>
-      <Telemetry />
+      <TelemetryPanel />
     </ThemeProvider>
   );
 }

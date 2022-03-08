@@ -7,7 +7,7 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import ReactVirtualizedTable from "./VirtualizedTable";
 import { UASUniversalLog, UniversalLogOrigin, UniversalLogType } from '../../interfaces/logging.interface';
 
-const Logs = () => {
+const LogsPanel = () => {
     let [autoscroll, setAutoscroll] = useState(true);
     // let logs = useSelector((state) => state.logger.logs);
     let logs: UASUniversalLog[] = [
@@ -52,4 +52,4 @@ const Logs = () => {
     </Box>
 }
 
-export default Logs;
+export default LogsPanel;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
-// import { updateMarker } from '../../actions/action-updatemarker';
+import { updateMarker } from '../actions/action-updatemarker';
 import { useDispatch } from 'react-redux';
 import { Marker, Popup, Tooltip } from 'react-leaflet';
-// import { selectMarker } from '../../actions/action-selectmarker';
+import { selectMarker } from '../actions/action-selectmarker';
 
 const WaypointMarker = ({ marker, icon }) => {
     const dispatch = useDispatch();
