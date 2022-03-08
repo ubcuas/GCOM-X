@@ -45,9 +45,13 @@ function calculateTelemContainerWidth(t: UASTelemetry): number {
     return (l > 40) ? 6 : (l > 20) ? 4 : (l > 12) ? 3 : 2;
 }
 
-const TelemetryPanel = () => {
-    const [allMisions, setAllMissions] = useState(["USC Task 2", "AUVSI Survey", "AUVSI Waypoints"]);
-    const [mission, setMission] = useState(allMisions[0])
+const Telemetry = () => {
+    const [allMisions, setAllMissions] = useState(["Select Mission", "USC Task 2", "AUVSI Survey", "AUVSI Waypoints"]);
+    const [mission, setMission] = useState(allMisions[0]);
+    const [canSelectMission, setCanSelectMission] = useState(false);
+    const [canUploadMission, setCanUploadMission] = useState(false);
+    const [canStart, setCanStart] = useState(false);
+    const [canUseControls, setCanUseControls] = useState(false);
 
     return <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 1000 }}>
         <Paper style={{ textAlign: "center", padding: 10 }}>
@@ -76,20 +80,29 @@ const TelemetryPanel = () => {
                         <Typography fontSize={20} fontWeight={700}>Mission Control</Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <IconButton style={{ height: 35 }}> <RefreshIcon /></IconButton>
+                        <IconButton style={{ height: 35 }}
+                            onClick={() => {
+                                setCanSelectMission(true)
+                            }}>
+                            <RefreshIcon />
+                        </IconButton>
                     </Grid>
                     <Grid item xs={11}>
                         <FormControl fullWidth>
                             <InputLabel id="theme-select-label">Mission</InputLabel>
                             <Select
+                                disabled={!canSelectMission}
                                 fullWidth
                                 labelId="theme-select-label"
                                 id="theme-select"
                                 style={{ height: 35 }}
                                 value={mission}
-                                label="Theme"
+                                label="Mission"
                                 onChange={(evt) => {
                                     setMission(evt.target.value)
+                                    setCanUploadMission(true)
+                                    setCanStart(false)
+                                    setCanUseControls(false)
                                 }}
                             >
                                 {allMisions.map(item => {
@@ -99,12 +112,42 @@ const TelemetryPanel = () => {
                         </FormControl>
                     </Grid>
                     <Grid item container xs={12} alignItems="center" spacing={1}>
-                        <Grid item xs={2}><Button fullWidth variant="contained" startIcon={<UploadIcon />}>Upload</Button></Grid>
-                        <Grid item xs={2}><Button disabled fullWidth variant="contained" startIcon={<DeleteIcon />}>Clear</Button></Grid>
-                        <Grid item xs={2}><Button disabled fullWidth variant="contained" startIcon={<PlayCircleIcon />}>Start</Button></Grid>
-                        <Grid item xs={2}><Button disabled fullWidth variant="contained" startIcon={<PauseCircleIcon />}>Pause</Button></Grid>
-                        <Grid item xs={2}><Button disabled fullWidth variant="contained" startIcon={<StopCircleIcon />}>Stop</Button></Grid>
-                        <Grid item xs={2}><Button disabled fullWidth variant="contained" startIcon={<RestartAltIcon />}>Restart</Button></Grid>
+                        <Grid item xs={2}><Button disabled={!canUploadMission} fullWidth variant="contained" startIcon={<UploadIcon />}
+                            onClick={() => {
+                                setCanStart(true)
+                                setCanUploadMission(false)
+                                setCanSelectMission(false)
+                            }}>Upload</Button></Grid>
+                        <Grid item xs={2}><Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
+                            onClick={() => {
+                                setCanSelectMission(true)
+                                setCanUploadMission(false)
+                                setCanStart(false)
+                            }}>Clear</Button></Grid>
+                        <Grid item xs={2}><Button disabled={!canStart} fullWidth variant="contained" startIcon={<PlayCircleIcon />}
+                            onClick={() => {
+                                setCanUseControls(true)
+                                setCanStart(false)
+                                setCanUploadMission(false)
+                            }}>Start</Button></Grid>
+                        <Grid item xs={2}><Button disabled={!canUseControls} fullWidth variant="contained" startIcon={<PauseCircleIcon />}
+                            onClick={() => {
+                                setCanStart(true)
+                                setCanUploadMission(false)
+                                setCanUseControls(false)
+                            }}>Pause</Button></Grid>
+                        <Grid item xs={2}><Button disabled={!canUseControls} fullWidth variant="contained" startIcon={<StopCircleIcon />}
+                            onClick={() => {
+                                setCanStart(true)
+                                setCanUploadMission(false)
+                                setCanUseControls(false)
+                            }}>Stop</Button></Grid>
+                        <Grid item xs={2}><Button disabled={!canUseControls} fullWidth variant="contained" startIcon={<RestartAltIcon />}
+                            onClick={() => {
+                                setCanStart(true)
+                                setCanUploadMission(false)
+                                setCanUseControls(false)
+                            }}>Restart</Button></Grid>
                     </Grid>
                 </Grid>
             </Grid>

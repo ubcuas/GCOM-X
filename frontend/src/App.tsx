@@ -5,7 +5,8 @@ import { Provider, useSelector } from "react-redux";
 import store from "./store/store";
 import { RootState } from "./store/reducers";
 
-import { CssBaseline, Grid, Theme } from "@mui/material";
+import { CssBaseline } from "@mui/material";
+import { GlobalStyles } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 
 import Navbar from "./components/Navbar";
@@ -14,6 +15,7 @@ import TelemetryPanel from "./components/TelemetryPanel";
 import LogsPanel from "./components/LogsPanel";
 
 import { THEMES } from './utils/constants/THEMES';
+import { NoEncryption } from "@mui/icons-material";
 
 const ThemedApp = () => {
 
@@ -24,6 +26,12 @@ const ThemedApp = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyles
+        styles={{
+          '*::-webkit-scrollbar': {
+            display: 'none',
+          }
+        }} />
       <CssBaseline />
       <Navbar />
       <Fragment>
