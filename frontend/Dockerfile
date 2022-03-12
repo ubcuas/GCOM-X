@@ -11,6 +11,7 @@ COPY . ./
 
 # add npm-installed binaries to $PATH
 ENV PATH /uas/gcomx/frontend/node_modules/.bin:$PATH
+RUN npm install --legacy-peer-deps -g webpack webpack-cli
 
 # generate a stats file to satisfy backend dependency
 RUN webpack --json > /uas/gcomx/frontend/webpack-stats.json
