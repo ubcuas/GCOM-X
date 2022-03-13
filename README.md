@@ -24,6 +24,12 @@ docker-compose pull
 ```
 
 The images can also be built locally:
+
+Navigate to frontend folder (`cd frontend`) and run:
+```
+npm install --legacy-peer-deps
+```
+Change back to the main folder (`cd ..`):
 ```
 docker-compose build --parallel
 ```
@@ -83,6 +89,11 @@ Adding new JS (npm) packages
 docker-compose run frontend npm install <lib>
 ```
 
+## Django Accounts
+To create a new admin user:
+```
+docker-compose run interop-server bash -c “./manage.py createsuperuser”
+```
 
 ## Troubleshooting
 ----
@@ -93,7 +104,3 @@ docker-compose run frontend npm install <lib>
 Various Errors
 > Try doing `docker-compose down` to cleanup any created services. This will delete any changes and bring all the components down.
 > You will need to do the "After Install" steps again.
-
-----
-`Anything Else`
-> Contact `Eric Mikulin`
