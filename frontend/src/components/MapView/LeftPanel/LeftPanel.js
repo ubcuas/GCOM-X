@@ -65,7 +65,7 @@ class LeftPanel extends React.Component {
                     </tbody>
                 </table>
                 <IntervalTimer
-                    timeout={1000}
+                    timeout={100}
                     callback={() => {
                         this.props.getAircraftTelem()
                     }

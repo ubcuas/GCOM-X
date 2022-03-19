@@ -1,4 +1,9 @@
 import * as React from 'react';
+import { useState, useEffect } from "react";
+
+import { getAircraftTelem } from '../MapView/actions/action-getaircrafttelem';
+
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Container, Grid, Paper, Box, Typography, Button, FormControl, InputLabel, Select, MenuItem, IconButton } from "@mui/material";
 import { styled } from '@mui/material/styles';
@@ -12,9 +17,6 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { TelemetryIcon } from "./TelemetryIcon";
-
-import { useState } from "react";
-import Settings from "@mui/icons-material/Settings";
 import { UASTelemetry, UASTelemetryKey } from "../../interfaces/telemetry.interface";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -23,22 +25,6 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
 }));
-
-
-//TODO: fetch these from somewhere
-let TelemetryData: UASTelemetry[] = [
-    new UASTelemetry(UASTelemetryKey.GPS_POSITION, "43.231342343, -123.34234324"),
-    new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, "153", "m"),
-    new UASTelemetry(UASTelemetryKey.RUNTIME, "00:03:15"),
-    new UASTelemetry(UASTelemetryKey.VIBRATION, "1.35", "g"),
-    new UASTelemetry(UASTelemetryKey.BATTERY_CAPACITY, "87.93", "%"),
-    new UASTelemetry(UASTelemetryKey.HEADING, "153.5", "°"),
-    new UASTelemetry(UASTelemetryKey.TEMPERATURE, "11.7", "°C"),
-    new UASTelemetry(UASTelemetryKey.SPEED, "30.4", "m/s"),
-    new UASTelemetry(UASTelemetryKey.STORAGE, "45.6", "%"),
-    new UASTelemetry(UASTelemetryKey.NETWORK_SPEED, "153.5", "Mbps"),
-    new UASTelemetry(UASTelemetryKey.BATTERY_VOLTAGE, "24.9", "V")
-]
 
 function calculateTelemContainerWidth(t: UASTelemetry): number {
     let l = t.value.length + t.unit.length;
@@ -53,6 +39,9 @@ const TelemetryPanel = () => {
     const [canStart, setCanStart] = useState(false);
     const [canUseControls, setCanUseControls] = useState(false);
 
+    const dispatch = useDispatch();
+    const aircraft = useSelector(state => state.aircraft);
+
     return <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 1000 }}>
         <Paper style={{ textAlign: "center", padding: 10 }}>
             <Grid container spacing={1} alignItems="center" justifyContent="center">
@@ -61,14 +50,14 @@ const TelemetryPanel = () => {
                         <Typography fontSize={20} fontWeight={700}>System Telemetry</Typography>
                     </Grid>
                     <Grid item container xs={12} spacing={1} justifyContent="center" alignItems="center">
-                        {TelemetryData.map((telemetry) => {
-                            return <Grid item container xs={calculateTelemContainerWidth(telemetry)} alignItems="center" justifyContent="center">
+                        {(aircraft ? Object.keys(aircraft) : []).map((aircraftTelemetryKey) => {
+                            return <Grid item container xs={4} alignItems="center" justifyContent="center">
                                 <Grid item container xs={12}>
                                     <Grid item xs={2} alignItems="center" justifyContent="center">
-                                        <TelemetryIcon telemetryKey={telemetry.telemetryKey} />
+                                        <TelemetryIcon telemetryKey={UASTelemetryKey.GENERIC} />
                                     </Grid>
                                     <Grid item xs={10} alignItems="center" justifyContent="center">
-                                        <Typography fontWeight={100}>{telemetry.value} {telemetry.unit}</Typography>
+                                        <Typography fontWeight={100}>{aircraft[aircraftTelemetryKey]} {"N/A"}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
