@@ -96,11 +96,13 @@ def add_and_get_aerial(aerial_data):
     Returns:
         int -- index of the AerialPosition object in the AerialPosition list
     """
-    gps_index = add_and_get_gps(aerial_data[:2])
+    # gps_index = add_and_get_gps(aerial_data[:2])
 
     aerial = {
-        "altitude_msl": aerial_data[2],
-        "gps_position": gps_index,
+        "latitude": aerial_data[0],
+        "longitude": aerial_data[1],
+        "altitude_msl": aerial_data[2]
+        # "gps_position": gps_index,
     }
 
     return add_and_get_index(aerial, data["auvsi_suas.aerialposition"])
@@ -202,18 +204,40 @@ for section in SECTIONS[7:]:
 
 
 # waypoints are simply just aerialpositions
-data["auvsi_suas.waypoint"] = list(map(lambda pos : {
-    "order": pos,
-    "position": pos,
-},
-    range(1, len(data["auvsi_suas.aerialposition"]) + 1)
-))
+
+data["auvsi_suas.waypoint"] = [{
+    "order": i,
+    "latitude": aerial_position["latitude"],
+    "longitude": aerial_position["longitude"],
+    "altitude_msl": aerial_position["altitude_msl"]
+} for i,aerial_position in enumerate(data["auvsi_suas.aerialposition"])]
 
 # Mission stationary obstacles
+# data["auvsi_suas.missionconfig"][0]["stationary_obstacles"] = \
+#     list(range(1, len(data["auvsi_suas.stationaryobstacle"]) + 1))
+
+data["auvsi_suas.stationaryobstacle"] = [{
+    "latitude": data["auvsi_suas.aerialposition"][stationary_obstacle["gps_position"]]["latitude"],
+    "longitude": data["auvsi_suas.aerialposition"][stationary_obstacle["gps_position"]]["longitude"],
+    "cylinder_radius": stationary_obstacle["cylinder_radius"],
+    "cylinder_height": stationary_obstacle["cylinder_height"]
+} for _,stationary_obstacle in enumerate(data["auvsi_suas.stationaryobstacle"])]
+
 data["auvsi_suas.missionconfig"][0]["stationary_obstacles"] = \
     list(range(1, len(data["auvsi_suas.stationaryobstacle"]) + 1))
 
-pprint(data)
+data["auvsi_suas.missionconfig"][0]["lost_comms_pos_id"] = 1
+data["auvsi_suas.missionconfig"][0]["ugv_drive_pos_id"] = 1
+data["auvsi_suas.missionconfig"][0]["map_center_pos_id"] = 1
+data["auvsi_suas.missionconfig"][0]["map_height_ft"] = 0
+# data["auvsi_suas.missionconfig"][0]["map_height_ft"] = 0
+# data["auvsi_suas.missionconfig"][0]["map_height_ft"] = 0
+# data["auvsi_suas.missionconfig"][0]["map_height_ft"] = 0
+
+
+# data["auvsi_suas.missionconfig"][0]["stationary_obstacles"] = data["auvsi_suas.stationaryobstacle"]
+
+# pprint(data)
 
 # Generate fixture
 fixtures = []

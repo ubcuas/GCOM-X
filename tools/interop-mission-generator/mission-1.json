@@ -1,0 +1,326 @@
+[
+    {
+        "model": "auvsi_suas.gpsposition",
+        "pk": 1,
+        "fields": {
+            "latitude": 49.259416,
+            "longitude": -123.241028
+        }
+    },
+    {
+        "model": "auvsi_suas.gpsposition",
+        "pk": 2,
+        "fields": {
+            "latitude": 49.259487,
+            "longitude": -123.240272
+        }
+    },
+    {
+        "model": "auvsi_suas.gpsposition",
+        "pk": 3,
+        "fields": {
+            "latitude": 49.259382,
+            "longitude": -123.240622
+        }
+    },
+    {
+        "model": "auvsi_suas.gpsposition",
+        "pk": 4,
+        "fields": {
+            "latitude": 49.25947,
+            "longitude": -123.239892
+        }
+    },
+    {
+        "model": "auvsi_suas.gpsposition",
+        "pk": 5,
+        "fields": {
+            "latitude": 49.259285,
+            "longitude": -123.241194
+        }
+    },
+    {
+        "model": "auvsi_suas.gpsposition",
+        "pk": 6,
+        "fields": {
+            "latitude": 49.258977,
+            "longitude": -123.241559
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 1,
+        "fields": {
+            "latitude": 49.259202,
+            "longitude": -123.242068,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 2,
+        "fields": {
+            "latitude": 49.258348,
+            "longitude": -123.241384,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 3,
+        "fields": {
+            "latitude": 49.258996,
+            "longitude": -123.239678,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 4,
+        "fields": {
+            "latitude": 49.259822,
+            "longitude": -123.240365,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 5,
+        "fields": {
+            "latitude": 49.259285,
+            "longitude": -123.241213,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 6,
+        "fields": {
+            "latitude": 49.259068,
+            "longitude": -123.241441,
+            "altitude_msl": 75
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 7,
+        "fields": {
+            "latitude": 49.258882,
+            "longitude": -123.241511,
+            "altitude_msl": 100
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 8,
+        "fields": {
+            "latitude": 49.258746,
+            "longitude": -123.241559,
+            "altitude_msl": 130
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 9,
+        "fields": {
+            "latitude": 49.258438,
+            "longitude": -123.24135,
+            "altitude_msl": 110
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 10,
+        "fields": {
+            "latitude": 49.258715,
+            "longitude": -123.240551,
+            "altitude_msl": 100
+        }
+    },
+    {
+        "model": "auvsi_suas.aerialposition",
+        "pk": 11,
+        "fields": {
+            "latitude": 49.259051,
+            "longitude": -123.240749,
+            "altitude_msl": 120
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 1,
+        "fields": {
+            "order": 0,
+            "latitude": 49.259202,
+            "longitude": -123.242068,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 2,
+        "fields": {
+            "order": 1,
+            "latitude": 49.258348,
+            "longitude": -123.241384,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 3,
+        "fields": {
+            "order": 2,
+            "latitude": 49.258996,
+            "longitude": -123.239678,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 4,
+        "fields": {
+            "order": 3,
+            "latitude": 49.259822,
+            "longitude": -123.240365,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 5,
+        "fields": {
+            "order": 4,
+            "latitude": 49.259285,
+            "longitude": -123.241213,
+            "altitude_msl": 80
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 6,
+        "fields": {
+            "order": 5,
+            "latitude": 49.259068,
+            "longitude": -123.241441,
+            "altitude_msl": 75
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 7,
+        "fields": {
+            "order": 6,
+            "latitude": 49.258882,
+            "longitude": -123.241511,
+            "altitude_msl": 100
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 8,
+        "fields": {
+            "order": 7,
+            "latitude": 49.258746,
+            "longitude": -123.241559,
+            "altitude_msl": 130
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 9,
+        "fields": {
+            "order": 8,
+            "latitude": 49.258438,
+            "longitude": -123.24135,
+            "altitude_msl": 110
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 10,
+        "fields": {
+            "order": 9,
+            "latitude": 49.258715,
+            "longitude": -123.240551,
+            "altitude_msl": 100
+        }
+    },
+    {
+        "model": "auvsi_suas.waypoint",
+        "pk": 11,
+        "fields": {
+            "order": 10,
+            "latitude": 49.259051,
+            "longitude": -123.240749,
+            "altitude_msl": 120
+        }
+    },
+    {
+        "model": "auvsi_suas.flyzone",
+        "pk": 1,
+        "fields": {
+            "altitude_msl_min": 0,
+            "altitude_msl_max": 300,
+            "boundary_pts": [
+                1,
+                2,
+                3,
+                4
+            ]
+        }
+    },
+    {
+        "model": "auvsi_suas.stationaryobstacle",
+        "pk": 1,
+        "fields": {
+            "latitude": 49.259068,
+            "longitude": -123.241441,
+            "cylinder_radius": 150.0,
+            "cylinder_height": 200.0
+        }
+    },
+    {
+        "model": "auvsi_suas.stationaryobstacle",
+        "pk": 2,
+        "fields": {
+            "latitude": 49.258882,
+            "longitude": -123.241511,
+            "cylinder_radius": 50.0,
+            "cylinder_height": 300.0
+        }
+    },
+    {
+        "model": "auvsi_suas.missionconfig",
+        "pk": 1,
+        "fields": {
+            "fly_zones": [
+                1
+            ],
+            "mission_waypoints": [
+                5,
+                6,
+                7
+            ],
+            "search_grid_points": [
+                8,
+                9,
+                10,
+                11
+            ],
+            "stationary_obstacles": [
+                1,
+                2
+            ],
+            "odlcs": [],
+            "home_pos": 1,
+            "air_drop_pos": 2,
+            "emergent_last_known_pos": 3,
+            "off_axis_odlc_pos": 4,
+            "lost_comms_pos_id": 1,
+            "ugv_drive_pos_id": 1,
+            "map_center_pos_id": 1,
+            "map_height_ft": 0
+        }
+    }
+]
