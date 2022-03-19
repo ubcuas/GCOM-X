@@ -49,7 +49,7 @@ const Navbar = () => {
             <Container maxWidth="xxl">
                 <Toolbar disableGutters>
                     <Tooltip title="View GitLab Repository">
-                        <IconButton color="primary" style={{ marginRight: 25 }}>
+                        <IconButton color="primary" href="https://gitlab.com/ubcuas" target="_blank" style={{ marginRight: 25 }}>
                             <img src={UASLogo} style={{ height: 40 }} />
                         </IconButton>
                     </Tooltip>
