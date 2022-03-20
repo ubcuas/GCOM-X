@@ -182,9 +182,9 @@ const MapPanel = ({ visibility }) => {
     return <>
         {/* TODO: Add functionality from these into new GCOM UI */}
         <div className="draggable-container">
-            <WaypointEditor />
+            {/* <WaypointEditor /> */}
             <LeftPanel />
-            <BottomPanel />
+            {/* <BottomPanel /> */}
         </div>
 
         <MapContainer

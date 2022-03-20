@@ -42,6 +42,19 @@ const TelemetryPanel = () => {
     const dispatch = useDispatch();
     const aircraft = useSelector(state => state.aircraft);
 
+    // useEffect(() => {
+    //     console.log("aircraft updated", aircraft)
+    // }, [aircraft]);
+
+    // setInterval(() => {
+    //     try {
+    //         // dispatch((getAircraftTelem())())
+    //         // dispatch('GET_TELEM')
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }, 100)
+
     return <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 1000 }}>
         <Paper style={{ textAlign: "center", padding: 10 }}>
             <Grid container spacing={1} alignItems="center" justifyContent="center">

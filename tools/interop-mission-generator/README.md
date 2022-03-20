@@ -13,6 +13,7 @@ See `test-mission.json` for an example
 ### Example Usage
 
 ```bash
+rm mission-1.json (if the mission already exists)
 ./mission_generator.py test-mission.json mission-1.json
 docker cp mission-1.json interop-server:/interop/server
 docker exec interop-server python3 manage.py loaddata mission-1.json
