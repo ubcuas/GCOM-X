@@ -12,7 +12,7 @@ import BottomPanel from '../BottomPanel';
 import LeftPanel from '../LeftPanel';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addMarker } from '../actions/action-addmarker';
+import { addMarker } from '../../../store/actions/action-addmarker';
 
 // import OfflineControl from './OfflineControl';
 // import OfflineTileLayer from './OfflineTileLayer';

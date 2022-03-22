@@ -1,11 +1,10 @@
 /*
 
-This file contains the definitions of interfaces used by logging-related components
-See [Confluence page] for more details: https://placeholder.com
+This file contains the definitions of interfaces used by telemetry-related components
 
 */
 
-export enum UASTelemetryKey {
+enum UASTelemetryKey {
     GPS_POSITION = "gps_position",
     SPEED = "speed",
     ALTITUDE_MSL = "altitude_msl",
@@ -17,17 +16,18 @@ export enum UASTelemetryKey {
     TEMPERATURE = "temperature",
     STORAGE = "storage",
     NETWORK_SPEED = "network_speed",
+    TEAM_ID = "team_id",
     GENERIC = "generic"
 }
 
-export interface UASTelemetryInterface {
+interface UASTelemetryInterface {
     telemetryKey: UASTelemetryKey,
     unit: string,
     value: string,
     timestamp: Date
 }
 
-export class UASTelemetry implements UASTelemetryInterface {
+class UASTelemetry implements UASTelemetryInterface {
     telemetryKey: UASTelemetryKey = UASTelemetryKey.GENERIC;
     unit: string = "";
     value: string = "";
@@ -39,3 +39,5 @@ export class UASTelemetry implements UASTelemetryInterface {
         this.value = value;
     }
 }
+
+export { UASTelemetryKey, UASTelemetry };

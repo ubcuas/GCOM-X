@@ -3,7 +3,7 @@ import { Fragment } from "react";
 
 import { Provider, useSelector } from "react-redux";
 import store from "./store/store";
-import { RootState } from "./store/reducers";
+import { RootState } from "./store/reducers/reducers";
 
 import { Routes, Route } from "react-router-dom";
 

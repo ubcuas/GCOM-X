@@ -1,5 +1,8 @@
-import { createStore } from "redux";
-import rootReducer from "./reducers";
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+import { logger } from 'redux-logger';
+import rootReducer from "./reducers/reducers";
+
 import { THEMES } from "../utils/constants/THEMES";
 
 const localStorageKey = "user_preferences";
@@ -17,7 +20,20 @@ if (persistedTheme) {
     localStorage.setItem(localStorageKey, JSON.stringify(initialState.preferences));
 }
 
-const store = createStore(rootReducer, initialState);
+/* eslint-disable no-underscore-dangle */
+// const store = createStore(allReducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+const middlewares = [thunk];
+
+if (true || process.env.NODE_ENV === `development`) {
+    // TODO: add development to node_ENV
+    middlewares.push(logger);
+}
+
+const store = compose(applyMiddleware(...middlewares))(createStore)(rootReducer);
+/* eslint-enable */
+
+// const store = createStore(rootReducer, initialState);
 
 store.subscribe(() => {
     const preferences = store.getState().preferences;

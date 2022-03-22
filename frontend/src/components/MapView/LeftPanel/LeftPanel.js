@@ -2,7 +2,7 @@ import React from 'react';
 import IntervalTimer from 'react-interval-timer';
 import Switch from 'react-switch';
 import { bindActionCreators } from 'redux';
-import { getAircraftTelem } from '../actions/action-getaircrafttelem';
+import { getAircraftTelem } from '../../../store/actions/action-getaircrafttelem';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import './style.scss';
