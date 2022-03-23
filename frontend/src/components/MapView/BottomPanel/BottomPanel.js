@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Dropdown from 'react-dropdown';
-import { loadMissions } from '../actions/action-loadmissions';
-import { loadRoutes } from '../actions/action-loadroute';
-import { updateCurMission } from '../actions/action-updatecurmission';
-import { updateNewAlt } from '../actions/action-updatenewwp';
-import { updateMapProps } from '../actions/action-updatemapprops'
+import { loadMissions } from '../../../store/actions/action-loadmissions';
+import { loadRoutes } from '../../../store/actions/action-loadroute';
+import { updateCurMission } from '../../../store/actions/action-updatecurmission';
+import { updateNewAlt } from '../../../store/actions/action-updatenewwp';
+import { updateMapProps } from '../../../store/actions/action-updatemapprops'
 import axios from "axios";
 import 'react-dropdown/style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

@@ -5,7 +5,7 @@ const defaultValue = {
     "latitude": 38.15103255191606,
     "longitude": -76.4377644832984,
     "uas_heading": 90,
-    "altitude": 23,
+    "altitude_msl": 23,
 };
 
 const GET_TELEMETRY_API = "/api/interop/telemetry"

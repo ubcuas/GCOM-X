@@ -12,7 +12,7 @@ import BottomPanel from '../BottomPanel';
 import LeftPanel from '../LeftPanel';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addMarker } from '../actions/action-addmarker';
+import { addMarker } from '../../../store/actions/action-addmarker';
 
 // import OfflineControl from './OfflineControl';
 // import OfflineTileLayer from './OfflineTileLayer';
@@ -181,11 +181,11 @@ const MapPanel = ({ visibility }) => {
 
     return <>
         {/* TODO: Add functionality from these into new GCOM UI */}
-        <div className="draggable-container">
+        {/* <div className="draggable-container">
             <WaypointEditor />
             <LeftPanel />
             <BottomPanel />
-        </div>
+        </div> */}
 
         <MapContainer
             className="map leaflet-container"

@@ -40,7 +40,7 @@ class UasTelemetry(models.Model):
                 'latitude': self.latitude,
                 'longitude': self.longitude,
                 'uas_heading': self.uas_heading,
-                'altitude': meter_to_feet(self.altitude_msl)}
+                'altitude_msl': meter_to_feet(self.altitude_msl)}
 
 class Teams(models.Model):
     """

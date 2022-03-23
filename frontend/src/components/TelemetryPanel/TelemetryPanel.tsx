@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { useState, useEffect } from "react";
 
-import { getAircraftTelem } from '../MapView/actions/action-getaircrafttelem';
+import IntervalTimer from 'react-interval-timer';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { getAircraftTelem } from '../../store/actions/action-getaircrafttelem';
+import { useSelector, useDispatch, connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import { Container, Grid, Paper, Box, Typography, Button, FormControl, InputLabel, Select, MenuItem, IconButton } from "@mui/material";
+import { Container, Grid, Paper, Box, Typography, Button, FormControl, InputLabel, Select, MenuItem, IconButton, Switch } from "@mui/material";
 import { styled } from '@mui/material/styles';
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle"
@@ -31,33 +33,81 @@ function calculateTelemContainerWidth(t: UASTelemetry): number {
     return (l > 40) ? 6 : (l > 20) ? 4 : (l > 12) ? 3 : 2;
 }
 
-const TelemetryPanel = () => {
+const toTelemetryArray = (aircraft) => {
+    let telemArray = []
+    if (aircraft['latitude'] && aircraft['longitude']) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.GPS_POSITION, `${aircraft['latitude'].toFixed(8)}, ${aircraft['longitude'].toFixed(8)}`, ""))
+    }
+    if (aircraft['altitude_msl']) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${aircraft['altitude_msl']}`, "m"))
+    }
+    if (aircraft['uas_heading']) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.HEADING, `${aircraft['uas_heading']}`, "°"))
+    }
+    if (aircraft['team_id']) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.TEAM_ID, `${aircraft['team_id']}`, ""))
+    }
+    return telemArray
+}
+
+const TelemetryPanel = (props) => {
     const [allMisions, setAllMissions] = useState(["Select Mission", "USC Task 2", "AUVSI Survey", "AUVSI Waypoints"]);
     const [mission, setMission] = useState(allMisions[0]);
     const [canSelectMission, setCanSelectMission] = useState(false);
     const [canUploadMission, setCanUploadMission] = useState(false);
     const [canStart, setCanStart] = useState(false);
     const [canUseControls, setCanUseControls] = useState(false);
+    const [updatingTelemetry, setUpdatingTelemetry] = useState(false);
 
-    const dispatch = useDispatch();
-    const aircraft = useSelector(state => state.aircraft);
+    const aircraft = props.aircraft// useSelector(state => state.aircraft);
+
+    // let sampleAircraft: Object = {}
+    // sampleAircraft[UASTelemetryKey.GPS_POSITION] = new UASTelemetry(UASTelemetryKey.GPS_POSITION, "43.231342343, -123.34234324")
+
+    //     new UASTelemetry(UASTelemetryKey.GPS_POSITION, "43.231342343, -123.34234324"),
+    //     new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, "153", "m"),
+    //     new UASTelemetry(UASTelemetryKey.RUNTIME, "00:03:15"),
+    //     new UASTelemetry(UASTelemetryKey.VIBRATION, "1.35", "g"),
+    //     new UASTelemetry(UASTelemetryKey.BATTERY_CAPACITY, "87.93", "%"),
+    //     new UASTelemetry(UASTelemetryKey.HEADING, "153.5", "°"),
+    //     new UASTelemetry(UASTelemetryKey.TEMPERATURE, "11.7", "°C"),
+    //     new UASTelemetry(UASTelemetryKey.SPEED, "30.4", "m/s"),
+    //     new UASTelemetry(UASTelemetryKey.STORAGE, "45.6", "%"),
+    //     new UASTelemetry(UASTelemetryKey.NETWORK_SPEED, "153.5", "Mbps"),
+    //     new UASTelemetry(UASTelemetryKey.BATTERY_VOLTAGE, "24.9", "V")
+    // ]
+
+    useEffect(() => {
+        console.log("aircraft updated", aircraft)
+    }, [aircraft]);
 
     return <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 1000 }}>
+        <IntervalTimer
+            timeout={100}
+            callback={() => {
+                props.getAircraftTelem()
+            }
+            }
+            enabled={updatingTelemetry}
+            repeat={true}
+        />
         <Paper style={{ textAlign: "center", padding: 10 }}>
             <Grid container spacing={1} alignItems="center" justifyContent="center">
                 <Grid item container xs={6} spacing={1}>
                     <Grid item xs={12}>
-                        <Typography fontSize={20} fontWeight={700}>System Telemetry</Typography>
+                        <Typography fontSize={20} fontWeight={700}>System Telemetry <Switch onChange={(_, value) => {
+                            setUpdatingTelemetry(value)
+                        }}></Switch></Typography>
                     </Grid>
                     <Grid item container xs={12} spacing={1} justifyContent="center" alignItems="center">
-                        {(aircraft ? Object.keys(aircraft) : []).map((aircraftTelemetryKey) => {
-                            return <Grid item container xs={4} alignItems="center" justifyContent="center">
+                        {(aircraft ? toTelemetryArray(aircraft) : []).map((telemetryInstance) => {
+                            return <Grid item container xs={calculateTelemContainerWidth(telemetryInstance)} alignItems="center" justifyContent="center">
                                 <Grid item container xs={12}>
                                     <Grid item xs={2} alignItems="center" justifyContent="center">
-                                        <TelemetryIcon telemetryKey={UASTelemetryKey.GENERIC} />
+                                        <TelemetryIcon telemetryKey={telemetryInstance.telemetryKey} />
                                     </Grid>
                                     <Grid item xs={10} alignItems="center" justifyContent="center">
-                                        <Typography fontWeight={100}>{aircraft[aircraftTelemetryKey]} {"N/A"}</Typography>
+                                        <Typography fontWeight={100}>{telemetryInstance.value} {telemetryInstance.unit}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -141,7 +191,19 @@ const TelemetryPanel = () => {
                 </Grid>
             </Grid>
         </Paper>
-    </Box>
+    </Box >
 }
 
-export default TelemetryPanel;
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        getAircraftTelem,
+    }, dispatch);
+}
+
+function mapStateToProps(state) {
+    return {
+        aircraft: state.aircraft,
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TelemetryPanel);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { updateMarker, deleteMarker } from '../actions';
+import { updateMarker, deleteMarker } from '../../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import DraggableContainer from '../../common/DraggableContainer';
 

@@ -5,8 +5,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import DnsIcon from '@mui/icons-material/Dns';
 import MapIcon from '@mui/icons-material/Map';
 import CameraIcon from '@mui/icons-material/Camera';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import HomeIcon from "@mui/icons-material/Home";
 
+import { Link } from 'react-router-dom';
 
 import UASLogo from '../../assets/img/uas_arrow.png'
 
@@ -55,17 +56,25 @@ const Navbar = () => {
                     </Tooltip>
 
                     <Box sx={{ flexGrow: 1, display: 'flex' }}>
-                        <Tooltip title="Open Interop Client">
-                            <Button variant="contained" href="http://localhost:8000" target="_blank" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<DnsIcon />}>INTEROP</Button>
-                        </Tooltip>
                         <Tooltip title="Open Mission Map">
-                            <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<MapIcon />}>MAP</Button>
+                            <Link to="/map" style={{ textDecoration: 'none' }}>
+                                <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<MapIcon />}>MAP</Button>
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title="Open Interop Client">
+                            <Link to="/interop" style={{ textDecoration: 'none' }}>
+                                <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<DnsIcon />}>INTEROP</Button>
+                            </Link>
                         </Tooltip>
                         <Tooltip title="Open ODCL Panel">
-                            <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<CameraIcon />}>ODCL</Button>
+                            <Link to="/odcl" style={{ textDecoration: 'none' }}>
+                                <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<CameraIcon />}>ODCL</Button>
+                            </Link>
                         </Tooltip>
-                        <Tooltip title="Open Map Tracing Panel">
-                            <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<VisibilityIcon />}>Tracking</Button>
+                        <Tooltip title="Open Home Page">
+                            <Link to="/" style={{ textDecoration: 'none' }}>
+                                <Button variant="contained" style={{ marginRight: 10, borderRadius: 100, padding: "5px 20px" }} startIcon={<HomeIcon />}>Home</Button>
+                            </Link>
                         </Tooltip>
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
