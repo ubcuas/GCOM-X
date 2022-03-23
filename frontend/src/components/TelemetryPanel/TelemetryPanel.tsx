@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect } from "react";
 
+import IntervalTimer from 'react-interval-timer';
+
 import { getAircraftTelem } from '../../store/actions/action-getaircrafttelem';
 import { useSelector, useDispatch, connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { Container, Grid, Paper, Box, Typography, Button, FormControl, InputLabel, Select, MenuItem, IconButton, Switch } from "@mui/material";
 import { styled } from '@mui/material/styles';
@@ -47,7 +50,7 @@ const toTelemetryArray = (aircraft) => {
     return telemArray
 }
 
-const TelemetryPanel = () => {
+const TelemetryPanel = (props) => {
     const [allMisions, setAllMissions] = useState(["Select Mission", "USC Task 2", "AUVSI Survey", "AUVSI Waypoints"]);
     const [mission, setMission] = useState(allMisions[0]);
     const [canSelectMission, setCanSelectMission] = useState(false);
@@ -56,8 +59,7 @@ const TelemetryPanel = () => {
     const [canUseControls, setCanUseControls] = useState(false);
     const [updatingTelemetry, setUpdatingTelemetry] = useState(false);
 
-    const dispatch = useDispatch();
-    const aircraft = useSelector(state => state.aircraft);
+    const aircraft = props.aircraft// useSelector(state => state.aircraft);
 
     // let sampleAircraft: Object = {}
     // sampleAircraft[UASTelemetryKey.GPS_POSITION] = new UASTelemetry(UASTelemetryKey.GPS_POSITION, "43.231342343, -123.34234324")
@@ -79,27 +81,23 @@ const TelemetryPanel = () => {
         console.log("aircraft updated", aircraft)
     }, [aircraft]);
 
-    useEffect(() => {
-        setInterval(() => {
-            if (updatingTelemetry) {
-                try {
-                    dispatch(getAircraftTelem())
-                    // dispatch('GET_TELEM')
-                } catch (err) {
-                    console.log(err)
-                }
-            }
-        }, 100)
-    }, [])
     return <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 1000 }}>
+        <IntervalTimer
+            timeout={100}
+            callback={() => {
+                props.getAircraftTelem()
+            }
+            }
+            enabled={updatingTelemetry}
+            repeat={true}
+        />
         <Paper style={{ textAlign: "center", padding: 10 }}>
             <Grid container spacing={1} alignItems="center" justifyContent="center">
                 <Grid item container xs={6} spacing={1}>
                     <Grid item xs={12}>
-                        <Typography fontSize={20} fontWeight={700}>System Telemetry</Typography>
-                        <Switch onChange={(_, value) => {
+                        <Typography fontSize={20} fontWeight={700}>System Telemetry <Switch onChange={(_, value) => {
                             setUpdatingTelemetry(value)
-                        }}></Switch>
+                        }}></Switch></Typography>
                     </Grid>
                     <Grid item container xs={12} spacing={1} justifyContent="center" alignItems="center">
                         {(aircraft ? toTelemetryArray(aircraft) : []).map((telemetryInstance) => {
@@ -196,4 +194,16 @@ const TelemetryPanel = () => {
     </Box >
 }
 
-export default TelemetryPanel;
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        getAircraftTelem,
+    }, dispatch);
+}
+
+function mapStateToProps(state) {
+    return {
+        aircraft: state.aircraft,
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TelemetryPanel);
