@@ -8,7 +8,7 @@ const defaultValue = {
     "altitude_msl": 23,
 };
 
-const GET_TELEMETRY_API = "/api/interop/telemetry"
+const GET_TELEMETRY_API = "http://localhost:8080/api/interop/telemetry"
 
 export const getAircraftTelem = () => {
     return function (dispatch) {
