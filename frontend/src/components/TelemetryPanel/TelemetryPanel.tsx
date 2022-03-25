@@ -39,13 +39,13 @@ const toTelemetryArray = (aircraft) => {
         telemArray.push(new UASTelemetry(UASTelemetryKey.GPS_POSITION, `${aircraft['latitude'].toFixed(8)}, ${aircraft['longitude'].toFixed(8)}`, ""))
     }
     if (aircraft['altitude_msl']) {
-        telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${aircraft['altitude_msl']}`, "m"))
+        telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${aircraft['altitude_msl'].toFixed(2)}`, "m"))
     }
     if (aircraft['uas_heading']) {
-        telemArray.push(new UASTelemetry(UASTelemetryKey.HEADING, `${aircraft['uas_heading']}`, "°"))
+        telemArray.push(new UASTelemetry(UASTelemetryKey.HEADING, `${aircraft['uas_heading'].toFixed(2)}`, "°"))
     }
     if (aircraft['team_id']) {
-        telemArray.push(new UASTelemetry(UASTelemetryKey.TEAM_ID, `${aircraft['team_id']}`, ""))
+        telemArray.push(new UASTelemetry(UASTelemetryKey.TEAM_ID, `${aircraft['team_id'].toFixed(0)}`, ""))
     }
     return telemArray
 }
