@@ -1,8 +1,9 @@
 import * as React from "react";
+import Interop from "../../components/Interop";
 
 const InteropPage = () => {
     return <>
-        <a href="http://localhost:8000" target="_blank">open interop in new tab</a>
+        <Interop />
     </>
 }
 

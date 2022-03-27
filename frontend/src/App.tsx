@@ -38,7 +38,7 @@ const ThemedApp = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/map" element={<MapPage />} />
-        <Route path="/interop" element={<InteropPage />} />
+        <Route path="/interop/*" element={<InteropPage />} />
         <Route path="/odcl" element={<ODCLPage />} />
       </Routes>
     </ThemeProvider>

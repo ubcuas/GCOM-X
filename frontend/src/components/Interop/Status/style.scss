@@ -1,0 +1,45 @@
+.status {
+    width: 50%;
+    margin: 0 auto;
+
+    .flush-right {
+        display: block;
+        position: relative;
+        margin-right: 0;
+        margin-left: auto;
+    }
+
+    .card-flush-right {
+        display: block;
+        position: relative;
+        text-align: center;
+        margin-right: 0;
+        margin-left: auto;
+        width: 50%;
+    }
+
+    .label {
+        width: 30%;
+        text-align: left;
+        float: left;
+    }
+
+    .mission-id {
+        width: 30%;
+        float: left;
+    }
+
+    .status-card {
+        width: 30%;
+        float: left;
+        text-align: center;
+    }
+
+    .relogin {
+        float: left;
+    }
+
+    .center {
+        text-align: center;
+    }
+}
