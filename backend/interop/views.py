@@ -1,6 +1,6 @@
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 from django.shortcuts import render
@@ -135,10 +135,12 @@ def telem_status(request):
         return JsonResponse(response)
     # no error
     else:
-        last_uas_telem = UasTelemetry.objects.filter(team_id=UAS_team_id).order_by('-created_at')[0]
-        if last_uas_telem:
+        team_telems = UasTelemetry.objects.filter(team_id=UAS_team_id).order_by('-created_at')
+
+        if len(team_telems) > 0:
+            last_uas_telem = team_telems[0]
             stat = 1
-            delta = datetime.now(datetime.timezone.utc) - last_uas_telem.created_at
+            delta = datetime.now(timezone.utc) - last_uas_telem.created_at
             if delta.seconds <= 5:
                 stat = 1
             else:
@@ -155,8 +157,10 @@ def telem_status(request):
 @csrf_exempt
 @require_http_methods(["GET"])
 def team_telem_status(request):
-    last_team_telem = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')[0]
-    if last_team_telem:
+    team_telems = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')
+
+    if len(team_telems) > 0:
+        last_team_telem = team_telems[0]
         delta = datetime.now(datetime.timezone.utc) - last_team_telem.created_at
         if delta.seconds <= 5:
             stat = 1

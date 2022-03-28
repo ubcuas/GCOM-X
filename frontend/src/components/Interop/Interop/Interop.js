@@ -5,6 +5,10 @@ import Login from '../Login';
 import Status from '../Status';
 import './style.scss';
 
+import { Grid } from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 export const TelemetryStatus = Object.freeze({
     ERROR: -1,
     STOPPED: 0,
@@ -47,12 +51,12 @@ const Interop = () => {
         let status = await getConnectionStatus();
         if (location.pathname !== '/interop' &&
             (status.status === ConnectionStatus.DISCONNECTED ||
-            status.status === ConnectionStatus.ERROR))
+                status.status === ConnectionStatus.ERROR))
             navigate('/interop');
         else if (!needsRelogin &&
-                location.pathname === '/interop' &&
-                status.status !== ConnectionStatus.DISCONNECTED &&
-                status.status !== ConnectionStatus.ERROR)
+            location.pathname === '/interop' &&
+            status.status !== ConnectionStatus.DISCONNECTED &&
+            status.status !== ConnectionStatus.ERROR)
             navigate('/interop/status');
 
         setCurrentMissionID(status.missionID);
@@ -73,7 +77,7 @@ const Interop = () => {
         }
     }
 
-    async function getTelemetryStatus() { 
+    async function getTelemetryStatus() {
         try {
             let res = await axios.get(TELEMETRY_ENDPOINT)
             return res.data.status;
@@ -82,7 +86,7 @@ const Interop = () => {
         }
     }
 
-    async function getTeamTelemetryStatus() { 
+    async function getTeamTelemetryStatus() {
         try {
             let res = await axios.get(TEAM_TELEMETRY_ENDPOINT)
             return res.data.status;
@@ -125,7 +129,7 @@ const Interop = () => {
 
     async function grabInteropMission(id) {
         try {
-            let response = await axios.post(INTEROP_MISSION_ENDPOINT, {mission_id: id})
+            let response = await axios.post(INTEROP_MISSION_ENDPOINT, { mission_id: id })
             setCurrentMissionID(response.data.mission_id);
         } catch (err) {
             alert(err);
@@ -136,6 +140,18 @@ const Interop = () => {
         <div className="interop">
             <div className="heading">
                 <h1>Interop</h1>
+                <Grid container>
+                    <Grid item xs={12}>
+                        {Number(telemetryStatus) == 1 ?
+                            <><CheckCircleIcon /> Receiving Telemetry</> :
+                            <><CancelIcon /> Missing Telemetry</>}
+                    </Grid>
+                    <Grid item xs={12}>
+                        {Number(teamTelemetryStatus) == 1 ?
+                            <><CheckCircleIcon /> Receiving Team Telemetry</> :
+                            <><CancelIcon /> Missing Team Telemetry</>}
+                    </Grid>
+                </Grid>
                 <button
                     className="btn btn-primary"
                     onClick={refresh}
