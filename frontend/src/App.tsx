@@ -37,9 +37,17 @@ const ThemedApp = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/map" element={<MapPage />} />
-        <Route path="/interop/*" element={<InteropPage />} />
-        <Route path="/odcl" element={<ODCLPage />} />
+        <Route path="map" element={<MapPage />} />
+        <Route path="interop/*" element={<InteropPage />} />
+        <Route path="odcl" element={<ODCLPage />} />
+        <Route
+          path="*"
+          element={
+            <main style={{ textAlign: "center", padding: "1rem", fontSize: 45 }}>
+              <p>There's nothing here! (404)</p>
+            </main>
+          }
+        />
       </Routes>
     </ThemeProvider>
   );
