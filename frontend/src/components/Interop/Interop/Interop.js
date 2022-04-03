@@ -5,7 +5,7 @@ import Login from '../Login';
 import Status from '../Status';
 import './style.scss';
 
-import { Grid } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
@@ -32,7 +32,7 @@ const TEAM_TELEMETRY_ENDPOINT = 'http://localhost:8080/api/interop/teamtelemstat
 const Interop = () => {
     const [telemetryStatus, setTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
     const [teamTelemetryStatus, setTeamTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
-    const [needsRelogin, setNeedsRelogin] = useState(false);
+    const [needsRelogin, setNeedsRelogin] = useState(true);
     const [currentMissionID, setCurrentMissionID] = useState(-1);
     const location = useLocation();
     const navigate = useNavigate();
@@ -140,8 +140,8 @@ const Interop = () => {
         <div className="interop">
             <div className="heading">
                 <h1>Interop</h1>
-                <Grid container>
-                    <Grid item xs={12}>
+                <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>
+                    <Grid item xs={12} >
                         {Number(telemetryStatus) == 1 ?
                             <><CheckCircleIcon /> Receiving Telemetry</> :
                             <><CancelIcon /> Missing Telemetry</>}
@@ -151,38 +151,35 @@ const Interop = () => {
                             <><CheckCircleIcon /> Receiving Team Telemetry</> :
                             <><CancelIcon /> Missing Team Telemetry</>}
                     </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                        size="small"
+                        variant="contained"
+                        className="btn btn-primary"
+                        onClick={refresh}
+                    >
+                        Refresh
+                        </Button>
+                    </Grid>
                 </Grid>
-                <button
-                    className="btn btn-primary"
-                    onClick={refresh}
-                >
-                    Refresh
-                </button>
+                
             </div>
             <br />
 
             <Routes>
                 <Route
-                    path="/interop"
-                    exact
-                    render={() => (
-                        <Login
-                            login={login}
-                        />
-                    )}
+                    path="/"
+                    element={<Login login={login} />}
                 />
                 <Route
-                    path="/interop/status"
-                    exact
-                    render={() => (
-                        <Status
-                            grabInteropMission={grabInteropMission}
-                            telemetryStatus={telemetryStatus}
-                            teamTelemetryStatus={teamTelemetryStatus}
-                            currentMissionID={currentMissionID}
-                            relogin={relogin}
-                        />
-                    )}
+                    path="/status"
+                    element={<Status
+                        grabInteropMission={grabInteropMission}
+                        telemetryStatus={telemetryStatus}
+                        teamTelemetryStatus={teamTelemetryStatus}
+                        currentMissionID={currentMissionID}
+                        relogin={relogin}
+                    />}
                 />
             </Routes>
         </div>
