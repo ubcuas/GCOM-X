@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 import requests
 import logging
 
@@ -67,7 +68,7 @@ class Client():
 
     def get_mission(self, mission_id=1):
         """
-        GET /api/missions
+        GET /api/missions/${mission_id}
         """
         logger.debug("GET interop-server /api/missions")
         session = self.get_ClientSession()
@@ -79,6 +80,30 @@ class Client():
 
         if not r.ok:
             raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
+
+        return r.json()
+
+    # Get all missions
+    def get_missions(self):
+        """
+        GET /api/missions
+        """
+        logger.debug("GET interop-server /api/missions")
+        session = self.get_ClientSession()
+        cookies = self.get_cookies(session)
+
+        request_url = session.url + f"/api/missions"
+
+        r = requests.get(request_url, cookies=cookies)
+
+        if not r.ok:
+            raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
+
+        # if r.status_code != 200:
+        #     return JsonResponse({'missions': []})
+            # raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
+
+
 
         return r.json()
 

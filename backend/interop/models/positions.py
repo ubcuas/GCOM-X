@@ -1,5 +1,4 @@
 from django.db import models
-from common.utils.conversions import meter_to_feet
 
 class GpsPosition(models.Model):
     """GPS position consisting of a latitude and longitude degree value.
@@ -35,12 +34,13 @@ class UasTelemetry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded = models.BooleanField(default=False)
 
+    # Altitude is in meters here
     def marshal(self):
         return {'team_id': self.team_id,
                 'latitude': self.latitude,
                 'longitude': self.longitude,
                 'uas_heading': self.uas_heading,
-                'altitude_msl': meter_to_feet(self.altitude_msl)}
+                'altitude_msl': self.altitude_msl}
 
 class Teams(models.Model):
     """

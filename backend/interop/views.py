@@ -2,7 +2,6 @@ import json
 import logging
 from datetime import datetime, timezone
 
-
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt
@@ -50,7 +49,7 @@ def sendTelemetry(uasclient):
                     return True
                 except Exception as error:
                     connect_stat = 3
-                    logger.exception('Unable to send telemtry data error: %s' % error)
+                    logger.exception('Unable to send telemetry data error: %s' % error)
             else:
                 logger.debug("No new telemtry!")
     else:
@@ -218,6 +217,18 @@ def status(request):
     }
 
     return JsonResponse(response)
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def missions(request):
+    try:
+        gcomclient = Client()
+        missions = gcomclient.get_missions()
+        print(missions)
+        return missions
+    except Exception as e:
+        logger.exception(e)
+        return HttpResponseServerError(e)
 
 @csrf_exempt
 @require_http_methods(["POST"])
