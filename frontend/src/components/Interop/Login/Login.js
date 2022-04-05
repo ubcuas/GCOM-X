@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import './style.scss';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
 const Login = (props) => {
     const [url, setUrl] = useState('interop-server');
@@ -22,44 +25,64 @@ const Login = (props) => {
 
     return (
         <div className="login">
-            <div className="Login">
-                <form onSubmit={handleLogin}>
-                    Server URL
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={url}
-                        onChange={e => setUrl(e.target.value)}
-                    />
-                    Port
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={portNum}
-                        onChange={e => setPortNum(e.target.value)}
-                    />
-                    Username
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={username}
-                        onChange={e => setUsername(e.target.value)}
-                    />
-                    Password
-                    <input
-                        type="password"
-                        className="form-control"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                    <button
-                        type="submit"
-                        className="btn btn-primary submit"
+                <Box
+                    component="form"
+                    onSubmit={handleLogin}
                     >
-                        Log In
-                    </button>
-                </form>
-            </div>
+                    <Grid container direction="column" justifyContent="center" alignItems="center" spacing={2}>
+                        <Grid item xs={4}>
+                            <TextField
+                                required
+                                className="form-control"
+                                label="Server URL"
+                                variant="outlined"                        
+                                value={url}
+                                onChange={e => setUrl(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <TextField
+                                required
+                                className="form-control"
+                                label="Port"
+                                variant="outlined"                        
+                                value={portNum}
+                                onChange={e => setPortNum(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <TextField
+                                required
+                                className="form-control"
+                                label="Username"
+                                variant="outlined"                        
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <TextField
+                                required
+                                type="password"
+                                className="form-control"
+                                label="Password"
+                                variant="outlined"                        
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                className="btn btn-primary submit"
+                                style={{ margin: "auto" }}
+                            >
+                                Log In
+                            </Button>
+                        </Grid>
+                    </Grid>
+            </Box>
         </div>
 
     );
