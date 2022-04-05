@@ -27,7 +27,7 @@ const middlewares = [thunk];
 
 if (true || process.env.NODE_ENV === `development`) {
     // TODO: add development to node_ENV
-    middlewares.push(logger);
+    // middlewares.push(logger);
 }
 
 const store = compose(applyMiddleware(...middlewares))(createStore)(rootReducer);

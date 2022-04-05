@@ -60,10 +60,15 @@ def sendTelemetry(uasclient):
 @require_http_methods(["GET", "POST"])
 def telemetry(request):
     if request.method == 'GET':
-        uas_telem = UasTelemetry.objects.all().order_by('-created_at')
-        if uas_telem:
+        # return JsonResponse(UasTelemetry(team_id=1,
+        #                         latitude=33.33,
+        #                         longitude=33.33,
+        #                         altitude_msl=100,
+        #                         uas_heading=50.6).marshal())
+        try:
+            uas_telem = UasTelemetry.objects.all().order_by('-created_at')
             return JsonResponse(uas_telem[0].marshal())
-        else:
+        except Exception as err:
             return HttpResponse(status=204)  # No content
 
     if request.method == 'POST':

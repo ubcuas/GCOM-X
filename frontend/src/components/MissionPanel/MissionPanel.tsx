@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from "react";
 
-import { Grid, Typography, IconButton, FormControl, InputLabel, Select, Button, MenuItem, FormLabel } from "@mui/material"
+import { Grid, Typography, IconButton, FormControl, InputLabel, Select, Button, MenuItem, FormLabel, CircularProgress } from "@mui/material"
 
 import PlayCircleIcon from "@mui/icons-material/PlayCircle"
 import PauseCircleIcon from "@mui/icons-material/PauseCircle"
@@ -18,13 +18,17 @@ const getInteropMissions = () => {
 }
 
 const getCurrentAircraftMission = () => {
-    fetch("http://localhost:5000/aircraft/mission").then(res => {
-        if (res.ok) {
-            res.json().then(mission => {
-                console.log(mission)
-            })
-        }
-    }).catch(console.error)
+    return new Promise((resolve, reject) => {
+        fetch("http://localhost:5000/aircraft/mission").then(res => {
+            if (res.ok) {
+                res.json().then(mission => {
+                    resolve(mission)
+                })
+            } else {
+                reject()
+            }
+        }).catch(reject)
+    })
 }
 
 const MissionPanel = () => {
@@ -33,10 +37,18 @@ const MissionPanel = () => {
     const [canSelectMission, setCanSelectMission] = useState(true);
     const [canUploadMission, setCanUploadMission] = useState(false);
     const [canStart, setCanStart] = useState(false);
+    const [isFetchingMission, setIsFetchingMission] = useState(false);
     const [canUseControls, setCanUseControls] = useState(false);
 
     const syncAircraftMission = () => {
+        setIsFetchingMission(true)
+        getCurrentAircraftMission().then((mission) => {
+            setIsFetchingMission(false)
 
+        }).catch(err => {
+            setIsFetchingMission(false)
+            // some error handling here
+        })
     }
 
     return <Grid item container xs={6} spacing={1}>
@@ -94,7 +106,7 @@ const MissionPanel = () => {
             <Button
                 fullWidth
                 variant="contained"
-                startIcon={<FlightIcon />}
+                startIcon={isFetchingMission ? <CircularProgress color="inherit" /> : <FlightIcon />}
                 onClick={syncAircraftMission}
             >
                 Synchronize

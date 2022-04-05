@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const GET_MISSIONS_ENDPOINT = "/avoidance/api/missions/"
+const GET_MISSIONS_ENDPOINT = "http://localhost:8080/avoidance/api/missions/"
 const EMPTY = { missions: [] };
 
 export const loadMissions = () => {

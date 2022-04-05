@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const GET_ROUTES_ENDPOINT = "/avoidance/api/route/";
+const GET_ROUTES_ENDPOINT = "http://localhost:8080/avoidance/api/route/";
 
 export const loadRoutes = (id) => {
     return function (dispatch) {
