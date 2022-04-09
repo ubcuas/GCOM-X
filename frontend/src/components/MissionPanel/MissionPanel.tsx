@@ -1,5 +1,17 @@
 import * as React from 'react';
 import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { loadMissions } from '../../store/actions/action-loadmissions';
+import { loadRoutes } from '../../store/actions/action-loadroute';
+import { updateCurMission } from '../../store/actions/action-updatecurmission';
+import { updateNewAlt } from '../../store/actions/action-updatenewwp';
+import { updateMapProps } from '../../store/actions/action-updatemapprops'
+
+import UnitConverter from '../../utils/UnitConverter'
+const uc = new UnitConverter()
 
 import { Grid, Typography, IconButton, FormControl, InputLabel, Select, Button, MenuItem, FormLabel, CircularProgress } from "@mui/material"
 
@@ -31,14 +43,18 @@ const getCurrentAircraftMission = () => {
     })
 }
 
-const MissionPanel = () => {
-    const [allMisions, setAllMissions] = useState(["Select Mission", "USC Task 2", "AUVSI Survey", "AUVSI Waypoints"]);
+const MissionPanel = (props) => {
+    const [allMisions, setAllMissions] = useState([]);
     const [mission, setMission] = useState(allMisions[0]);
     const [canSelectMission, setCanSelectMission] = useState(true);
     const [canUploadMission, setCanUploadMission] = useState(false);
     const [canStart, setCanStart] = useState(false);
     const [isFetchingMission, setIsFetchingMission] = useState(false);
     const [canUseControls, setCanUseControls] = useState(false);
+
+    useEffect(() => {
+        props.loadMissions();
+    }, [])
 
     const syncAircraftMission = () => {
         setIsFetchingMission(true)
@@ -51,6 +67,22 @@ const MissionPanel = () => {
         })
     }
 
+    const handleMissionChange = (evt) => {
+        setMission(evt.value)
+        setCanUploadMission(true)
+        setCanStart(false)
+        setCanUseControls(false)
+
+        const missionId = evt.value;
+        props.loadRoutes(missionId);
+        props.updateCurMission(missionId);
+
+        // recenter the new mission
+        if (props.markers.length > 0) {
+            props.updateMapProps({ latitude: props.markers[0].latitude, longitude: props.markers[0].longitude, zoom: 16 });
+        }
+    }
+
     return <Grid item container xs={6} spacing={1}>
         <Grid item xs={12}>
             <Typography fontSize={20} fontWeight={700}>Mission Control</Typography>
@@ -58,8 +90,8 @@ const MissionPanel = () => {
         <Grid item xs={1}>
             <IconButton style={{ height: 35 }}
                 onClick={() => {
-                    // sextCanSelectMission(true)
-                    //TODO: fetch interop missions here
+                    props.loadMissions()
+                    setCanSelectMission(true)
                 }}>
                 <RefreshIcon />
             </IconButton>
@@ -75,15 +107,10 @@ const MissionPanel = () => {
                     style={{ height: 35 }}
                     value={mission}
                     label="Mission"
-                    onChange={(evt) => {
-                        setMission(evt.target.value)
-                        setCanUploadMission(true)
-                        setCanStart(false)
-                        setCanUseControls(false)
-                    }}
+                    onChange={handleMissionChange}
                 >
-                    {allMisions.map(item => {
-                        return <MenuItem value={item}>{item}</MenuItem>
+                    {props.missions.missions.map(mission => {
+                        return <MenuItem value={mission}>{mission}</MenuItem>
                     })}
                 </Select>
             </FormControl>
@@ -153,4 +180,34 @@ const MissionPanel = () => {
     </Grid>
 }
 
-export default MissionPanel
+function mapStateToProps(state) {
+    return {
+        selectedMarker: state.markers.selectedMarker,
+        markers: state.markers.markers,
+        missions: state.missions,
+        currentMission: state.curMission,
+        newAltitude: state.newAlt
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        loadMissions,
+        loadRoutes,
+        updateCurMission,
+        updateNewAlt,
+        updateMapProps,
+    }, dispatch);
+}
+
+
+const waypointPropType = PropTypes.shape({
+    id: PropTypes.any,
+    latlng: PropTypes.array,
+});
+
+MissionPanel.propTypes = {
+    markers: PropTypes.arrayOf(waypointPropType).isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MissionPanel);
