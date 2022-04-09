@@ -9,6 +9,7 @@ import { loadRoutes } from '../../store/actions/action-loadroute';
 import { updateCurMission } from '../../store/actions/action-updatecurmission';
 import { updateNewAlt } from '../../store/actions/action-updatenewwp';
 import { updateMapProps } from '../../store/actions/action-updatemapprops'
+import axios from "axios";
 
 import UnitConverter from '../../utils/UnitConverter'
 const uc = new UnitConverter()
@@ -46,7 +47,7 @@ const getCurrentAircraftMission = () => {
 const MissionPanel = (props) => {
     const [allMisions, setAllMissions] = useState([]);
     const [mission, setMission] = useState(allMisions[0]);
-    const [canSelectMission, setCanSelectMission] = useState(true);
+    const [canSelectMission, setCanSelectMission] = useState(false);
     const [canUploadMission, setCanUploadMission] = useState(false);
     const [canStart, setCanStart] = useState(false);
     const [isFetchingMission, setIsFetchingMission] = useState(false);
@@ -68,12 +69,12 @@ const MissionPanel = (props) => {
     }
 
     const handleMissionChange = (evt) => {
-        setMission(evt.value)
+        setMission(evt.target.value)
         setCanUploadMission(true)
         setCanStart(false)
         setCanUseControls(false)
 
-        const missionId = evt.value;
+        const missionId = evt.target.value;
         props.loadRoutes(missionId);
         props.updateCurMission(missionId);
 
@@ -81,6 +82,27 @@ const MissionPanel = (props) => {
         if (props.markers.length > 0) {
             props.updateMapProps({ latitude: props.markers[0].latitude, longitude: props.markers[0].longitude, zoom: 16 });
         }
+    }
+
+    const uploadRoute = () => {
+        const UPLOAD_ENDPOINT = "http://localhost:8080/avoidance/api/upload_to_acom/";
+        axios.post(UPLOAD_ENDPOINT + props.currentMission + "/", { waypoints: props.markers })
+            .then(response => {
+                alert('The mission was successfully uploaded.');
+                setCanStart(true);
+                setCanUploadMission(false);
+                setCanSelectMission(false);
+            }).catch(() => {
+                alert('There was an error uploading mission.');
+            });
+    }
+
+    const loadRoutes = () => {
+        setCanSelectMission(true)
+        setCanUploadMission(false)
+        setCanStart(false)
+
+        props.loadRoutes(props.currentMission);
     }
 
     return <Grid item container xs={6} spacing={1}>
@@ -97,14 +119,13 @@ const MissionPanel = (props) => {
             </IconButton>
         </Grid>
         <Grid item xs={5}>
-            <FormControl fullWidth>
+            <FormControl fullWidth size="small">
                 <InputLabel id="theme-select-label">Mission</InputLabel>
                 <Select
                     disabled={!canSelectMission}
                     fullWidth
                     labelId="theme-select-label"
                     id="theme-select"
-                    style={{ height: 35 }}
                     value={mission}
                     label="Mission"
                     onChange={handleMissionChange}
@@ -133,25 +154,25 @@ const MissionPanel = (props) => {
             <Button
                 fullWidth
                 variant="contained"
-                startIcon={isFetchingMission ? <CircularProgress color="inherit" /> : <FlightIcon />}
+                startIcon={isFetchingMission ? <CircularProgress size={20} color="inherit" /> : <FlightIcon />}
                 onClick={syncAircraftMission}
             >
                 Synchronize
             </Button>
         </Grid>
         <Grid item container xs={12} alignItems="center" spacing={1}>
-            <Grid item xs={2}><Button disabled={!canUploadMission} fullWidth variant="contained" startIcon={<UploadIcon />}
-                onClick={() => {
-                    setCanStart(true)
-                    setCanUploadMission(false)
-                    setCanSelectMission(false)
-                }}>Upload</Button></Grid>
-            <Grid item xs={2}><Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
-                onClick={() => {
-                    setCanSelectMission(true)
-                    setCanUploadMission(false)
-                    setCanStart(false)
-                }}>Clear</Button></Grid>
+            <Grid item xs={2}>
+                <Button disabled={!canUploadMission} fullWidth variant="contained" startIcon={<UploadIcon />}
+                onClick={uploadRoute}>
+                Upload
+                </Button>
+            </Grid>
+            <Grid item xs={2}>
+                <Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
+                onClick={loadRoutes}>
+                Clear
+                </Button>
+            </Grid>
             <Grid item xs={2}><Button disabled={!canStart} fullWidth variant="contained" startIcon={<PlayCircleIcon />}
                 onClick={() => {
                     setCanUseControls(true)
