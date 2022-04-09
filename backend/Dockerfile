@@ -32,4 +32,5 @@ EXPOSE 8080
 STOPSIGNAL SIGINT
 
 # Run server
-CMD ["python", "manage.py", "runserver", "localhost:8080"]
+# NOTE: 0.0.0.0 must be specified below and will map to localhost. Does not work otherwise.
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
