@@ -64,6 +64,19 @@ def upload_to_acom(request, mission_id):
         return JsonResponse(r.json())
     return
 
+@csrf_exempt
+@require_http_methods(["GET"])
+def acom_heartbeat(request):
+    """
+    GET:
+        - Returns the current aircraft heartbeat
+    """
+    if request.method == "GET":
+        r = requests.get(settings.ACOM_HOSTNAME + '/aircraft/telemetry/heartbeat')
+        if not r.ok:
+            raise Exception('Failed to GET /api/acom_heartbeat: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
 
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
