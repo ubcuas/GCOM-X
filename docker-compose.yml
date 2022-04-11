@@ -99,6 +99,8 @@ services:
       gcomnet:
         ipv4_address: 172.0.0.3
       uasnet:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   nginx:
     container_name: gcomx-nginx
