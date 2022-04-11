@@ -223,7 +223,20 @@ class Client():
 
         request_url = session.url + "/api/telemetry"
 
-        r = requests.post(request_url, json=telem_data, cookies=cookies)
+        # interop does not expect team_id in telemetry data
+        exclude_telem_data_keys = {'team_id'}
+        filtered_telem_data = {x: telem_data[x] for x in set(list(telem_data.keys())) - set(exclude_telem_data_keys)}
+
+        # rename uas_heading to "heading" for interop
+        filtered_telem_data["heading"] = filtered_telem_data["uas_heading"]
+        del filtered_telem_data["uas_heading"]
+
+        # rename altitude_msl to "altitude" for interop
+        filtered_telem_data["altitude"] = filtered_telem_data["altitude_msl"]
+        del filtered_telem_data["altitude_msl"]
+
+
+        r = requests.post(request_url, json=filtered_telem_data, cookies=cookies)
 
         if not r.ok:
             raise Exception('Failed to POST /api/telemetry: [%s] %s' % (r.status_code, r.content))
