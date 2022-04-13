@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Box, Toolbar, IconButton, Container, AppBar, Drawer, Button, Tooltip, MenuItem, InputLabel, FormControl, Select, Typography } from '@mui/material';
 
+import { makeStyles, useTheme } from "@mui/styles";
 import SettingsIcon from '@mui/icons-material/Settings';
 import DnsIcon from '@mui/icons-material/Dns';
 import MapIcon from '@mui/icons-material/Map';
@@ -19,10 +20,22 @@ import { THEMES } from '../../utils/constants/THEMES';
 
 import { capitalizeFirstLetter } from '../../utils/helpers/strings';
 
+const useStyles = makeStyles((theme) => {
+    return ({
+        navbar: {
+            zIndex: "6000 !important"
+        }
+    })
+});
+
+
 const Navbar = () => {
     const selectedTheme = useSelector((state) => state.preferences.selectedTheme);
     const dispatch = useDispatch();
     const [preferencesOpen, setPreferencesOpen] = useState(false);
+
+    const theme = useTheme();
+    const classes = useStyles(theme);
 
     // const randomLog = () => {
     //     const logTypes = ["info", "warning", "success", "error"]
@@ -46,9 +59,11 @@ const Navbar = () => {
     // }, 2000)
 
     return (
-        <AppBar position="static" color="default" style={{ height: 64 }} elevation={2} >
-            <Container maxWidth="xxl">
-                <Toolbar disableGutters>
+        <AppBar position="relative" color="default" style={{ height: 64 }} elevation={2} className={classes.navbar} classes={{
+            root: classes.navbar
+        }}>
+            <Container maxWidth="xxl" color="inherit">
+                <Toolbar disableGutters style={{ zIndex: 3000 }}>
                     <Tooltip title="View GitLab Repository">
                         <IconButton color="primary" href="https://gitlab.com/ubcuas" target="_blank" style={{ marginRight: 25 }}>
                             <img src={UASLogo} style={{ height: 40 }} />

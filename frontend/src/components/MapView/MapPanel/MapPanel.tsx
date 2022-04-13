@@ -181,10 +181,10 @@ const MapPanel = ({ visibility }) => {
 
     return <>
         {/* TODO: Add functionality from these into new GCOM UI */}
-        <div className="draggable-container">
+        {/* <div className="draggable-container">
             <WaypointEditor />
             <BottomPanel />
-        </div>
+        </div> */}
 
         <MapContainer
             className="map leaflet-container"
@@ -195,7 +195,7 @@ const MapPanel = ({ visibility }) => {
             attributionControl={false}
             zoomControl={false}
             ref={(ref) => setMap(ref)}
-            style={{ height: `calc(100vh - 64px)`, width: `calc(100vw - ${LAYOUT.sidebar_width})` }}>
+            style={{ height: `calc(100vh - 64px)`, width: `100vw` }}>
             <TileLayer
                 url={DEFAULT_PROVIDER}
             />

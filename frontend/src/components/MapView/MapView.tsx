@@ -12,7 +12,7 @@ library.add(faSyncAlt);
 
 const MapView = ({ visibility }) => {
     return (
-        <div className="full-height container-fluid">
+        <div className="full-height container-fluid" style={{ zIndex: 200 }}>
             <MapPanel visibility={visibility} />
         </div>
     );

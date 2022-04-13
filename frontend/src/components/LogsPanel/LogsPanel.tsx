@@ -7,7 +7,7 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import ReactVirtualizedTable from "./VirtualizedTable";
 import { UASUniversalLog, UniversalLogOrigin, UniversalLogType } from '../../interfaces/logging.interface';
 
-const LogsPanel = () => {
+const LogsPanel = (props) => {
     let [autoscroll, setAutoscroll] = useState(true);
     // let logs = useSelector((state) => state.logger.logs);
     let logs: UASUniversalLog[] = [
@@ -34,22 +34,24 @@ const LogsPanel = () => {
         }
     }, [logs, autoscroll])
 
-    return <Box style={{ width: 400, float: "left", textAlign: "center" }}>
-        <Typography fontWeight={800} fontSize={20} style={{ padding: 20 }}>System Logs</Typography>
-        <Grid container>
-            <Grid item xs={6}>
-                <Checkbox value={autoscroll} onChange={(evt) => {
-                    setAutoscroll(evt.target.checked)
-                }} /> Autoscroll
+    return <div style={{ display: props.visible ? "block" : "none" }}>
+        <Box style={{ width: 400, float: "left", textAlign: "center" }}>
+            <Typography fontWeight={800} fontSize={20} style={{ padding: 20 }}>System Logs</Typography>
+            <Grid container>
+                <Grid item xs={6}>
+                    <Checkbox value={autoscroll} onChange={(evt) => {
+                        setAutoscroll(evt.target.checked)
+                    }} /> Autoscroll
+                </Grid>
+                <Grid item xs={6}>
+                    <Button variant="contained" startIcon={<DataObjectIcon />}>Download</Button>
+                </Grid>
             </Grid>
-            <Grid item xs={6}>
-                <Button variant="contained" startIcon={<DataObjectIcon />}>Download</Button>
-            </Grid>
-        </Grid>
-        <Box style={{ maxHeight: "calc(100vh - 300px)", padding: 0 }} ref={logContainerRef}>
-            <ReactVirtualizedTable rows={logs} />
+            <Box style={{ maxHeight: "calc(100vh - 300px)", padding: 0 }} ref={logContainerRef}>
+                <ReactVirtualizedTable rows={logs} />
+            </Box>
         </Box>
-    </Box>
+    </div>
 }
 
 export default LogsPanel;
