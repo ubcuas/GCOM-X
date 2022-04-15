@@ -85,6 +85,18 @@ export enum MAV_STATE {
     FLIGHT_TERMINATION = 8,
 }
 
+// https://mavlink.io/en/messages/common.html#MAV_MODE_FLAG
+export enum MAV_MODE_FLAG {
+    CUSTOM_MODE_ENABLED = 1,
+    TEST_ENABLED = 2,
+    AUTO_ENABLED = 4,
+    GUIDED_ENABLED = 8,
+    STABILIZE_ENABLED = 16,
+    HIL_ENABLED = 32,
+    MANUAL_INPUT_ENABLED = 64,
+    SAFETY_ARMED = 128,
+}
+
 // https://mavlink.io/en/messages/common.html#HEARTBEAT
 export interface MavLinkHeartbeat {
     type: MAV_TYPE;

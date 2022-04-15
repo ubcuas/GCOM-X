@@ -45,8 +45,8 @@ const getCurrentAircraftMission = () => {
 }
 
 const MissionPanel = (props) => {
-    const [allMisions, setAllMissions] = useState([]);
-    const [mission, setMission] = useState(allMisions[0]);
+    const [allMissionIds, setAllMissionIds] = useState([]);
+    const [activeMissionId, setActiveMissionId] = useState(-1);
     const [canSelectMission, setCanSelectMission] = useState(false);
     const [canUploadMission, setCanUploadMission] = useState(false);
     const [canStart, setCanStart] = useState(false);
@@ -56,6 +56,10 @@ const MissionPanel = (props) => {
     useEffect(() => {
         props.loadMissions();
     }, [])
+
+    useEffect(() => {
+        setAllMissionIds(props.missions.missions);
+    }, [props.missions])
 
     const syncAircraftMission = () => {
         setIsFetchingMission(true)
@@ -69,14 +73,18 @@ const MissionPanel = (props) => {
     }
 
     const handleMissionChange = (evt) => {
-        setMission(evt.target.value)
+        let selectedMissionId = evt.target.value;
+        if (selectedMissionId === -1 || selectedMissionId === activeMissionId) {
+            return;
+        }
+
+        setActiveMissionId(evt.target.value)
         setCanUploadMission(true)
         setCanStart(false)
         setCanUseControls(false)
 
-        const missionId = evt.target.value;
-        props.loadRoutes(missionId);
-        props.updateCurMission(missionId);
+        props.loadRoutes(selectedMissionId);
+        props.updateCurMission(selectedMissionId);
 
         // recenter the new mission
         if (props.markers.length > 0) {
@@ -101,7 +109,6 @@ const MissionPanel = (props) => {
         setCanSelectMission(true)
         setCanUploadMission(false)
         setCanStart(false)
-
         props.loadRoutes(props.currentMission);
     }
 
@@ -126,12 +133,13 @@ const MissionPanel = (props) => {
                     fullWidth
                     labelId="theme-select-label"
                     id="theme-select"
-                    value={mission}
+                    value={activeMissionId}
                     label="Mission"
                     onChange={handleMissionChange}
                 >
-                    {props.missions.missions.map(mission => {
-                        return <MenuItem value={mission}>{mission}</MenuItem>
+                    <MenuItem value={-1}>No Mission Selected</MenuItem>
+                    {allMissionIds.map(missionId => {
+                        return <MenuItem value={missionId}>Mission {missionId}</MenuItem>
                     })}
                 </Select>
             </FormControl>
@@ -163,14 +171,14 @@ const MissionPanel = (props) => {
         <Grid item container xs={12} alignItems="center" spacing={1}>
             <Grid item xs={2}>
                 <Button disabled={!canUploadMission} fullWidth variant="contained" startIcon={<UploadIcon />}
-                onClick={uploadRoute}>
-                Upload
+                    onClick={uploadRoute}>
+                    Upload
                 </Button>
             </Grid>
             <Grid item xs={2}>
                 <Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
-                onClick={loadRoutes}>
-                Clear
+                    onClick={loadRoutes}>
+                    Clear
                 </Button>
             </Grid>
             <Grid item xs={2}><Button disabled={!canStart} fullWidth variant="contained" startIcon={<PlayCircleIcon />}

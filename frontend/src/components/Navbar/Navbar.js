@@ -94,7 +94,7 @@ const Navbar = () => {
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open Settings">
-                            <IconButton onClick={() => setPreferencesOpen(true)} sx={{ p: 0 }}>
+                            <IconButton onClick={() => setPreferencesOpen(!preferencesOpen)} sx={{ p: 0 }}>
                                 <SettingsIcon />
                             </IconButton>
                         </Tooltip>

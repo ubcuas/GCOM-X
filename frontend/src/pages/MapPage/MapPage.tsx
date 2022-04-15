@@ -11,6 +11,7 @@ import { Grid, Box, Paper, Drawer, List, ListItem, ListItemIcon, ListItemText, T
 import { makeStyles, useTheme } from "@mui/styles";
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 
 const useStyles = makeStyles((theme) => {
     return ({
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => {
             width: 57
         },
         drawerPaper: {
-            zIndex: 600,
+            zIndex: 500,
             width: 57,
             overflow: "hidden"
         },
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => {
         drawerPanelPaper: {
             width: 400,
             zIndex: 300,
-            opacity: 0.8,
+            opacity: 0.95,
             marginLeft: 57,
         }
     });
@@ -70,7 +71,7 @@ const MapPage = () => {
                 <Tooltip title="View Aircraft State" placement="right">
                     <ListItem button onClick={_ => handleToggle("aircraft_state")}>
                         <ListItemIcon>
-                            <FlightTakeoffIcon />
+                            <MonitorHeartIcon />
                         </ListItemIcon>
                     </ListItem>
                 </Tooltip>
@@ -86,17 +87,10 @@ const MapPage = () => {
             <LogsPanel visible={currentOpen == "logs"} />
             <AircraftStatePanel visible={currentOpen == "aircraft_state"} />
         </Drawer>
-        {/* <Popover className={classes.drawerPanel} open={open} anchorOrigin={{
-            horizontal: 'right',
-            vertical: 'top'
-        }}>
-            <h3>content here</h3>
-        </Popover> */}
 
-        {/* <LogsPanel /> */}
         <MapView visibility={true} />
 
-        <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 3000 }}>
+        <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 550 }}>
             <Paper style={{ textAlign: "center", padding: 10 }}>
                 <Grid container spacing={1} alignItems="center" justifyContent="center">
                     <TelemetryPanel />

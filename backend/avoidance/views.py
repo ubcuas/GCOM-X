@@ -79,6 +79,84 @@ def acom_heartbeat(request):
     return
 
 @csrf_exempt
+def acom_arm(request):
+    """
+    PUT:
+        - Sends an ARM command to the aircraft
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/arm')
+        if not r.ok:
+            raise Exception('Failed to PUT /api/acom_arm: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+@csrf_exempt
+def acom_disarm(request):
+    """
+    PUT:
+        - Sends a DISARM command to the aircraft
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/disarm')
+        if not r.ok:
+            raise Exception('Failed to PUT /api/acom_disarm: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+@csrf_exempt
+def acom_setmode_manual(request):
+    """
+    PUT:
+        - Attempts to set mode of aircraft to MANUAL
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/manual')
+        if not r.ok:
+            raise Exception('Failed to PUT /api/acom_setmode_manual: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+@csrf_exempt
+def acom_setmode_auto(request):
+    """
+    PUT:
+        - Attempts to set mode of aircraft to AUTO
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/auto')
+        if not r.ok:
+            raise Exception('Failed to PUT /api/acom_setmode_auto: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+@csrf_exempt
+def acom_setmode_rtl(request):
+    """
+    PUT:
+        - Attempts to set mode of aircraft to RTL
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/rtl')
+        if not r.ok:
+            raise Exception('Failed to PUT /api/acom_setmode_rtl: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+@csrf_exempt
+def acom_setmode_guided(request):
+    """
+    PUT:
+        - Attempts to set mode of aircraft to GUIDED
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/guided')
+        if not r.ok:
+            raise Exception('Failed to PUT /api/acom_setmode_guided: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+@csrf_exempt
 @require_http_methods(["GET", "POST"])
 def reroute(request, mission_id):
     """
