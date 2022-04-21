@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { loadMissions } from '../../store/actions/action-loadmissions';
-import { loadRoutes } from '../../store/actions/action-loadroute';
+import { loadRoutes, loadCurrentRoute } from '../../store/actions/action-loadroute';
 import { updateCurMission } from '../../store/actions/action-updatecurmission';
 import { updateNewAlt } from '../../store/actions/action-updatenewwp';
 import { updateMapProps } from '../../store/actions/action-updatemapprops'
@@ -26,24 +26,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import FlightIcon from '@mui/icons-material/Flight';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 
-const getInteropMissions = () => {
-    // fetch("http://localhost:8080/api/interop/missions")
-}
-
-const getCurrentAircraftMission = () => {
-    return new Promise((resolve, reject) => {
-        fetch("http://localhost:5000/aircraft/mission").then(res => {
-            if (res.ok) {
-                res.json().then(mission => {
-                    resolve(mission)
-                })
-            } else {
-                reject()
-            }
-        }).catch(reject)
-    })
-}
-
 const MissionPanel = (props) => {
     const [allMissionIds, setAllMissionIds] = useState([]);
     const [activeMissionId, setActiveMissionId] = useState(-1);
@@ -62,14 +44,8 @@ const MissionPanel = (props) => {
     }, [props.missions])
 
     const syncAircraftMission = () => {
-        setIsFetchingMission(true)
-        getCurrentAircraftMission().then((mission) => {
-            setIsFetchingMission(false)
-
-        }).catch(err => {
-            setIsFetchingMission(false)
-            // some error handling here
-        })
+        props.loadCurrentRoute()
+        props.updateCurMission(0)
     }
 
     const handleMissionChange = (evt) => {
@@ -223,6 +199,7 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         loadMissions,
         loadRoutes,
+        loadCurrentRoute,
         updateCurMission,
         updateNewAlt,
         updateMapProps,

@@ -1,7 +1,8 @@
 import * as React from "react";
+import Imp from "../../components/Imp";
 
 const ODCLPage = () => {
-    return <h2>odcl/imp page here</h2>
+    return <Imp />;
 }
 
 export default ODCLPage

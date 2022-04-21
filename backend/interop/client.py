@@ -13,7 +13,7 @@ class Client():
     See: https://github.com/auvsi-suas/interop
     """
 
-    def get_ClientSession(self):
+    def get_client_session(self):
         """
         Gets the latest active client session
         """
@@ -71,7 +71,7 @@ class Client():
         GET /api/missions/${mission_id}
         """
         logger.debug("GET interop-server /api/missions")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + f"/api/missions/{mission_id}"
@@ -89,7 +89,7 @@ class Client():
         GET /api/missions
         """
         logger.debug("GET interop-server /api/missions")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + f"/api/missions"
@@ -112,7 +112,7 @@ class Client():
         GET /api/obstacles
         """
         logger.debug("GET interop-server /api/obstacles")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/obstacles"
@@ -129,7 +129,7 @@ class Client():
         GET /api/odlcs
         """
         logger.debug("GET interop-server /api/odlcs")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/odlcs"
@@ -146,7 +146,7 @@ class Client():
         POST /api/odlcs
         """
         logger.debug("POST interop-server /api/odlcs")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/odlcs"
@@ -163,7 +163,7 @@ class Client():
         PUT /api/odlcs/<id>
         """
         logger.debug("PUT interop-server /api/odlcs/%s" % odlc_json['id'])
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/odlcs/%s" % odlc_json['id']
@@ -180,7 +180,7 @@ class Client():
         DELETE /api/odlcs/<id>
         """
         logger.debug("DELETE interop-server /api/odlcs/%s" % odlc_id)
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/odlcs/%s" % odlc_id
@@ -199,7 +199,7 @@ class Client():
         POST /api/odlcs/<id>/image
         """
         logger.debug("POST interop-server /api/odlcs/%s/image" % odlc_json['id'])
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
         headers = {'Content-Type' : 'image/jpeg'}
 
@@ -218,7 +218,7 @@ class Client():
         POST /api/telemetry
         """
         logger.debug("POST interop-server /api/telemetry")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/telemetry"
@@ -248,7 +248,7 @@ class Client():
         GET /api/teams
         """
         logger.debug("GET interop-server /api/teams")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/teams"

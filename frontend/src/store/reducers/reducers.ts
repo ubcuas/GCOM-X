@@ -1,6 +1,7 @@
 import * as actions from "../actions";
 import { combineReducers } from 'redux';
 import AirCraftReducer from './reducer-aircraft';
+import TeamsReducer from './reducer-teams';
 import MapPropReducer from './reducer-mapprops';
 import MarkersReducer from './reducer-markers';
 import ObstaclesReducer from './reducer-obstacles';
@@ -32,6 +33,7 @@ export const rootReducer = combineReducers({
     preferences,
     logger,
     aircraft: AirCraftReducer,
+    teams: TeamsReducer,
     mapProps: MapPropReducer,
     markers: MarkersReducer,
     obstacles: ObstaclesReducer,

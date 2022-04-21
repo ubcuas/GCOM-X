@@ -25,7 +25,6 @@ Uas_client connection status
 
 connect_stat = 0
 current_mission_id = -1
-
 UAS_team_id = 1
 
 def get_connect_stat():
@@ -36,7 +35,6 @@ def sendTelemetry(uasclient):
     connected = get_connect_stat()
     if connected > 0:
         if UasTelemetry.objects.count() != 0:
-
             uas_telem = UasTelemetry.objects.latest('created_at')
             if not uas_telem.uploaded:
                 try:
@@ -60,11 +58,6 @@ def sendTelemetry(uasclient):
 @require_http_methods(["GET", "POST"])
 def telemetry(request):
     if request.method == 'GET':
-        # return JsonResponse(UasTelemetry(team_id=1,
-        #                         latitude=33.33,
-        #                         longitude=33.33,
-        #                         altitude_msl=100,
-        #                         uas_heading=50.6).marshal())
         try:
             uas_telem = UasTelemetry.objects.all().order_by('-created_at')
             return JsonResponse(uas_telem[0].marshal())
@@ -72,15 +65,8 @@ def telemetry(request):
             return HttpResponse(status=204)  # No content
 
     if request.method == 'POST':
-        # telem = deserialize_telem_msg(request.body)
         unicode_body = request.body.decode('utf-8')
         telem = json.loads(unicode_body)
-        # print(telem)
-        # new_telem = UasTelemetry(team_id=UAS_team_id,
-        #                          latitude=telem.latitude_dege7 / 1.0E7,
-        #                          longitude=telem.longitude_dege7 / 1.0E7,
-        #                          altitude_msl=telem.altitude_msl_m,
-        #                          uas_heading=telem.heading_deg)
         new_telem = UasTelemetry(team_id=UAS_team_id,
                                  latitude=telem['latitude_dege7'] / 1.0E7,
                                  longitude=telem['longitude_dege7'] / 1.0E7,
@@ -96,14 +82,14 @@ def telemetry(request):
 @csrf_exempt
 @require_http_methods(["GET"])
 def teams(request):
-    body_unicode = request.body.decode('utf-8')
-    body = json.loads(body_unicode)
+    # body_unicode = request.body.decode('utf-8')
+    # body = json.loads(body_unicode)
 
     try:
         gcomclient = Client()
 
         teams = gcomclient.get_teams_telemetry()
-        clientsession  = gcomclient.get_clientSession()
+        client_session  = gcomclient.get_client_session()
 
         logger.debug(teams)
 
@@ -114,9 +100,9 @@ def teams(request):
     response_payload = []
 
     for team in teams:
-        if (team['username'] != clientsession.username):
-            telem = deserialize_telem_msg(request.body)
-            team_telem = UasTelemetry(team_id=team['id'],
+        if (team['team']['username'] != client_session.username):
+            telem = deserialize_telem_msg(team['team']['telemetry'])
+            team_telem = UasTelemetry(team_id=team['team']['id'],
                                     latitude=telem.latitude_dege7 / 1.0E7,
                                     longitude=telem.longitude_dege7 / 1.0E7,
                                     altitude_msl=telem.altitude_msl_m,
@@ -124,7 +110,7 @@ def teams(request):
             team_telem.save()
             response_payload.append(team_telem.marshall())
 
-    return JsonResponse(response_payload)
+    return JsonResponse({'teams':response_payload})
 
 # -1 error, 0 stopped, 1 sending
 @csrf_exempt
@@ -229,7 +215,6 @@ def missions(request):
     try:
         gcomclient = Client()
         missions = gcomclient.get_missions()
-        print(missions)
         return missions
     except Exception as e:
         logger.exception(e)

@@ -29,6 +29,18 @@ def route(request, mission_id):
         return JsonResponse({"default":"No Waypoints"})
     return _route(request, mission_id)
 
+def current_route(request):
+    """
+    GET:
+        - Returns the current route as a JSON object.
+    """
+    r = requests.get(settings.ACOM_HOSTNAME + '/aircraft/mission')
+    if not r.ok:
+            raise Exception('Failed to GET /aircraft/mission: [%s] %s' % (r.status_code, r.content))
+
+    # TODO: Add obstacle and flyzone support to ACOM, then modify this to return them
+    return JsonResponse({'waypoints': r.json()['wps'], 'obstacles': [], 'flyzone': []})
+
 def _route(request, mission_id):
     mission = UasMission.objects.get(id=mission_id)
 

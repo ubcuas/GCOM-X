@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import IntervalTimer from 'react-interval-timer';
 
 import { getAircraftTelem } from '../../store/actions/action-getaircrafttelem';
+import { getTeamTelem } from '../../store/actions/action-getteamtelem';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -72,6 +73,7 @@ const TelemetryPanel = (props: any) => {
             timeout={100}
             callback={() => {
                 props.getAircraftTelem()
+                props.getTeamTelem()
             }
             }
             enabled={updatingTelemetry}
@@ -104,6 +106,7 @@ const TelemetryPanel = (props: any) => {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getAircraftTelem,
+        getTeamTelem
     }, dispatch);
 }
 
