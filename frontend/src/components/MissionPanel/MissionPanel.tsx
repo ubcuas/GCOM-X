@@ -151,9 +151,10 @@ const MissionPanel = (props) => {
                     Upload
                 </Button>
             </Grid>
+            {/* TODO: Clear mission from aircraft using this button */}
             <Grid item xs={2}>
                 <Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
-                    onClick={loadRoutes}>
+                    onClick={ }>
                     Clear
                 </Button>
             </Grid>

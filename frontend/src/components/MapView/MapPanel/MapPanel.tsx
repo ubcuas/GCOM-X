@@ -57,7 +57,6 @@ const aircraftIconWithHeading = (heading) => {
     });
 }
 
-
 const planeIconWithHeading = (heading) => {
     let aircraftIconSize = 30; //in pixels
     return divIcon({
