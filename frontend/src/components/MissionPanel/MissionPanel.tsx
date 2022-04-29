@@ -29,6 +29,7 @@ import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 const MissionPanel = (props) => {
     const [allMissionIds, setAllMissionIds] = useState([]);
     const [activeMissionId, setActiveMissionId] = useState(-1);
+    const [canRefreshMission, setCanRefreshMission] = useState(true);
     const [canSelectMission, setCanSelectMission] = useState(false);
     const [canUploadMission, setCanUploadMission] = useState(false);
     const [canStart, setCanStart] = useState(false);
@@ -76,6 +77,7 @@ const MissionPanel = (props) => {
                 setCanStart(true);
                 setCanUploadMission(false);
                 setCanSelectMission(false);
+                setCanRefreshMission(false)
             }).catch(() => {
                 alert('There was an error uploading mission.');
             });
@@ -94,6 +96,7 @@ const MissionPanel = (props) => {
         </Grid>
         <Grid item xs={1}>
             <IconButton style={{ height: 35 }}
+                disabled={!canRefreshMission}
                 onClick={() => {
                     props.loadMissions()
                     setCanSelectMission(true)
@@ -154,7 +157,9 @@ const MissionPanel = (props) => {
             {/* TODO: Clear mission from aircraft using this button */}
             <Grid item xs={2}>
                 <Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
-                    onClick={ }>
+                    onClick={() => {
+                        setCanRefreshMission(true)
+                    }}>
                     Clear
                 </Button>
             </Grid>
