@@ -125,6 +125,7 @@ const MissionPanel = (props) => {
         </Grid>
         <Grid item xs={3}>
             <Button
+                disabled={!canSelectMission}
                 fullWidth
                 variant="contained"
                 component="label"
@@ -159,15 +160,18 @@ const MissionPanel = (props) => {
                 <Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
                     onClick={() => {
                         setCanRefreshMission(true)
+                        setCanSelectMission(true)
+                        setCanUploadMission(true)
+                        setCanStart(false)
                     }}>
                     Clear
                 </Button>
             </Grid>
             <Grid item xs={2}><Button disabled={!canStart} fullWidth variant="contained" startIcon={<PlayCircleIcon />}
                 onClick={() => {
-                    setCanUseControls(true)
-                    setCanStart(false)
-                    setCanUploadMission(false)
+                    // setCanUseControls(true)
+                    // setCanStart(false)
+                    // setCanUploadMission(false)
                 }}>Start</Button></Grid>
             <Grid item xs={2}><Button disabled={!canUseControls} fullWidth variant="contained" startIcon={<PauseCircleIcon />}
                 onClick={() => {
