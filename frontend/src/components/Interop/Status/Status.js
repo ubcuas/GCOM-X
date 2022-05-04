@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import downloadFile from 'js-file-download';
 import { TelemetryStatus } from "../Interop";
-import './style.scss';
+import { Grid, Button, Typography, Stack, Paper, TextField } from '@mui/material';
 
-const WAYPOINT_FILE_ENDPOINT = '/avoidance/file/route/';
+const WAYPOINT_FILE_ENDPOINT = 'http://localhost:8080/avoidance/file/route/';
 
 const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID, grabInteropMission }) => {
     const [newMissionID, setNewMissionID] = useState(1);
@@ -32,54 +32,64 @@ const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID
     }
 
     return (
-        <div className="status">
-            <button
-                className="btn btn-warning relogin"
-                onClick={() => relogin()}
-            >
-                Relogin
-            </button>
-            <button
-                className="btn btn-success flush-right"
-                onClick={downloadWaypointFile}
-            >
-                Download waypoint file
-            </button>
-            <br />
-
-            <h5 className="label">Mission ID</h5>
-            <div className="card card-flush-right"><h5>
-                { currentMissionID }
-            </h5></div>
-            <input
-                type="number"
-                className="form-control card card-flush-right"
-                value={ newMissionID }
-                onChange={e => setNewMissionID(e.target.value)}
-            />
-            <button
-                className="btn btn-success flush-right"
-                onClick={() => grabInteropMission(newMissionID)}
-            >
-                Grab Interop mission
-            </button>
-            <div className="row">
-                <div className="col s6">
-                <h5>Telemetry Status</h5>
-                <div className="card status-card"><h5>
-                    { telemetryStatusToText(telemetryStatus) }
-                </h5>  
-                </div>
-                </div>
-                <div className="col s6">
-                    <h5>Other Team Telemetry Status</h5>
-                    <div className="card status-card"><h5>
-                        { telemetryStatusToText(teamTelemetryStatus) }
-                    </h5>
-                    </div>
-                </div>
-            </div>                     
-    </div>
+        <Grid container justifyContent="center" alignItems="center" rowSpacing={3} columnSpacing={1} style={{ width: "33%", margin: "0 auto" }}>
+            <Grid item xs={3}>
+                <Button
+                    variant="contained"
+                    onClick={() => relogin()}
+                >
+                    Relogin
+                </Button>
+            </Grid>
+            <Grid item xs={5}>
+                <Button
+                    variant="outlined"
+                    onClick={downloadWaypointFile}
+                >
+                    Download waypoint file
+                </Button>
+            </Grid>
+            <Paper style={{width: "100%", height: "100%", "margin-top": 30, "padding-top": 30, "padding-bottom": 20 }}>
+                <Grid container item rowSpacing ={3}>
+                    <Grid item xs={5}>
+                        <Stack alignItems="center" gap={1}>
+                            <Typography variant="h5">Mission ID:</Typography>
+                            <Typography variant="h6"> { currentMissionID } </Typography>
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <Stack alignItems="center" gap={1}>
+                            <TextField
+                                variant="outlined"
+                                label="Set Mission ID"
+                                size="small"
+                                type="number"
+                                value={ newMissionID }
+                                onChange={e => setNewMissionID(e.target.value)}
+                            />
+                            <Button
+                                variant="text"
+                                onClick={() => grabInteropMission(newMissionID)}
+                            >
+                                Grab Interop mission
+                            </Button>
+                        </Stack>
+                    </Grid>
+                </Grid>
+            </Paper>
+            <Grid item xs={5}>
+                <Stack alignItems="center" gap={1}>
+                    <Typography variant="h7">Telemetry Status:</Typography>
+                    <Typography variant="h6">{ telemetryStatusToText(telemetryStatus) }</Typography>
+                </Stack>
+            </Grid>
+            <Grid item xs={7}>
+                <Stack alignItems="center" gap={1}>
+                    <Typography variant="h7">Other Team Telemetry Status:</Typography>
+                    <Typography variant="h6">{ telemetryStatusToText(teamTelemetryStatus) }</Typography>
+                </Stack>
+            </Grid>
+        </Grid>                     
     );
 }
 
