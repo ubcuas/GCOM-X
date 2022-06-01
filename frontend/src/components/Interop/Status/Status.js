@@ -49,7 +49,7 @@ const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID
                     Download waypoint file
                 </Button>
             </Grid>
-            <Paper style={{width: "100%", height: "100%", "margin-top": 30, "padding-top": 30, "padding-bottom": 20 }}>
+            <Paper style={{width: "100%", height: "100%", "marginTop": 30, "paddingTop": 30, "paddingBottom": 20 }}>
                 <Grid container item rowSpacing ={3}>
                     <Grid item xs={5}>
                         <Stack alignItems="center" gap={1}>

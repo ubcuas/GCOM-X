@@ -121,7 +121,7 @@ const Navbar = () => {
                                 }}
                             >
                                 {Object.keys(THEMES).map(themeName => {
-                                    return <MenuItem value={themeName}>{capitalizeFirstLetter(themeName)}</MenuItem>
+                                    return <MenuItem key={themeName} value={themeName}>{capitalizeFirstLetter(themeName)}</MenuItem>
                                 })}
                             </Select>
                         </FormControl>
