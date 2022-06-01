@@ -29,6 +29,7 @@ import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 const MissionPanel = (props) => {
     const [allMissionIds, setAllMissionIds] = useState([]);
     const [activeMissionId, setActiveMissionId] = useState(-1);
+    const [canRefreshMission, setCanRefreshMission] = useState(true);
     const [canSelectMission, setCanSelectMission] = useState(false);
     const [canUploadMission, setCanUploadMission] = useState(false);
     const [canStart, setCanStart] = useState(false);
@@ -76,6 +77,7 @@ const MissionPanel = (props) => {
                 setCanStart(true);
                 setCanUploadMission(false);
                 setCanSelectMission(false);
+                setCanRefreshMission(false)
             }).catch(() => {
                 alert('There was an error uploading mission.');
             });
@@ -94,6 +96,7 @@ const MissionPanel = (props) => {
         </Grid>
         <Grid item xs={1}>
             <IconButton style={{ height: 35 }}
+                disabled={!canRefreshMission}
                 onClick={() => {
                     props.loadMissions()
                     setCanSelectMission(true)
@@ -122,6 +125,7 @@ const MissionPanel = (props) => {
         </Grid>
         <Grid item xs={3}>
             <Button
+                disabled={!canSelectMission}
                 fullWidth
                 variant="contained"
                 component="label"
@@ -154,15 +158,20 @@ const MissionPanel = (props) => {
             {/* TODO: Clear mission from aircraft using this button */}
             <Grid item xs={2}>
                 <Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
-                    onClick={() => { }}>
+                    onClick={() => {
+                        setCanRefreshMission(true)
+                        setCanSelectMission(true)
+                        setCanUploadMission(true)
+                        setCanStart(false)
+                    }}>
                     Clear
                 </Button>
             </Grid>
             <Grid item xs={2}><Button disabled={!canStart} fullWidth variant="contained" startIcon={<PlayCircleIcon />}
                 onClick={() => {
-                    setCanUseControls(true)
-                    setCanStart(false)
-                    setCanUploadMission(false)
+                    // setCanUseControls(true)
+                    // setCanStart(false)
+                    // setCanUploadMission(false)
                 }}>Start</Button></Grid>
             <Grid item xs={2}><Button disabled={!canUseControls} fullWidth variant="contained" startIcon={<PauseCircleIcon />}
                 onClick={() => {

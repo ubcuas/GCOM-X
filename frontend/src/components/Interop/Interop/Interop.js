@@ -3,9 +3,8 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Login from '../Login';
 import Status from '../Status';
-import './style.scss';
 
-import { Grid, Button } from '@mui/material';
+import { Grid, Button, Typography, Stack } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
@@ -32,7 +31,7 @@ const TEAM_TELEMETRY_ENDPOINT = 'http://localhost:8080/api/interop/teamtelemstat
 const Interop = () => {
     const [telemetryStatus, setTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
     const [teamTelemetryStatus, setTeamTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
-    const [needsRelogin, setNeedsRelogin] = useState(true);
+    const [needsRelogin, setNeedsRelogin] = useState(false);
     const [currentMissionID, setCurrentMissionID] = useState(-1);
     const location = useLocation();
     const navigate = useNavigate();
@@ -137,33 +136,43 @@ const Interop = () => {
     }
 
     return (
-        <div className="interop">
-            <div className="heading">
-                <h1>Interop</h1>
-                <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>
-                    <Grid item xs={12} >
+        <div>
+            <Grid container direction="column" justifyContent="center" alignItems="center" spacing={2}>
+                <Grid item xs={12}>
+                    <Stack direction="column" alignItems="center" gap={0}>
+                        <Typography fontSize={32} fontWeight={700} style={{ margin: 20 }}>Interop</Typography>
                         {Number(telemetryStatus) == 1 ?
-                            <><CheckCircleIcon /> Receiving Telemetry</> :
-                            <><CancelIcon /> Missing Telemetry</>}
-                    </Grid>
-                    <Grid item xs={12}>
+                            <><Stack direction="row" alignItems="center" gap={1}>
+                                <CheckCircleIcon />
+                                <Typography variant="h6">Receiving Telemetry</Typography>
+                            </Stack></> :
+                            <><Stack direction="row" alignItems="center" gap={1}>
+                                <CancelIcon />
+                                <Typography variant="h6">Missing Telemetry</Typography>
+                            </Stack></>}
                         {Number(teamTelemetryStatus) == 1 ?
-                            <><CheckCircleIcon /> Receiving Team Telemetry</> :
-                            <><CancelIcon /> Missing Team Telemetry</>}
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button
-                        size="small"
-                        variant="contained"
-                        className="btn btn-primary"
-                        onClick={refresh}
-                    >
-                        Refresh
-                        </Button>
-                    </Grid>
+                            <><Stack direction="row" alignItems="center" gap={1}>
+                                <CheckCircleIcon />
+                                <Typography variant="h6">Receiving Team Telemetry</Typography>
+                            </Stack></> :
+                            <><Stack direction="row" alignItems="center" gap={1}>
+                                <CancelIcon />
+                                <Typography variant="h6">Missing Team Telemetry</Typography>
+                            </Stack></>}
+                        </Stack>
                 </Grid>
-                
-            </div>
+                <Grid item xs={12}>
+                    <Button
+                    size="small"
+                    variant="contained"
+                    className="btn btn-primary"
+                    onClick={refresh}
+                >
+                    Refresh
+                    </Button>
+                </Grid>
+            </Grid>
+                       
             <br />
 
             <Routes>

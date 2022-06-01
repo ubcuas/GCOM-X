@@ -25,7 +25,7 @@ Uas_client connection status
 
 connect_stat = 0
 current_mission_id = -1
-UAS_team_id = 1
+UAS_team_id = 5
 
 def get_connect_stat():
     global connect_stat
@@ -59,7 +59,7 @@ def sendTelemetry(uasclient):
 def telemetry(request):
     if request.method == 'GET':
         try:
-            uas_telem = UasTelemetry.objects.all().order_by('-created_at')
+            uas_telem = UasTelemetry.objects.filter(team_id=UAS_team_id).order_by('-created_at')
             return JsonResponse(uas_telem[0].marshal())
         except Exception as err:
             return HttpResponse(status=204)  # No content
@@ -82,14 +82,11 @@ def telemetry(request):
 @csrf_exempt
 @require_http_methods(["GET"])
 def teams(request):
-    # body_unicode = request.body.decode('utf-8')
-    # body = json.loads(body_unicode)
-
     try:
         gcomclient = Client()
 
         teams = gcomclient.get_teams_telemetry()
-        client_session  = gcomclient.get_client_session()
+        client_session = gcomclient.get_client_session()
 
         logger.debug(teams)
 
@@ -101,14 +98,20 @@ def teams(request):
 
     for team in teams:
         if (team['team']['username'] != client_session.username):
-            telem = deserialize_telem_msg(team['team']['telemetry'])
+            telem = team['telemetry']
             team_telem = UasTelemetry(team_id=team['team']['id'],
-                                    latitude=telem.latitude_dege7 / 1.0E7,
-                                    longitude=telem.longitude_dege7 / 1.0E7,
-                                    altitude_msl=telem.altitude_msl_m,
-                                    uas_heading=telem.heading_deg)
+                          latitude=telem['latitude'],
+                          longitude=telem['longitude'],
+                          altitude_msl=telem['altitude'],
+                          uas_heading=telem['heading'])
+            # telem = deserialize_telem_msg(json.dump(team['telemetry']))
+            # team_telem = UasTelemetry(team_id=team['team']['id'],
+            #                         latitude=telem.latitude_dege7 / 1.0E7,
+            #                         longitude=telem.longitude_dege7 / 1.0E7,
+            #                         altitude_msl=telem.altitude_msl_m,
+            #                         uas_heading=telem.heading_deg)
             team_telem.save()
-            response_payload.append(team_telem.marshall())
+            response_payload.append(team_telem.marshal())
 
     return JsonResponse({'teams':response_payload})
 
@@ -147,12 +150,32 @@ def telem_status(request):
 @csrf_exempt
 @require_http_methods(["GET"])
 def team_telem_status(request):
-    team_telems = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')
+    try:
+        gcomclient = Client()
+        team_telems = gcomclient.get_teams_telemetry()
+        logger.debug(team_telems)
+        
+    except Exception as e:
+        logger.exception(e)
+        return HttpResponseServerError(e)
+
+    # teams(request)
+    # team_telems = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')
+    # if len(team_telems) > 0:
+    #     last_team_telem = team_telems[0]
+    #     delta = datetime.now(timezone.utc) - last_team_telem.created_at
+    #     if delta.seconds <= 5:
+    #         stat = 1
+    #     else:
+    #         stat = 0
+    # else:
+    #     stat = -1
 
     if len(team_telems) > 0:
-        last_team_telem = team_telems[0]
-        delta = datetime.now(datetime.timezone.utc) - last_team_telem.created_at
-        if delta.seconds <= 5:
+        team_telems = list(filter(lambda i: i['team']['id'] != UAS_team_id, team_telems))
+        sorted_team_telems = sorted(team_telems, key=lambda d: d['telemetryAgeSec'])
+        last_team_telem = sorted_team_telems[0]
+        if last_team_telem['telemetryAgeSec'] <= 5:
             stat = 1
         else:
             stat = 0
@@ -225,6 +248,7 @@ def missions(request):
 def mission(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
+    global current_mission_id 
     current_mission_id = int(body['mission_id'])
 
     try:

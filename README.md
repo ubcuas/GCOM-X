@@ -30,13 +30,6 @@ Navigate to frontend folder (`cd frontend`) and run:
 npm install --legacy-peer-deps
 ```
 
-In case of the webpack json command in the frontend Dockerfile not running, run the following commands and comment out the command in the frontend Dockerfile:
-```
-npm install webpack -g --legacy-peer-deps
-npm install webpack-cli -g --legacy-peer-deps
-webpack-cli --json > webpack-stats.json
-```
-
 Change back to the main folder (`cd ..`):
 ```
 docker-compose build --parallel
