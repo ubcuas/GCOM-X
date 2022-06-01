@@ -31,7 +31,7 @@ const TEAM_TELEMETRY_ENDPOINT = 'http://localhost:8080/api/interop/teamtelemstat
 const Interop = () => {
     const [telemetryStatus, setTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
     const [teamTelemetryStatus, setTeamTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
-    const [needsRelogin, setNeedsRelogin] = useState(true);
+    const [needsRelogin, setNeedsRelogin] = useState(false);
     const [currentMissionID, setCurrentMissionID] = useState(-1);
     const location = useLocation();
     const navigate = useNavigate();
