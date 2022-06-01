@@ -101,14 +101,20 @@ def teams(request):
 
     for team in teams:
         if (team['team']['username'] != client_session.username):
-            telem = deserialize_telem_msg(team['team']['telemetry'])
+            telem = team['telemetry']
             team_telem = UasTelemetry(team_id=team['team']['id'],
-                                    latitude=telem.latitude_dege7 / 1.0E7,
-                                    longitude=telem.longitude_dege7 / 1.0E7,
-                                    altitude_msl=telem.altitude_msl_m,
-                                    uas_heading=telem.heading_deg)
+                          latitude=telem['latitude'],
+                          longitude=telem['longitude'],
+                          altitude_msl=telem['altitude'],
+                          uas_heading=telem['heading'])
+            # telem = deserialize_telem_msg(json.dump(team['telemetry']))
+            # team_telem = UasTelemetry(team_id=team['team']['id'],
+            #                         latitude=telem.latitude_dege7 / 1.0E7,
+            #                         longitude=telem.longitude_dege7 / 1.0E7,
+            #                         altitude_msl=telem.altitude_msl_m,
+            #                         uas_heading=telem.heading_deg)
             team_telem.save()
-            response_payload.append(team_telem.marshall())
+            response_payload.append(team_telem.marshal())
 
     return JsonResponse({'teams':response_payload})
 
@@ -148,10 +154,9 @@ def telem_status(request):
 @require_http_methods(["GET"])
 def team_telem_status(request):
     team_telems = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')
-
     if len(team_telems) > 0:
         last_team_telem = team_telems[0]
-        delta = datetime.now(datetime.timezone.utc) - last_team_telem.created_at
+        delta = datetime.now(timezone.utc) - last_team_telem.created_at
         if delta.seconds <= 5:
             stat = 1
         else:
