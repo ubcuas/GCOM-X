@@ -60,8 +60,15 @@ docker-compose up
 
 **Key URLS**
 - Go to the frontend webpage: [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
+    - Development url: [http://127.0.0.1:3000/](http://127.0.0.1:3000/)
 - Go to the admin webpage: [http://127.0.0.1:8080/admin/](http://127.0.0.1:8080/admin/)
+    - See [below](#django-accounts) to create an admin user
 - Go to the interop admin webpage: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+    - User: testadmin
+    - Password: testpass
+    - More details: [https://github.com/auvsi-suas/interop](https://github.com/auvsi-suas/interop)
+
+*`127.0.0.1` can be replaced with `localhost` if preferred
 
 
 #### Testing
@@ -103,7 +110,8 @@ docker-compose run frontend npm install <lib>
 ## Django Accounts
 To create a new admin user:
 ```
-docker-compose run interop-server bash -c “./manage.py createsuperuser”
+(Interop) docker-compose run interop-server bash -c “./manage.py createsuperuser”
+(GCOM-X) docker-compose run backend bash -c “python manage.py createsuperuser”
 ```
 
 ## Troubleshooting
