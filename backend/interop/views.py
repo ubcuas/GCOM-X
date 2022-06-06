@@ -11,8 +11,6 @@ from interop.models import UasMission, UasTelemetry
 
 from interop.client import Client
 
-from pylibuuas.telem import deserialize_telem_msg
-
 logger = logging.getLogger(__name__)
 
 """
@@ -60,7 +58,7 @@ def telemetry(request):
     if request.method == 'GET':
         try:
             uas_telem = UasTelemetry.objects.filter(team_id=UAS_team_id).order_by('-created_at')
-            return JsonResponse(uas_telem[0].marshal())
+            return JsonResponse(uas_telem[0].marshal(), json_dumps_params={"indent":2})
         except Exception as err:
             return HttpResponse(status=204)  # No content
 
@@ -97,23 +95,21 @@ def teams(request):
     response_payload = []
 
     for team in teams:
-        if (team['team']['username'] != client_session.username):
-            telem = team['telemetry']
-            team_telem = UasTelemetry(team_id=team['team']['id'],
-                          latitude=telem['latitude'],
-                          longitude=telem['longitude'],
-                          altitude_msl=telem['altitude'],
-                          uas_heading=telem['heading'])
-            # telem = deserialize_telem_msg(json.dump(team['telemetry']))
-            # team_telem = UasTelemetry(team_id=team['team']['id'],
-            #                         latitude=telem.latitude_dege7 / 1.0E7,
-            #                         longitude=telem.longitude_dege7 / 1.0E7,
-            #                         altitude_msl=telem.altitude_msl_m,
-            #                         uas_heading=telem.heading_deg)
-            team_telem.save()
-            response_payload.append(team_telem.marshal())
+        try:
+            if (team['team']['username'] != client_session.username):
+                telem = team['telemetry']
+                team_telem = UasTelemetry(team_id=team['team']['id'],
+                            latitude=telem['latitude'],
+                            longitude=telem['longitude'],
+                            altitude_msl=telem['altitude'],
+                            uas_heading=telem['heading'])
 
-    return JsonResponse({'teams':response_payload})
+                team_telem.save()
+                response_payload.append(team_telem.marshal())
+        except:
+            pass
+
+    return JsonResponse({'teams':response_payload}, json_dumps_params={"indent":2})
 
 # -1 error, 0 stopped, 1 sending
 @csrf_exempt
@@ -125,7 +121,7 @@ def telem_status(request):
             'status': -1,
             'mission_id': current_mission_id,
         }
-        return JsonResponse(response)
+        return JsonResponse(response, json_dumps_params={"indent":2})
     # no error
     else:
         team_telems = UasTelemetry.objects.filter(team_id=UAS_team_id).order_by('-created_at')
@@ -144,7 +140,7 @@ def telem_status(request):
         'status': stat,
         'mission_id': current_mission_id,
         }
-        return JsonResponse(response)
+        return JsonResponse(response, json_dumps_params={"indent":2})
 
 
 @csrf_exempt
@@ -153,39 +149,29 @@ def team_telem_status(request):
     try:
         gcomclient = Client()
         team_telems = gcomclient.get_teams_telemetry()
-        logger.debug(team_telems)
         
     except Exception as e:
         logger.exception(e)
         return HttpResponseServerError(e)
 
-    # teams(request)
-    # team_telems = UasTelemetry.objects.exclude(team_id=UAS_team_id).order_by('-created_at')
-    # if len(team_telems) > 0:
-    #     last_team_telem = team_telems[0]
-    #     delta = datetime.now(timezone.utc) - last_team_telem.created_at
-    #     if delta.seconds <= 5:
-    #         stat = 1
-    #     else:
-    #         stat = 0
-    # else:
-    #     stat = -1
-
     if len(team_telems) > 0:
-        team_telems = list(filter(lambda i: i['team']['id'] != UAS_team_id, team_telems))
-        sorted_team_telems = sorted(team_telems, key=lambda d: d['telemetryAgeSec'])
-        last_team_telem = sorted_team_telems[0]
-        if last_team_telem['telemetryAgeSec'] <= 5:
-            stat = 1
-        else:
-            stat = 0
+        try:
+            team_telems = list(filter(lambda i: i['team']['id'] != UAS_team_id, team_telems))
+            sorted_team_telems = sorted(team_telems, key=lambda d: d['telemetryAgeSec'])
+            last_team_telem = sorted_team_telems[0]
+            if last_team_telem['telemetryAgeSec'] <= 5:
+                stat = 1
+            else:
+                stat = 0
+        except:
+            stat = -1
     else:
         stat = -1
     response = {
     'status': stat,
     'mission_id': current_mission_id,
     }
-    return JsonResponse(response)
+    return JsonResponse(response, json_dumps_params={"indent":2})
 
 
 
@@ -217,7 +203,7 @@ def login(request):
         'status': connect_stat,
         'mission_id': current_mission_id,
     }
-    return JsonResponse(response)
+    return JsonResponse(response, json_dumps_params={"indent":2})
 
 @csrf_exempt
 @require_http_methods(["GET"])
@@ -230,15 +216,15 @@ def status(request):
         'mission_id': current_mission_id,
     }
 
-    return JsonResponse(response)
+    return JsonResponse(response, json_dumps_params={"indent":2})
 
 @csrf_exempt
 @require_http_methods(["GET"])
-def missions(request):
+def missions(request, mission_id):
     try:
         gcomclient = Client()
-        missions = gcomclient.get_missions()
-        return missions
+        missions = gcomclient.get_mission(mission_id)
+        return JsonResponse(missions, json_dumps_params={"indent":2})
     except Exception as e:
         logger.exception(e)
         return HttpResponseServerError(e)
@@ -267,4 +253,4 @@ def mission(request):
         'mission_id': current_mission_id,
     }
 
-    return JsonResponse(response)
+    return JsonResponse(response, json_dumps_params={"indent":2})
