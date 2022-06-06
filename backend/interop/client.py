@@ -66,11 +66,11 @@ class Client():
         # Save new session
         gcom_session.save()
 
-    def get_mission(self, mission_id=1):
+    def get_mission(self, mission_id):
         """
         GET /api/missions/${mission_id}
         """
-        logger.debug("GET interop-server /api/missions")
+        logger.debug("GET interop-server /api/missions/" + mission_id)
         session = self.get_client_session()
         cookies = self.get_cookies(session)
 
@@ -79,31 +79,7 @@ class Client():
         r = requests.get(request_url, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
-
-        return r.json()
-
-    # Get all missions
-    def get_missions(self):
-        """
-        GET /api/missions
-        """
-        logger.debug("GET interop-server /api/missions")
-        session = self.get_client_session()
-        cookies = self.get_cookies(session)
-
-        request_url = session.url + f"/api/missions"
-
-        r = requests.get(request_url, cookies=cookies)
-
-        if not r.ok:
-            raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
-
-        # if r.status_code != 200:
-        #     return JsonResponse({'missions': []})
-            # raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
-
-
+            raise Exception('Failed to GET /api/missions/%s: [%s] %s' % (mission_id, r.status_code, r.content))
 
         return r.json()
 
@@ -257,5 +233,5 @@ class Client():
 
         if not r.ok:
             raise Exception('Failed to GET /api/teams: [%s] %s' % (r.status_code, r.content))
-
+        
         return r.json()
