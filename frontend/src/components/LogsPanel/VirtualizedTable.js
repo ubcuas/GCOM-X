@@ -181,12 +181,12 @@ export default function ReactVirtualizedTable(props) {
         rowGetter={({ index }) => rows[index]}
         columns={[
           {
-            width: 100,
+            width: 75,
             label: 'Origin',
             dataKey: 'origin',
           },
           {
-            width: 200,
+            width: 225,
             label: 'Content',
             dataKey: 'content',
           },

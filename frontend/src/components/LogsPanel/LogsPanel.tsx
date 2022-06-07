@@ -28,7 +28,8 @@ const LogsPanel = (props) => {
     useEffect(() => {
         if (logContainerRef.current !== null) {
             if (autoscroll) {
-                let current = logContainerRef.current
+                // let current = logContainerRef.current
+                let current = document.getElementsByClassName("ReactVirtualized__Grid ReactVirtualized__Table__Grid")[0]
                 current.scrollTop = current.scrollHeight + 100
             }
         }
@@ -39,7 +40,7 @@ const LogsPanel = (props) => {
             <Typography fontWeight={800} fontSize={20} style={{ padding: 20 }}>System Logs</Typography>
             <Grid container>
                 <Grid item xs={6}>
-                    <Checkbox value={autoscroll} onChange={(evt) => {
+                    <Checkbox checked={autoscroll} onChange={(evt) => {
                         setAutoscroll(evt.target.checked)
                     }} /> Autoscroll
                 </Grid>
