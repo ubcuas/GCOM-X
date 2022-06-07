@@ -27,10 +27,12 @@ const INTEROP_MISSION_ENDPOINT = 'http://localhost:8080/api/interop/mission';
 const INTEROP_STATUS_ENDPOINT = 'http://localhost:8080/api/interop/status';
 const TELEMETRY_ENDPOINT = 'http://localhost:8080/api/interop/telemstatus';
 const TEAM_TELEMETRY_ENDPOINT = 'http://localhost:8080/api/interop/teamtelemstatus';
+const INTEROP_UBC_ID_ENDPOINT = 'http://localhost:8080/api/interop/ubcid';
 
 const Interop = () => {
     const [telemetryStatus, setTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
-    const [teamTelemetryStatus, setTeamTelemetryStatus] = useState(ConnectionStatus.DISCONNECTED);
+    const [teamTelemetryStatus, setTeamTelemetryStatus] = useState(TelemetryStatus.STOPPED);
+    const [ubcID, setUbcID] = useState(0);
     const [needsRelogin, setNeedsRelogin] = useState(false);
     const [currentMissionID, setCurrentMissionID] = useState(-1);
     const location = useLocation();
@@ -94,6 +96,15 @@ const Interop = () => {
         }
     }
 
+    async function getUbcID() {
+        try {
+            let res = await axios.get(INTEROP_UBC_ID_ENDPOINT)
+            return res.data.ubc_id
+        } catch (err) {
+            return -1;
+        }
+    }
+
     async function updateTelemetry() {
         let telemetryStatus = await getTelemetryStatus();
         setTelemetryStatus(Number(telemetryStatus));
@@ -104,10 +115,16 @@ const Interop = () => {
         setTeamTelemetryStatus(Number(teamTelemetryStatus));
     }
 
+    async function updateUbcID() {
+        let ubcID = await getUbcID();
+        setUbcID(Number(ubcID));
+    }
+
     function refresh() {
         updatePage();
         updateTelemetry();
         updateTeamTelemetry();
+        updateUbcID();
     }
 
     async function login(params) {
@@ -130,6 +147,15 @@ const Interop = () => {
         try {
             let response = await axios.post(INTEROP_MISSION_ENDPOINT, { mission_id: id })
             setCurrentMissionID(response.data.mission_id);
+        } catch (err) {
+            alert(err);
+        }
+    }
+
+    async function postUbcID(id) {
+        try {
+            let response = await axios.post(INTEROP_UBC_ID_ENDPOINT, { ubc_id: id })
+            setUbcID(response.data.ubc_id);
         } catch (err) {
             alert(err);
         }
@@ -187,6 +213,8 @@ const Interop = () => {
                         telemetryStatus={telemetryStatus}
                         teamTelemetryStatus={teamTelemetryStatus}
                         currentMissionID={currentMissionID}
+                        ubcID={ubcID}
+                        postUbcID={postUbcID}
                         relogin={relogin}
                     />}
                 />

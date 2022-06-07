@@ -7,8 +7,9 @@ import { Grid, Button, Typography, Stack, Paper, TextField } from '@mui/material
 
 const WAYPOINT_FILE_ENDPOINT = 'http://localhost:8080/avoidance/file/route/';
 
-const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID, grabInteropMission }) => {
+const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID, ubcID, grabInteropMission, postUbcID }) => {
     const [newMissionID, setNewMissionID] = useState(1);
+    const [newUbcID, setNewUbcID] = useState(ubcID);
 
     function telemetryStatusToText(status) {
         switch (status) {
@@ -32,7 +33,7 @@ const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID
     }
 
     return (
-        <Grid container justifyContent="center" alignItems="center" rowSpacing={3} columnSpacing={1} style={{ width: "33%", margin: "0 auto" }}>
+        <Grid container justifyContent="center" alignItems="center" rowSpacing={2} columnSpacing={1} style={{ width: "33%", margin: "0 auto" }}>
             <Grid item xs={3}>
                 <Button
                     variant="contained"
@@ -49,11 +50,11 @@ const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID
                     Download waypoint file
                 </Button>
             </Grid>
-            <Paper style={{width: "100%", height: "100%", "marginTop": 30, "paddingTop": 30, "paddingBottom": 20 }}>
+            <Paper style={{width: "80%", height: "100%", "marginTop": 20, "paddingTop": 22, "paddingBottom": 10 }}>
                 <Grid container item rowSpacing ={3}>
                     <Grid item xs={5}>
                         <Stack alignItems="center" gap={1}>
-                            <Typography variant="h5">Mission ID:</Typography>
+                            <Typography variant="h6">Mission ID:</Typography>
                             <Typography variant="h6"> { currentMissionID } </Typography>
                         </Stack>
                     </Grid>
@@ -72,6 +73,34 @@ const Status = ({telemetryStatus, teamTelemetryStatus, relogin, currentMissionID
                                 onClick={() => grabInteropMission(newMissionID)}
                             >
                                 Grab Interop mission
+                            </Button>
+                        </Stack>
+                    </Grid> 
+                </Grid>
+            </Paper>
+            <Paper style={{width: "80%", height: "100%", "paddingTop": 22, "paddingBottom": 10, "marginTop": 10 }}>
+                <Grid container item rowSpacing ={3}>
+                    <Grid item xs={5}>
+                        <Stack alignItems="center" gap={1}>
+                            <Typography variant="h6">UBC UAS ID:</Typography>
+                            <Typography variant="h6"> { ubcID } </Typography>
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <Stack alignItems="center" gap={1}>
+                            <TextField
+                                variant="outlined"
+                                label="Set Correct UBC UAS ID"
+                                size="small"
+                                type="number"
+                                value={ newUbcID }
+                                onChange={e => setNewUbcID(e.target.value)}
+                            />
+                            <Button
+                                variant="text"
+                                onClick={() => postUbcID(newUbcID)}
+                            >
+                                Update UBC UAS ID
                             </Button>
                         </Stack>
                     </Grid>

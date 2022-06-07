@@ -23,7 +23,7 @@ Uas_client connection status
 
 connect_stat = 0
 current_mission_id = -1
-UAS_team_id = 5
+UAS_team_id = 0
 
 def get_connect_stat():
     global connect_stat
@@ -51,6 +51,30 @@ def sendTelemetry(uasclient):
     else:
         logger.debug('UBC uas interop not connected or smurf not connected')
     return False
+
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def ubc_id(request):
+    global UAS_team_id
+    if request.method == 'GET':
+        try:
+            return JsonResponse({'ubc_id':UAS_team_id}, json_dumps_params={"indent":2})
+        except Exception as err:
+            logger.exception(err)
+            return HttpResponseServerError(err)
+    if request.method == 'POST':
+        try:
+            unicode_body = request.body.decode('utf-8')
+            body = json.loads(unicode_body)
+            UAS_team_id = int(body['ubc_id'])
+
+            response = {
+                'ubc_id': UAS_team_id,
+            }
+            return JsonResponse(response)
+        except Exception as err:
+            logger.exception(err)
+            return HttpResponseServerError(err)
 
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
@@ -137,8 +161,8 @@ def telem_status(request):
         else:
             stat = -1
         response = {
-        'status': stat,
-        'mission_id': current_mission_id,
+            'status': stat,
+            'mission_id': current_mission_id,
         }
         return JsonResponse(response, json_dumps_params={"indent":2})
 
@@ -168,8 +192,8 @@ def team_telem_status(request):
     else:
         stat = -1
     response = {
-    'status': stat,
-    'mission_id': current_mission_id,
+        'status': stat,
+        'mission_id': current_mission_id,
     }
     return JsonResponse(response, json_dumps_params={"indent":2})
 

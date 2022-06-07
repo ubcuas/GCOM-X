@@ -1,4 +1,3 @@
-from django.urls import path
 from interop import views
 from django.urls import re_path
 
@@ -11,5 +10,6 @@ urlpatterns = [
     re_path(r'api/interop/telemetry/?$', views.telemetry, name='interop.telemetry'),
     re_path(r'api/interop/teamtelemetry/?$', views.teams, name='interop.teamtelemetry'),
     re_path(r'api/interop/telemstatus/?$', views.telem_status, name='interop.telem_status'),
-    re_path(r'api/interop/teamtelemstatus/?$', views.team_telem_status, name='interop.team_telem_status')
+    re_path(r'api/interop/teamtelemstatus/?$', views.team_telem_status, name='interop.team_telem_status'),
+    re_path(r'api/interop/ubcid$', views.ubc_id, name='interop.ubc_id')
 ]
