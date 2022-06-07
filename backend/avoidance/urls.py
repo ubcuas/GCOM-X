@@ -1,6 +1,6 @@
 from django.urls import path
 from avoidance import views
-from django.conf.urls import re_path
+from django.urls import re_path
 
 urlpatterns = [
     re_path(r'^api/route/(?P<mission_id>[0-9]+)/$', views.route, name='avoidance.api.route'),

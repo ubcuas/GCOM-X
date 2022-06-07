@@ -70,7 +70,7 @@ class Client():
         """
         GET /api/missions/${mission_id}
         """
-        logger.debug("GET interop-server /api/missions/" + mission_id)
+        logger.debug("GET interop-server /api/missions/" + str(mission_id))
         session = self.get_client_session()
         cookies = self.get_cookies(session)
 
@@ -79,7 +79,7 @@ class Client():
         r = requests.get(request_url, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to GET /api/missions/%s: [%s] %s' % (mission_id, r.status_code, r.content))
+            raise Exception('Failed to GET /api/missions/%i: [%s] %s' % (mission_id, r.status_code, r.content))
 
         return r.json()
 

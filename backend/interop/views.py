@@ -203,7 +203,7 @@ def login(request):
         'status': connect_stat,
         'mission_id': current_mission_id,
     }
-    return JsonResponse(response, json_dumps_params={"indent":2})
+    return JsonResponse(response)
 
 @csrf_exempt
 @require_http_methods(["GET"])
@@ -240,7 +240,7 @@ def mission(request):
     try:
         gcomclient = Client()
 
-        mission = gcomclient.get_mission(mission_id=current_mission_id)
+        mission = gcomclient.get_mission(mission_id=str(current_mission_id))
         logger.debug(mission)
         UasMission.create(mission)
 
@@ -253,4 +253,4 @@ def mission(request):
         'mission_id': current_mission_id,
     }
 
-    return JsonResponse(response, json_dumps_params={"indent":2})
+    return JsonResponse(response)
