@@ -175,7 +175,7 @@ export default function ReactVirtualizedTable(props) {
   }) || [];
 
   return (
-    <Paper style={{ height: "calc(100vh - 300px)", width: '100%' }}>
+    <Paper style={{ height: "100%", width: '100%' }}>
       <VirtualizedTable
         rowCount={rows.length}
         rowGetter={({ index }) => rows[index]}

@@ -34,8 +34,8 @@ const LogsPanel = (props) => {
         }
     }, [logs, autoscroll])
 
-    return <div style={{ display: props.visible ? "block" : "none" }}>
-        <Box style={{ width: 400, float: "left", textAlign: "center" }}>
+    return <div style={{ display: props.visible ? "block" : "none", height: '100%' }}>
+        <Box style={{ width: 400, height: '100%', float: "left", textAlign: "center" }}>
             <Typography fontWeight={800} fontSize={20} style={{ padding: 20 }}>System Logs</Typography>
             <Grid container>
                 <Grid item xs={6}>
@@ -47,7 +47,7 @@ const LogsPanel = (props) => {
                     <Button variant="contained" startIcon={<DataObjectIcon />}>Download</Button>
                 </Grid>
             </Grid>
-            <Box style={{ maxHeight: "calc(100vh - 300px)", padding: 0 }} ref={logContainerRef}>
+            <Box style={{ maxHeight: 'calc(100vh - 176px)', height: '100%', paddingTop: 10 }} ref={logContainerRef}>
                 <ReactVirtualizedTable rows={logs} />
             </Box>
         </Box>
