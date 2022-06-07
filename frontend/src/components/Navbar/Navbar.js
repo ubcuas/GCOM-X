@@ -59,7 +59,7 @@ const Navbar = () => {
     // }, 2000)
 
     return (
-        <AppBar position="relative" color="default" style={{ height: 64 }} elevation={2} className={classes.navbar} classes={{
+        <AppBar position="absolute" color="default" style={{ height: 64 }} elevation={2} className={classes.navbar} classes={{
             root: classes.navbar
         }}>
             <Container maxWidth="xxl" color="inherit">
