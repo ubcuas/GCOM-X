@@ -34,8 +34,20 @@ const toTelemetryArray = (aircraft: any) => {
     if (aircraft['altitude_msl']) {
         telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${aircraft['altitude_msl'].toFixed(2)}`, "m"))
     }
+    if (aircraft['altitude_msl']) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${(aircraft['altitude_msl']*3.280839895).toFixed(2)}`, "ft"))
+    }
+    if (aircraft['groundspeed_m_s']) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.SPEED, `${aircraft['groundspeed_m_s'].toFixed(2)}`, "m/s"))
+    }
+    if (aircraft['groundspeed_m_s']) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.SPEED, `${(aircraft['groundspeed_m_s']*1.94384449).toFixed(2)}`, "kn"))
+    }
     if (aircraft['uas_heading']) {
         telemArray.push(new UASTelemetry(UASTelemetryKey.HEADING, `${aircraft['uas_heading'].toFixed(2)}`, "°"))
+    }
+    if (aircraft['chan3_raw']) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.CHANNEL, `${aircraft['chan3_raw'].toFixed(0)}`, ""))
     }
     if (aircraft['team_id']) {
         telemArray.push(new UASTelemetry(UASTelemetryKey.TEAM_ID, `${aircraft['team_id'].toFixed(0)}`, ""))

@@ -93,7 +93,9 @@ def telemetry(request):
                                  latitude=telem['latitude_dege7'] / 1.0E7,
                                  longitude=telem['longitude_dege7'] / 1.0E7,
                                  altitude_msl=telem['altitude_msl_m'],
-                                 uas_heading=telem['heading_deg'])
+                                 uas_heading=telem['heading_deg'],
+                                 groundspeed_m_s=telem['groundspeed_m_s'],
+                                 chan3_raw=telem['chan3_raw'])
         new_telem.save()
         gcom_client = Client()
         sendTelemetry(gcom_client)
@@ -126,7 +128,9 @@ def teams(request):
                             latitude=telem['latitude'],
                             longitude=telem['longitude'],
                             altitude_msl=telem['altitude'],
-                            uas_heading=telem['heading'])
+                            uas_heading=telem['heading'],
+                            groundspeed_m_s=None,
+                            chan3_raw=None)
 
                 team_telem.save()
                 response_payload.append(team_telem.marshal())

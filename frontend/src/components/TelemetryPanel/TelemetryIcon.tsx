@@ -13,6 +13,7 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import BatteryChargingFullIcon from '@mui/icons-material/BatteryChargingFull';
 import HeightIcon from '@mui/icons-material/Height';
 import GroupsIcon from '@mui/icons-material/Groups';
+import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
 
 //default for telemetry with missing icon in the map
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
@@ -35,6 +36,8 @@ TKIconMap[UASTelemetryKey.STORAGE] = <SdStorageIcon />;
 TKIconMap[UASTelemetryKey.NETWORK_SPEED] = <NetworkCheckIcon />;
 TKIconMap[UASTelemetryKey.TEAM_ID] = <GroupsIcon />;
 TKIconMap[UASTelemetryKey.GENERIC] = <HelpCenterIcon />;
+TKIconMap[UASTelemetryKey.CHANNEL] = <SettingsInputAntennaIcon />;
+
 
 export const TelemetryIcon = ({ telemetryKey = UASTelemetryKey.GENERIC }) => {
     try {

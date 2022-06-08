@@ -8,6 +8,8 @@
       "longitude": 14.0,
       "altitude_msl": 2.0,
       "uas_heading": 40.0,
+      "groundspeed_m_s": 3.0,
+      "chan3_raw": 975,
       "created_at": "2021-03-13T21:57:55.921Z",
       "uploaded": true
     }
@@ -21,6 +23,8 @@
       "longitude": 41.0,
       "altitude_msl": 1.0,
       "uas_heading": 40.0,
+      "groundspeed_m_s": 5.0,
+      "chan3_raw": 975,
       "created_at": "2021-03-13T21:58:28.522Z",
       "uploaded": true
     }
@@ -34,6 +38,8 @@
       "longitude": 34.0,
       "altitude_msl": 1.0,
       "uas_heading": 12.0,
+      "groundspeed_m_s": 5.0,
+      "chan3_raw": 975,
       "created_at": "2021-03-20T17:34:33.479Z",
       "uploaded": true
     }
@@ -47,6 +53,8 @@
       "longitude": 43.0,
       "altitude_msl": 176.0,
       "uas_heading": 3.0,
+      "groundspeed_m_s": 4.0,
+      "chan3_raw": 975,
       "created_at": "2021-03-20T17:34:52.831Z",
       "uploaded": true
     }

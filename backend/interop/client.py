@@ -200,7 +200,7 @@ class Client():
         request_url = session.url + "/api/telemetry"
 
         # interop does not expect team_id in telemetry data
-        exclude_telem_data_keys = {'team_id'}
+        exclude_telem_data_keys = {'team_id', 'groundspeed_m_s', 'chan3_raw'}
         filtered_telem_data = {x: telem_data[x] for x in set(list(telem_data.keys())) - set(exclude_telem_data_keys)}
 
         # rename uas_heading to "heading" for interop

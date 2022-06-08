@@ -31,6 +31,8 @@ class UasTelemetry(models.Model):
     longitude = models.FloatField()
     altitude_msl = models.FloatField()
     uas_heading = models.FloatField()
+    groundspeed_m_s = models.FloatField()
+    chan3_raw = models.IntegerField(default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded = models.BooleanField(default=False)
 
@@ -40,7 +42,9 @@ class UasTelemetry(models.Model):
                 'latitude': self.latitude,
                 'longitude': self.longitude,
                 'uas_heading': self.uas_heading,
-                'altitude_msl': self.altitude_msl}
+                'altitude_msl': self.altitude_msl,
+                'groundspeed_m_s': self.groundspeed_m_s,
+                'chan3_raw': self.chan3_raw}
 
 class Teams(models.Model):
     """

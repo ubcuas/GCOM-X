@@ -6,7 +6,7 @@ This file contains the definitions of interfaces used by telemetry-related compo
 
 enum UASTelemetryKey {
     GPS_POSITION = "gps_position",
-    SPEED = "speed",
+    SPEED = "groundspeed_m_s",
     ALTITUDE_MSL = "altitude_msl",
     RUNTIME = "runtime",
     VIBRATION = "vibration",
@@ -17,7 +17,8 @@ enum UASTelemetryKey {
     STORAGE = "storage",
     NETWORK_SPEED = "network_speed",
     TEAM_ID = "team_id",
-    GENERIC = "generic"
+    GENERIC = "generic",
+    CHANNEL = "chan3_raw"
 }
 
 interface UASTelemetryInterface {
