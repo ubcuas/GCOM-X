@@ -211,6 +211,7 @@ class Client():
         filtered_telem_data["altitude"] = filtered_telem_data["altitude_msl"]
         del filtered_telem_data["altitude_msl"]
 
+        # change altitude from m to ft
         filtered_telem_data["altitude"] *= 3.280839895
 
         r = requests.post(request_url, json=filtered_telem_data, cookies=cookies)
