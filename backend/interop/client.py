@@ -199,7 +199,7 @@ class Client():
 
         request_url = session.url + "/api/telemetry"
 
-        # interop does not expect team_id in telemetry data
+        # interop does not expect team_id, speed, or rc channel status in telemetry data
         exclude_telem_data_keys = {'team_id', 'groundspeed_m_s', 'chan3_raw'}
         filtered_telem_data = {x: telem_data[x] for x in set(list(telem_data.keys())) - set(exclude_telem_data_keys)}
 
@@ -211,6 +211,7 @@ class Client():
         filtered_telem_data["altitude"] = filtered_telem_data["altitude_msl"]
         del filtered_telem_data["altitude_msl"]
 
+        filtered_telem_data["altitude"] *= 3.280839895
 
         r = requests.post(request_url, json=filtered_telem_data, cookies=cookies)
 
