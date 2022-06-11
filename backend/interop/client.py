@@ -3,6 +3,7 @@ import requests
 import logging
 
 from interop.models import ClientSession
+from common.utils.conversions import m_2_f
 
 logger = logging.getLogger(__name__)
 
@@ -212,7 +213,7 @@ class Client():
         del filtered_telem_data["altitude_msl"]
 
         # change altitude from m to ft
-        filtered_telem_data["altitude"] *= 3.280839895
+        filtered_telem_data["altitude"] = m_2_f(filtered_telem_data["altitude"])
 
         r = requests.post(request_url, json=filtered_telem_data, cookies=cookies)
 
