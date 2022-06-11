@@ -361,7 +361,7 @@ def _draw_search_grid(short_p, search_grid_points, altitude_msl):
 
     return [Waypoint(longitude=x[0], latitude=x[1], altitude=altitude_msl, invert_m_l=True, wp_type='search_grid') for x in calculated_grid_points]
 
-def _calculate_odlc_search(flyzone, start_point, search_grid_points, off_axis_odlc_pos, altitude_msl=35):
+def _calculate_odlc_search(flyzone, start_point, search_grid_points, off_axis_odlc_pos, altitude_msl=67):
     # off_axis_odlc_pos = Waypoint(latitude=off_axis_odlc_pos.latitude, longitude=off_axis_odlc_pos.longitude, altitude=altitude_msl, is_generated=False, wp_type='off_axis')
     search_grid_points = [Waypoint(latitude=x.latitude, longitude=x.longitude, altitude=altitude_msl, is_generated=False) for x in search_grid_points]
 
@@ -387,7 +387,7 @@ def _calculate_odlc_search(flyzone, start_point, search_grid_points, off_axis_od
     # else:
     #     return _find_off_axis_point(flyzone, off_axis_odlc_pos, off_axis_line, altitude_msl) + search_grid_grid_points
 
-def _draw_airdrop(airdrop_pos, altitude_msl=35):
+def _draw_airdrop(airdrop_pos, altitude_msl=66.5):
     return [Waypoint(latitude=airdrop_pos.latitude, longitude=airdrop_pos.longitude, altitude=altitude_msl, is_generated=False, wp_type='airdrop')]
 
 def _draw_auto_route(auto_flight_wps):
