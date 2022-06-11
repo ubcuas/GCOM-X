@@ -258,7 +258,7 @@ def _serialize_orwp_to_acomjson(orwp_list):
     """
     acom_wps = []
     for wp in orwp_list:
-        acom_wps.append({'hold': 0, 'radius': 1, 'lat': wp.latitude, 'lng': wp.longitude, 'alt' : wp.altitude_msl})
+        acom_wps.append({'hold': 0, 'radius': 1, 'lat': wp.latitude, 'lng': wp.longitude, 'alt' : wp.altitude_msl, 'wp_type': wp.wp_type})
     return acom_wps
 
 def _parse_waypoints_to_dict(orwp_list):
