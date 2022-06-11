@@ -129,8 +129,8 @@ def teams(request):
                             longitude=telem['longitude'],
                             altitude_msl=telem['altitude'],
                             uas_heading=telem['heading'],
-                            groundspeed_m_s=None,
-                            chan3_raw=None)
+                            groundspeed_m_s=0,
+                            chan3_raw=0)
 
                 team_telem.save()
                 response_payload.append(team_telem.marshal())
