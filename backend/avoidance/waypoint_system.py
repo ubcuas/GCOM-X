@@ -8,15 +8,27 @@ import shapely.ops as ops
 import networkx as nx
 
 from fiona import collection
-from common.utils.conversions import ll_to_utm, utm_to_ll
+from common.utils.conversions import ll_to_utm, utm_to_ll, feet_to_meter
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_ALTITUDE = 35
-
 # All measurements are in meters
-
 # ( long , Lat ) = ( x , y ) = ( 0 , 1 )
+
+# TODO: Read this automatically from ACOM frame of reference
+# GROUND ALTITUDE SHOULD BE CONFIGURED UPON ARRIVAL AT LOCATION
+GROUND_ALTITUDE_MSL_M = 35
+DEFAULT_ALTITUDE = GROUND_ALTITUDE_MSL_M
+
+# Fly ODCL survey at the given altitude with a safety margin
+ODCL_ALTITUDE_MSL_M_SAFETY_MARGIN = feet_to_meter(10)
+ODCL_ALTITUDE_MSL_M = GROUND_ALTITUDE_MSL_M + \
+    feet_to_meter(80) + ODCL_ALTITUDE_MSL_M_SAFETY_MARGIN
+
+# Fly AIRDROP at the given altitude with a safety margin
+AIRDROP_ALTITUDE_MSL_M_SAFETY_MARGIN = feet_to_meter(10)
+AIRDROP_ALTITUDE_MSL_M = GROUND_ALTITUDE_MSL_M + \
+    feet_to_meter(75) + AIRDROP_ALTITUDE_MSL_M_SAFETY_MARGIN
 
 # Aircraft_Size (meters) - Higher EXTRA_RADIUS and lower SAFETY_FACTOR results in nicer curves
 EXTRA_RADIUS = 15
@@ -409,7 +421,7 @@ def _draw_search_grid(short_p, search_grid_points, altitude_msl):
     return [Waypoint(longitude=x[0], latitude=x[1], altitude=altitude_msl, invert_m_l=True, wp_type='search_grid') for x in calculated_grid_points]
 
 
-def _calculate_odlc_search(flyzone, start_point, search_grid_points, off_axis_odlc_pos, altitude_msl=DEFAULT_ALTITUDE):
+def _calculate_odlc_search(flyzone, start_point, search_grid_points, off_axis_odlc_pos, altitude_msl=ODCL_ALTITUDE_MSL_M):
     # off_axis_odlc_pos = Waypoint(latitude=off_axis_odlc_pos.latitude, longitude=off_axis_odlc_pos.longitude, altitude=altitude_msl, is_generated=False, wp_type='off_axis')
     search_grid_points = [Waypoint(latitude=x.latitude, longitude=x.longitude,
                                    altitude=altitude_msl, is_generated=False) for x in search_grid_points]
@@ -440,7 +452,7 @@ def _calculate_odlc_search(flyzone, start_point, search_grid_points, off_axis_od
     #     return _find_off_axis_point(flyzone, off_axis_odlc_pos, off_axis_line, altitude_msl) + search_grid_grid_points
 
 
-def _draw_airdrop(airdrop_pos, altitude_msl=DEFAULT_ALTITUDE):
+def _draw_airdrop(airdrop_pos, altitude_msl=AIRDROP_ALTITUDE_MSL_M):
     return [Waypoint(latitude=airdrop_pos.latitude, longitude=airdrop_pos.longitude, altitude=altitude_msl, is_generated=False, wp_type='airdrop')]
 
 
@@ -580,7 +592,7 @@ class Map:
             visited_nodes[s_node] = True
         logger.info("Map preprocessing done!")
 
-    def _convert_obs_to_points(self, obstacles, altitude=40):
+    def _convert_obs_to_points(self, obstacles, altitude=DEFAULT_ALTITUDE):
         points = []
         for obs in obstacles:
             buffered_obstacle = obs.as_Circle.buffer(
@@ -596,7 +608,7 @@ class Map:
         buffered_obstacle_union = ops.cascaded_union(buffered_obstacles)
         return buffered_obstacle_union
 
-    def _convert_flyzone_to_points(self, altitude=40):
+    def _convert_flyzone_to_points(self, altitude=DEFAULT_ALTITUDE):
         return [Waypoint(longitude=c[0], latitude=c[1], altitude=altitude, invert_m_l=True) for c in self.flyzone_obj.buffer(-EXTRA_RADIUS*(SAFETY_FACTOR-1)).exterior.coords]
 
     def _convert_flyzone_to_polygon(self, flyzone):

@@ -73,6 +73,8 @@ class Migration(migrations.Migration):
                 ('longitude', models.FloatField()),
                 ('altitude_msl', models.FloatField()),
                 ('uas_heading', models.FloatField()),
+                ('groundspeed_m_s', models.FloatField()),
+                ('chan3_raw', models.IntegerField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('uploaded', models.BooleanField(default=False)),
             ],

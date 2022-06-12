@@ -3,6 +3,7 @@ import requests
 import logging
 
 from interop.models import ClientSession
+from common.utils.conversions import m_2_f
 
 logger = logging.getLogger(__name__)
 
@@ -66,11 +67,11 @@ class Client():
         # Save new session
         gcom_session.save()
 
-    def get_mission(self, mission_id=1):
+    def get_mission(self, mission_id):
         """
         GET /api/missions/${mission_id}
         """
-        logger.debug("GET interop-server /api/missions")
+        logger.debug("GET interop-server /api/missions/" + str(mission_id))
         session = self.get_client_session()
         cookies = self.get_cookies(session)
 
@@ -79,31 +80,7 @@ class Client():
         r = requests.get(request_url, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
-
-        return r.json()
-
-    # Get all missions
-    def get_missions(self):
-        """
-        GET /api/missions
-        """
-        logger.debug("GET interop-server /api/missions")
-        session = self.get_client_session()
-        cookies = self.get_cookies(session)
-
-        request_url = session.url + f"/api/missions"
-
-        r = requests.get(request_url, cookies=cookies)
-
-        if not r.ok:
-            raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
-
-        # if r.status_code != 200:
-        #     return JsonResponse({'missions': []})
-            # raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
-
-
+            raise Exception('Failed to GET /api/missions/%i: [%s] %s' % (mission_id, r.status_code, r.content))
 
         return r.json()
 
@@ -223,8 +200,8 @@ class Client():
 
         request_url = session.url + "/api/telemetry"
 
-        # interop does not expect team_id in telemetry data
-        exclude_telem_data_keys = {'team_id'}
+        # interop does not expect team_id, speed, or rc channel status in telemetry data
+        exclude_telem_data_keys = {'team_id', 'groundspeed_m_s', 'chan3_raw'}
         filtered_telem_data = {x: telem_data[x] for x in set(list(telem_data.keys())) - set(exclude_telem_data_keys)}
 
         # rename uas_heading to "heading" for interop
@@ -235,6 +212,8 @@ class Client():
         filtered_telem_data["altitude"] = filtered_telem_data["altitude_msl"]
         del filtered_telem_data["altitude_msl"]
 
+        # change altitude from m to ft
+        filtered_telem_data["altitude"] = m_2_f(filtered_telem_data["altitude"])
 
         r = requests.post(request_url, json=filtered_telem_data, cookies=cookies)
 
@@ -257,5 +236,5 @@ class Client():
 
         if not r.ok:
             raise Exception('Failed to GET /api/teams: [%s] %s' % (r.status_code, r.content))
-
+        
         return r.json()

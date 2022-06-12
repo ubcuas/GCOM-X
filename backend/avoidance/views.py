@@ -27,7 +27,7 @@ def route(request, mission_id):
 
     # Map needs an empty default route
     if "0" in mission_id:
-        return JsonResponse({"default": "No Waypoints"})
+        return JsonResponse({"default": "No Waypoints"}, json_dumps_params={"indent": 2})
     return _route(request, mission_id)
 
 
@@ -42,7 +42,7 @@ def current_route(request):
             'Failed to GET /aircraft/mission: [%s] %s' % (r.status_code, r.content))
 
     # TODO: Add obstacle and flyzone support to ACOM, then modify this to return them
-    return JsonResponse({'waypoints': r.json()['wps'], 'obstacles': [], 'flyzone': []})
+    return JsonResponse({'waypoints': r.json()['wps'], 'obstacles': [], 'flyzone': []}, json_dumps_params={"indent": 2})
 
 
 def _route(request, mission_id):
@@ -62,7 +62,7 @@ def _route(request, mission_id):
 
     payload = {'waypoints': output_waypoints,
                'obstacles': output_obstacles, 'flyzone': output_flyzone}
-    return JsonResponse(payload)
+    return JsonResponse(payload, json_dumps_params={"indent": 2})
 
 
 @csrf_exempt
@@ -102,7 +102,7 @@ def acom_heartbeat(request):
         if not r.ok:
             raise Exception(
                 'Failed to GET /api/acom_heartbeat: [%s] %s' % (r.status_code, r.content))
-        return JsonResponse(r.json())
+        return JsonResponse(r.json(), json_dumps_params={"indent": 2})
     return
 
 
@@ -290,7 +290,7 @@ def _serialize_orwp_to_acomjson(orwp_list):
     acom_wps = []
     for wp in orwp_list:
         acom_wps.append({'hold': 0, 'radius': 1, 'lat': wp.latitude,
-                        'lng': wp.longitude, 'alt': wp.altitude_msl})
+                        'lng': wp.longitude, 'alt': wp.altitude_msl, 'wp_type': wp.wp_type})
     return acom_wps
 
 
@@ -358,7 +358,7 @@ def missions(request):
         - Returns a list of possible missions
     """
     missions = UasMission.objects.filter()
-    return JsonResponse({"missions": [mission.id for mission in missions]})
+    return JsonResponse({"missions": [mission.id for mission in missions]}, json_dumps_params={"indent": 2})
 
 
 @require_http_methods(["GET"])

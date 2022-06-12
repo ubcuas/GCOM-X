@@ -43,7 +43,9 @@ class InteropTelemetryCase(TestCase):
                                   latitude=24.0,
                                   longitude=23.0,
                                   altitude_msl=100,
-                                  uas_heading=123)
+                                  uas_heading=123,
+                                  groundspeed_m_s=15,
+                                  chan3_raw=975)
         test_telem.save()
         self.assertFalse(test_telem.uploaded)
 

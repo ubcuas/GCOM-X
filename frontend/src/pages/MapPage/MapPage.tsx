@@ -90,7 +90,7 @@ const MapPage = () => {
 
         <MapView visibility={true} />
 
-        <Box sx={{ flexGrow: 1 }} style={{ padding: 0, position: "fixed", width: "100%", bottom: 0, left: 0, zIndex: 550 }}>
+        <Box sx={{ flexGrow: 1 }} style={{ marginLeft: 57, padding: 0, position: "fixed", width: "100% - 57px", bottom: 0, left: 0, zIndex: 550 }}>
             <Paper style={{ textAlign: "center", padding: 10 }}>
                 <Grid container spacing={1} alignItems="center" justifyContent="center">
                     <TelemetryPanel />
