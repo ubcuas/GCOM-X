@@ -37,7 +37,7 @@ pylint-plugin-utils==0.6
 pylint==2.6.0
 python-decouple==3.4
 requests==2.25.1
-Shapely==1.7.1
+Shapely==1.8.0
 utm==0.7.0
 vine==5.0.0
 watchdog==1.0.2

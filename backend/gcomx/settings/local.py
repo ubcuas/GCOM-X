@@ -82,4 +82,8 @@ LOGGING = {
 
 JS_REVERSE_JS_MINIFY = False
 
-ACOM_HOSTNAME='http://host.docker.internal:5000'
+# For use in testing
+ACOM_HOSTNAME = 'http://host.docker.internal:5000'
+
+# For use in production
+#ACOM_HOSTNAME = 'http://51.222.12.76:5000'

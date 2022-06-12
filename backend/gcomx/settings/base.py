@@ -4,13 +4,17 @@ import os
 
 from decouple import config  # noqa
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 # BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+ROOT_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.dirname(__file__))))
+
 
 def base_dir_join(*args):
     return os.path.join(BASE_DIR, *args)
+
 
 def frontend_dir_join(*args):
     return os.path.join(ROOT_DIR, 'api', 'frontend', *args)
@@ -70,6 +74,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:5000",
     "http://127.0.0.1:5000",
+    "http://51.222.12.76:5000"
 ]
 
 ROOT_URLCONF = 'gcomx.urls'
@@ -149,7 +154,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULE = {
-    'periodic logging':{
+    'periodic logging': {
         'task': 'interop.tasks.periodic_send',
         'schedule': 2.0,
     },
