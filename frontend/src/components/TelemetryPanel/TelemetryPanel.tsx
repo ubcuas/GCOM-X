@@ -32,10 +32,10 @@ const toTelemetryArray = (aircraft: any) => {
         telemArray.push(new UASTelemetry(UASTelemetryKey.GPS_POSITION, `${aircraft['latitude'].toFixed(8)}, ${aircraft['longitude'].toFixed(8)}`, ""))
     }
     if (aircraft['altitude_msl']) {
-        telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${aircraft['altitude_msl'].toFixed(2)}`, "m"))
+        telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${(aircraft['altitude_msl'] - 142 * 0.3048).toFixed(2)}`, "m (AGL)"))
     }
     if (aircraft['altitude_msl']) {
-        telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${(aircraft['altitude_msl']*3.280839895).toFixed(2)}`, "ft"))
+        telemArray.push(new UASTelemetry(UASTelemetryKey.ALTITUDE_MSL, `${(aircraft['altitude_msl']*3.280839895).toFixed(2)}`, "ft (MSL)"))
     }
     if (aircraft['groundspeed_m_s']) {
         telemArray.push(new UASTelemetry(UASTelemetryKey.SPEED, `${aircraft['groundspeed_m_s'].toFixed(2)}`, "m/s"))
