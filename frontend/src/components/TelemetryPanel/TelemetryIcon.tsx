@@ -14,6 +14,7 @@ import BatteryChargingFullIcon from '@mui/icons-material/BatteryChargingFull';
 import HeightIcon from '@mui/icons-material/Height';
 import GroupsIcon from '@mui/icons-material/Groups';
 import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 
 //default for telemetry with missing icon in the map
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
@@ -37,6 +38,7 @@ TKIconMap[UASTelemetryKey.NETWORK_SPEED] = <NetworkCheckIcon />;
 TKIconMap[UASTelemetryKey.TEAM_ID] = <GroupsIcon />;
 TKIconMap[UASTelemetryKey.GENERIC] = <HelpCenterIcon />;
 TKIconMap[UASTelemetryKey.CHANNEL] = <SettingsInputAntennaIcon />;
+TKIconMap[UASTelemetryKey.WINCH] = <PrecisionManufacturingIcon />;
 
 
 export const TelemetryIcon = ({ telemetryKey = UASTelemetryKey.GENERIC }) => {

@@ -5,6 +5,7 @@ import IntervalTimer from 'react-interval-timer';
 
 import { getAircraftTelem } from '../../store/actions/action-getaircrafttelem';
 import { getTeamTelem } from '../../store/actions/action-getteamtelem';
+import { getWinchStatus, winchStatus } from '../../store/actions/action-getwinchstatus';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -26,7 +27,7 @@ function calculateTelemContainerWidth(t: UASTelemetry): number {
     return (l > 40) ? 6 : (l > 20) ? 4 : (l > 12) ? 3 : 2;
 }
 // TODO: write a type for this, then replace any with correct type
-const toTelemetryArray = (aircraft: any) => {
+const toTelemetryArray = (aircraft: any, winch: any) => {
     let telemArray = []
     if (aircraft['latitude'] && aircraft['longitude']) {
         telemArray.push(new UASTelemetry(UASTelemetryKey.GPS_POSITION, `${aircraft['latitude'].toFixed(8)}, ${aircraft['longitude'].toFixed(8)}`, ""))
@@ -52,6 +53,9 @@ const toTelemetryArray = (aircraft: any) => {
     if (aircraft['team_id']) {
         telemArray.push(new UASTelemetry(UASTelemetryKey.TEAM_ID, `${aircraft['team_id'].toFixed(0)}`, ""))
     }
+    if (winch['winch_status'] || winch['winch_status'] == 0) {
+        telemArray.push(new UASTelemetry(UASTelemetryKey.WINCH, `${winchStatus[winch['winch_status']]}`, ""))
+    }
     return telemArray
 }
 
@@ -59,6 +63,7 @@ const TelemetryPanel = (props: any) => {
     const [updatingTelemetry, setUpdatingTelemetry] = useState(false);
 
     const aircraft = props.aircraft;
+    const winch = props.winch;
 
     // let sampleAircraft: Object = {}
     // sampleAircraft[UASTelemetryKey.GPS_POSITION] = new UASTelemetry(UASTelemetryKey.GPS_POSITION, "43.231342343, -123.34234324")
@@ -86,6 +91,7 @@ const TelemetryPanel = (props: any) => {
             callback={() => {
                 props.getAircraftTelem()
                 props.getTeamTelem()
+                props.getWinchStatus()
             }
             }
             enabled={updatingTelemetry}
@@ -98,7 +104,7 @@ const TelemetryPanel = (props: any) => {
                 }}></Switch></Typography>
             </Grid>
             <Grid item container xs={12} spacing={1} justifyContent="center" alignItems="center">
-                {(aircraft ? toTelemetryArray(aircraft) : []).map((telemetryInstance) => {
+                {(aircraft ? toTelemetryArray(aircraft, winch) : []).map((telemetryInstance) => {
                     return <Grid item container xs={calculateTelemContainerWidth(telemetryInstance)} alignItems="center" justifyContent="center">
                         <Grid item container xs={12}>
                             <Grid item xs={2} alignItems="center" justifyContent="center">
@@ -118,13 +124,15 @@ const TelemetryPanel = (props: any) => {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getAircraftTelem,
-        getTeamTelem
+        getTeamTelem,
+        getWinchStatus
     }, dispatch);
 }
 
 function mapStateToProps(state) {
     return {
         aircraft: state.aircraft,
+        winch: state.winch,
     };
 }
 

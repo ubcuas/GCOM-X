@@ -18,7 +18,8 @@ enum UASTelemetryKey {
     NETWORK_SPEED = "network_speed",
     TEAM_ID = "team_id",
     GENERIC = "generic",
-    CHANNEL = "chan3_raw"
+    CHANNEL = "chan3_raw",
+    WINCH = "winch_status"
 }
 
 interface UASTelemetryInterface {
