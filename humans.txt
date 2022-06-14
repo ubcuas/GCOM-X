@@ -10,3 +10,4 @@
 - Isabelle Andre
 - Niko Andrianos
 - Yekta Ataozden
+- Elio Di Nino
