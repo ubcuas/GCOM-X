@@ -16,6 +16,19 @@ import avoidance.waypoint_system as wps
 from avoidance.models import OrderedRouteWayPoint
 from avoidance.decorators import timed
 
+@require_http_methods(["GET"])
+def winch_status(request):
+    """
+    GET:
+        - Returns the winch status as an integer
+        - See winch status definitions in ACOM's vehicle.py
+    """
+    r = requests.get(settings.ACOM_HOSTNAME + '/aircraft/winchstatus')
+    if not r.ok:
+        raise Exception(
+            'Failed to GET /aircraft/winchstatus: [%s] %s' % (r.status_code, r.content))
+    return JsonResponse(r.json(), json_dumps_params={"indent": 2})
+
 
 @require_http_methods(["GET"])
 def route(request, mission_id):
