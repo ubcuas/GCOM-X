@@ -29,6 +29,7 @@ def winch_status(request):
             'Failed to GET /aircraft/winchstatus: [%s] %s' % (r.status_code, r.content))
     return JsonResponse(r.json(), json_dumps_params={"indent": 2})
 
+@csrf_exempt
 @require_http_methods(["POST"])
 def winch_command(request):
     """
