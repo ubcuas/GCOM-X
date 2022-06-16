@@ -4,6 +4,7 @@ from django.urls import re_path
 
 urlpatterns = [
     re_path(r'^api/winchstatus/?$', views.winch_status, name='avoidance.api.winch_status'),
+    re_path(r'^api/winch/command/?$', views.winch_command, name='avoidance.api.winch_command'),
     re_path(r'^api/route/(?P<mission_id>[0-9]+)/?$', views.route, name='avoidance.api.route'),
     re_path(r'^api/current_route/?$', views.current_route, name='avoidance.api.current_route'),
     re_path(r'^api/reroute/(?P<mission_id>[0-9]+)/?$', views.reroute, name='avoidance.api.reroute'),

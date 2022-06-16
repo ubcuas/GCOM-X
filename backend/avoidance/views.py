@@ -29,6 +29,21 @@ def winch_status(request):
             'Failed to GET /aircraft/winchstatus: [%s] %s' % (r.status_code, r.content))
     return JsonResponse(r.json(), json_dumps_params={"indent": 2})
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def winch_command(request):
+    """
+    POST:
+        - Send a command to the winch through ACOM
+        - Currently accepts anything and causes an emergency reel
+    """
+    r = requests.post(settings.ACOM_HOSTNAME +
+                          '/aircraft/winch/command', json={"command":1})
+
+    if not r.ok:
+        raise Exception(
+            'Failed to POST /api/winch/command: [%s] %s' % (r.status_code, r.content))
+    return JsonResponse(r.json())
 
 @require_http_methods(["GET"])
 def route(request, mission_id):

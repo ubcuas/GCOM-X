@@ -16,15 +16,14 @@ const uc = new UnitConverter()
 
 import { Grid, Typography, IconButton, FormControl, InputLabel, Select, Button, MenuItem, FormLabel, CircularProgress } from "@mui/material"
 
-import PlayCircleIcon from "@mui/icons-material/PlayCircle"
-import PauseCircleIcon from "@mui/icons-material/PauseCircle"
-import StopCircleIcon from "@mui/icons-material/StopCircle"
 import UploadIcon from "@mui/icons-material/Upload"
 import DeleteIcon from '@mui/icons-material/Delete';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FlightIcon from '@mui/icons-material/Flight';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
+import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
+
+const GCOM_WINCH_COMMAND_ENDPOINT = "http://localhost:8080/avoidance/api/winch/command"
 
 const MissionPanel = (props) => {
     const [allMissionIds, setAllMissionIds] = useState([]);
@@ -33,8 +32,8 @@ const MissionPanel = (props) => {
     const [canSelectMission, setCanSelectMission] = useState(false);
     const [canUploadMission, setCanUploadMission] = useState(false);
     const [canStart, setCanStart] = useState(false);
+    const [canWinch, setCanWinch] = useState(true)
     const [isFetchingMission, setIsFetchingMission] = useState(false);
-    const [canUseControls, setCanUseControls] = useState(false);
 
     useEffect(() => {
         props.loadMissions();
@@ -58,7 +57,6 @@ const MissionPanel = (props) => {
         setActiveMissionId(evt.target.value)
         setCanUploadMission(true)
         setCanStart(false)
-        setCanUseControls(false)
 
         props.loadRoutes(selectedMissionId);
         props.updateCurMission(selectedMissionId);
@@ -149,14 +147,14 @@ const MissionPanel = (props) => {
             </Button>
         </Grid>
         <Grid item container xs={12} alignItems="center" spacing={1}>
-            <Grid item xs={2}>
+            <Grid item xs={4}>
                 <Button disabled={!canUploadMission} fullWidth variant="contained" startIcon={<UploadIcon />}
                     onClick={uploadRoute}>
                     Upload
                 </Button>
             </Grid>
             {/* TODO: Clear mission from aircraft using this button */}
-            <Grid item xs={2}>
+            <Grid item xs={3}>
                 <Button disabled={!canStart} fullWidth variant="contained" startIcon={<DeleteIcon />}
                     onClick={() => {
                         setCanRefreshMission(true)
@@ -167,30 +165,11 @@ const MissionPanel = (props) => {
                     Clear
                 </Button>
             </Grid>
-            <Grid item xs={2}><Button disabled={!canStart} fullWidth variant="contained" startIcon={<PlayCircleIcon />}
+            <Grid item xs={5}><Button disabled={!canWinch} fullWidth variant="contained" startIcon={<CrisisAlertIcon />}
                 onClick={() => {
-                    // setCanUseControls(true)
-                    // setCanStart(false)
-                    // setCanUploadMission(false)
-                }}>Start</Button></Grid>
-            <Grid item xs={2}><Button disabled={!canUseControls} fullWidth variant="contained" startIcon={<PauseCircleIcon />}
-                onClick={() => {
-                    setCanStart(true)
-                    setCanUploadMission(false)
-                    setCanUseControls(false)
-                }}>Pause</Button></Grid>
-            <Grid item xs={2}><Button disabled={!canUseControls} fullWidth variant="contained" startIcon={<StopCircleIcon />}
-                onClick={() => {
-                    setCanStart(true)
-                    setCanUploadMission(false)
-                    setCanUseControls(false)
-                }}>Stop</Button></Grid>
-            <Grid item xs={2}><Button disabled={!canUseControls} fullWidth variant="contained" startIcon={<RestartAltIcon />}
-                onClick={() => {
-                    setCanStart(true)
-                    setCanUploadMission(false)
-                    setCanUseControls(false)
-                }}>Restart</Button></Grid>
+                    fetch(GCOM_WINCH_COMMAND_ENDPOINT, {method: 'POST'}).then(response => response.json())
+                    .then(data => console.log(data));
+                }}>Emergency Winch Reel</Button></Grid>
         </Grid>
     </Grid>
 }
