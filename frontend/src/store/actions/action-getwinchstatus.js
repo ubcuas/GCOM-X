@@ -6,7 +6,8 @@ export const winchStatus = {
     1: "Standby",
     2: "In Progress",
     3: "Failed, Retrying",
-    4: "Complete"
+    4: "Complete",
+    5: "Emergency Reel"
 };
 
 const defaultValue = {
