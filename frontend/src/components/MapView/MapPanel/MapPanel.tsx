@@ -7,6 +7,9 @@ import WaypointMarker from '../WaypointMarker/WaypointMarker';
 import { Icon, divIcon } from 'leaflet'
 import './MapPanel.css';
 import { LAYOUT } from "../../../utils/constants/LAYOUT.js"
+import UnitConverter from "../../../utils/UnitConverter"
+
+let UC = new UnitConverter();
 
 import WaypointEditor from '../WaypointEditor';
 import BottomPanel from '../BottomPanel';
@@ -143,7 +146,7 @@ const MapPanel = ({ visibility }) => {
     const teamMarkers = (teams) => {
         if (teams.length > 0) {
             return teams.map(team => {
-                const teamText = divIcon({ iconAnchor: [-15, -15], className: 'teamMarkers', html: `<div style="color:black;background:white;width:46px;padding:5px;text-align:center;font-weight:600;border-radius:0px 100px 100px 100px;position:relative;"># ${team.team_id}</div>` });
+                const teamText = divIcon({ iconAnchor: [-15, -15], className: 'teamMarkers', html: `<div style="color:black;background:white;width:70px;padding:5px;text-align:center;font-weight:600;border-radius:0px 100px 100px 100px;position:relative;"># ${team.team_id} : ${Math.round(UC.metersToFeet(team.altitude_msl))}ft</div>` });
                 return <>
                     <Marker position={[team.latitude - 0.000015, team.longitude]} icon={teamText} />
                     <Marker position={[team.latitude, team.longitude]} icon={new Icon({ iconUrl: circleIcon, iconSize: [46, 46], iconAnchor: [23, 23] })}></Marker>
