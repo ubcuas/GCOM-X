@@ -41,17 +41,6 @@ docker-compose run backend python manage.py migrate
 docker-compose run interop-server bash -c "./healthcheck.py --postgres_host interop-db && ./manage.py migrate && ./config/load_test_data.py"
 ```
 
-**Updating running containers**
-Copying a new frontend build to backend's frontend serve folder
-```
-# Create build
-cd frontend
-npm run build
-
-# Copy build to backend
-docker cp ./build gcomx-backend:/uas/gcomx/api/frontend
-```
-
 ## Usage
 General usage is as follows:
 ```
