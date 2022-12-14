@@ -4,11 +4,20 @@ import os
 
 from decouple import config  # noqa
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
+# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+ROOT_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.dirname(__file__))))
 
 
 def base_dir_join(*args):
     return os.path.join(BASE_DIR, *args)
+
+
+def frontend_dir_join(*args):
+    return os.path.join(ROOT_DIR, 'api', 'frontend', *args)
 
 
 SITE_ID = 1
@@ -24,6 +33,7 @@ ADMINS = (
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,11 +59,22 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5000",
+    "http://127.0.0.1:5000",
+    "http://51.222.12.76:5000"
 ]
 
 ROOT_URLCONF = 'gcomx.urls'
@@ -111,23 +132,19 @@ USE_L10N = True
 USE_TZ = True
 
 STATICFILES_DIRS = (
-    base_dir_join('frontend/assets'),
+    frontend_dir_join('build'),
 )
 
 # Webpack
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': False,  # on DEBUG should be False
-        'STATS_FILE': base_dir_join('frontend/webpack-stats.json'),
+        'BUNDLE_DIR_NAME': 'build',
+        'STATS_FILE': frontend_dir_join('webpack-stats.json'),
         'POLL_INTERVAL': 0.1,
         'IGNORE': ['.+\.hot-update.js', '.+\.map']
-    },
-    'JQUERY': {
-        'BUNDLE_DIR_NAME': 'frontend/bundles/',
-        'STATS_FILE': 'frontend/jquery-webpack-stats.json',
     }
 }
-
 
 # Celery
 CELERY_BROKER_URL = 'redis://localhost:6379'
@@ -137,7 +154,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULE = {
-    'periodic logging':{
+    'periodic logging': {
         'task': 'interop.tasks.periodic_send',
         'schedule': 2.0,
     },

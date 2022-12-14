@@ -4,13 +4,14 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from channels.layers import get_channel_layer
 
-from asgiref.sync import async_to_sync
+from asgiref.sync import sync_to_async, async_to_sync
 
 from interop import odlc as interop_odlc
 from imp_module.models import ImpImage, ImpODLC
 from imp_module.serializer import ImpImageSerializer, ImpODLCSerializer
 from imp_module.odlc_handler import ODLCHandler
 from common.utils.uas_web_message import UASWebMessage
+
 
 class ImpImageConsumer(AsyncWebsocketConsumer):
     """
@@ -47,11 +48,11 @@ class ImpImageConsumer(AsyncWebsocketConsumer):
         await ImpImageConsumer._send_image_data()
 
     @staticmethod
-    def update_image_data():
+    async def update_image_data():
         """
         Broadcasts updates to channel
         """
-        async_to_sync(ImpImageConsumer._send_image_data)()
+        await ImpImageConsumer._send_image_data()
 
     @staticmethod
     async def _send_image_data():
@@ -59,10 +60,10 @@ class ImpImageConsumer(AsyncWebsocketConsumer):
         Broadcasts updates to channel
         """
         image_query_set = await database_sync_to_async(ImpImage.objects.all)()
-        image_json = ImpImageSerializer(image_query_set, many=True).data
+        image_json = await sync_to_async(ImpImageSerializer(image_query_set, many=True))()
         await get_channel_layer().group_send(ImpImageConsumer.GROUP_NAME, {
             'type': 'image_message',
-            'message': image_json
+            'message': image_json.data
         })
 
     async def image_message(self, event):

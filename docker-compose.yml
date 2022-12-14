@@ -32,15 +32,15 @@ services:
       interopnet:
         ipv4_address: 172.170.0.22
 
-  golden-retriever:
-    container_name: gcomx-golden-retriever
-    hostname: gcomx-golden-retriever
-    image: ubcuas/golden:latest
-    volumes:
-      - ./backend/mediafiles/images:/uas/golden/images
-    networks:
-      gcomnet:
-        ipv4_address: 172.0.0.7
+  # golden-retriever:
+  #   container_name: gcomx-golden-retriever
+  #   hostname: gcomx-golden-retriever
+  #   image: ubcuas/golden:latest
+  #   volumes:
+  #     - ./backend/mediafiles/images:/uas/golden/images
+  #   networks:
+  #     gcomnet:
+  #       ipv4_address: 172.0.0.7
 
   db:
     container_name: gcomx-db
@@ -99,6 +99,8 @@ services:
       gcomnet:
         ipv4_address: 172.0.0.3
       uasnet:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   nginx:
     container_name: gcomx-nginx

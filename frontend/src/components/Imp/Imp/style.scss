@@ -1,0 +1,18 @@
+.imp{
+    .instruction {
+        background-color: lightgray;
+        width: 50%;
+        height: 8%;
+        position: fixed;
+        bottom: 1%;
+        left: 25%;
+        z-index: 2;
+        opacity: 0.75;
+        p {
+            text-align: center;
+            line-height: 40%;
+            margin-top: 1%;
+        }
+    }
+    
+}

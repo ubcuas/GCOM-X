@@ -1,0 +1,28 @@
+html, body, .left, .container, .container-fluid {
+    height: 100%;
+}
+
+.row {
+    height: 100%;
+}
+
+form {
+    display: inline;
+}
+
+.displayFlex {
+    display:flex;
+    flex-direction:row;
+}
+
+#map {
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.full-height {
+    height:calc(100vh - 64px);
+    position: relative;
+    padding-left: 0;
+    padding-right: 0;
+}

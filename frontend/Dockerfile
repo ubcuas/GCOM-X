@@ -1,27 +1,28 @@
-# UBC UAS Dockerfile - Frontend
+# useful: https://mherman.org/blog/dockerizing-a-react-app/
 
-# Pull the base node image
-FROM node:8-alpine
+# pull official base image
+FROM node:12.22.10-alpine
 
-# Build dependency
-RUN apk add --no-cache git
-
-# Create app directory
-RUN mkdir -p /uas/gcomx/frontend
+# set working directory
 WORKDIR /uas/gcomx/frontend
 
-# Install app dependencies
-COPY package*.json ./
+# copy gcom files
+COPY . ./
 
-# Install NODE dependencies
-RUN npm install
-RUN npm rebuild node-sass
+# add npm-installed binaries to $PATH
+RUN npm install --legacy-peer-deps -g webpack webpack-cli
+ENV PATH /uas/gcomx/frontend/node_modules/.bin:$PATH
 
-# Add other conf files
-COPY *.js *.json .babelrc .bootstraprc ./
+# generate a stats file to satisfy backend dependency
+RUN webpack --json > /uas/gcomx/frontend/webpack-stats.json
 
-# Expose the correct port
-EXPOSE 3000
+EXPOSE 8080
 
-# Run server
-CMD ["npm", "run", "start"]
+# for backend bundle
+RUN npm run build
+
+# for production
+# CMD ["npm", "run", "production"]
+
+# for hot-reloadable dev
+CMD ["npm", "start"]

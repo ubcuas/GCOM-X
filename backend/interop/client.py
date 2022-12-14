@@ -1,7 +1,9 @@
+from django.http import JsonResponse
 import requests
 import logging
 
 from interop.models import ClientSession
+from common.utils.conversions import m_2_f
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +14,7 @@ class Client():
     See: https://github.com/auvsi-suas/interop
     """
 
-    def get_ClientSession(self):
+    def get_client_session(self):
         """
         Gets the latest active client session
         """
@@ -45,7 +47,8 @@ class Client():
         r = session.post(request_url, json=request_payload)
 
         if not r.ok:
-            raise Exception('Failed to Login: [%s] %s' % (r.status_code, r.content))
+            raise Exception('Failed to Login: [%s] %s' % (
+                r.status_code, r.content))
 
         # Create a new local session object
         cookies = r.cookies.get_dict()
@@ -65,12 +68,12 @@ class Client():
         # Save new session
         gcom_session.save()
 
-    def get_mission(self, mission_id=1):
+    def get_mission(self, mission_id):
         """
-        GET /api/missions
+        GET /api/missions/${mission_id}
         """
-        logger.debug("GET interop-server /api/missions")
-        session = self.get_ClientSession()
+        logger.debug("GET interop-server /api/missions/" + str(mission_id))
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + f"/api/missions/{mission_id}"
@@ -78,7 +81,8 @@ class Client():
         r = requests.get(request_url, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to GET /api/missions: [%s] %s' % (r.status_code, r.content))
+            raise Exception(
+                'Failed to GET /api/missions/%i: [%s] %s' % (mission_id, r.status_code, r.content))
 
         return r.json()
 
@@ -87,7 +91,7 @@ class Client():
         GET /api/obstacles
         """
         logger.debug("GET interop-server /api/obstacles")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/obstacles"
@@ -95,7 +99,8 @@ class Client():
         r = requests.get(request_url, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to GET /api/obstacles: [%s] %s' % (r.status_code, r.content))
+            raise Exception(
+                'Failed to GET /api/obstacles: [%s] %s' % (r.status_code, r.content))
 
         return r.json()['stationary_obstacles']
 
@@ -104,7 +109,7 @@ class Client():
         GET /api/odlcs
         """
         logger.debug("GET interop-server /api/odlcs")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/odlcs"
@@ -112,7 +117,8 @@ class Client():
         r = requests.get(request_url, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to GET /api/odlcs: [%s] %s' % (r.status_code, r.content))
+            raise Exception(
+                'Failed to GET /api/odlcs: [%s] %s' % (r.status_code, r.content))
 
         return r.json()
 
@@ -121,7 +127,7 @@ class Client():
         POST /api/odlcs
         """
         logger.debug("POST interop-server /api/odlcs")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/odlcs"
@@ -129,7 +135,8 @@ class Client():
         r = requests.post(request_url, json=odlc_json, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to POST /api/odlcs: [%s] %s' % (r.status_code, r.content))
+            raise Exception(
+                'Failed to POST /api/odlcs: [%s] %s' % (r.status_code, r.content))
 
         return r.json()
 
@@ -138,7 +145,7 @@ class Client():
         PUT /api/odlcs/<id>
         """
         logger.debug("PUT interop-server /api/odlcs/%s" % odlc_json['id'])
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/odlcs/%s" % odlc_json['id']
@@ -146,7 +153,8 @@ class Client():
         r = requests.put(request_url, json=odlc_json, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to PUT /api/odlcs: [%s] %s' % (r.status_code, r.content))
+            raise Exception(
+                'Failed to PUT /api/odlcs: [%s] %s' % (r.status_code, r.content))
 
         return r.json()
 
@@ -155,7 +163,7 @@ class Client():
         DELETE /api/odlcs/<id>
         """
         logger.debug("DELETE interop-server /api/odlcs/%s" % odlc_id)
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/odlcs/%s" % odlc_id
@@ -163,9 +171,11 @@ class Client():
         r = requests.delete(request_url, cookies=cookies)
 
         if r.status_code == 404:
-            logger.warning('Failed to DELETE /api/odlcs/%s: [%s] %s', odlc_id, r.status_code, r.content)
+            logger.warning(
+                'Failed to DELETE /api/odlcs/%s: [%s] %s', odlc_id, r.status_code, r.content)
         elif not r.ok:
-            raise Exception('Failed to DELETE /api/odlcs/%s: [%s] %s' % (odlc_id, r.status_code, r.content))
+            raise Exception(
+                'Failed to DELETE /api/odlcs/%s: [%s] %s' % (odlc_id, r.status_code, r.content))
 
         return r.content
 
@@ -173,18 +183,21 @@ class Client():
         """
         POST /api/odlcs/<id>/image
         """
-        logger.debug("POST interop-server /api/odlcs/%s/image" % odlc_json['id'])
-        session = self.get_ClientSession()
+        logger.debug("POST interop-server /api/odlcs/%s/image" %
+                     odlc_json['id'])
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
         headers = {'Content-Type': 'image/jpeg'}
 
         request_url = session.url + "/api/odlcs/%s/image" % odlc_json['id']
         img_data = open(thumbnail_filename, 'rb').read()
 
-        r = requests.post(request_url, data=img_data, cookies=cookies, headers=headers)
+        r = requests.post(request_url, data=img_data,
+                          cookies=cookies, headers=headers)
 
         if not r.ok:
-            raise Exception('Failed to POST /api/odlcs/%s/image: [%s] %s' % (odlc_json['id'], r.status_code, r.content))
+            raise Exception(
+                'Failed to POST /api/odlcs/%s/image: [%s] %s' % (odlc_json['id'], r.status_code, r.content))
 
         return r.content
 
@@ -193,15 +206,34 @@ class Client():
         POST /api/telemetry
         """
         logger.debug("POST interop-server /api/telemetry")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/telemetry"
 
-        r = requests.post(request_url, json=telem_data, cookies=cookies)
+        # interop does not expect team_id, speed, or rc channel status in telemetry data
+        exclude_telem_data_keys = {'team_id', 'groundspeed_m_s', 'chan3_raw'}
+        filtered_telem_data = {x: telem_data[x] for x in set(
+            list(telem_data.keys())) - set(exclude_telem_data_keys)}
+
+        # rename uas_heading to "heading" for interop
+        filtered_telem_data["heading"] = filtered_telem_data["uas_heading"]
+        del filtered_telem_data["uas_heading"]
+
+        # rename altitude_msl to "altitude" for interop
+        filtered_telem_data["altitude"] = filtered_telem_data["altitude_msl"]
+        del filtered_telem_data["altitude_msl"]
+
+        # change altitude from m to ft
+        filtered_telem_data["altitude"] = m_2_f(
+            filtered_telem_data["altitude"])
+
+        r = requests.post(
+            request_url, json=filtered_telem_data, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to POST /api/telemetry: [%s] %s' % (r.status_code, r.content))
+            raise Exception(
+                'Failed to POST /api/telemetry: [%s] %s' % (r.status_code, r.content))
 
         return r.content
 
@@ -210,7 +242,7 @@ class Client():
         GET /api/teams
         """
         logger.debug("GET interop-server /api/teams")
-        session = self.get_ClientSession()
+        session = self.get_client_session()
         cookies = self.get_cookies(session)
 
         request_url = session.url + "/api/teams"
@@ -218,6 +250,7 @@ class Client():
         r = requests.get(request_url, cookies=cookies)
 
         if not r.ok:
-            raise Exception('Failed to GET /api/teams: [%s] %s' % (r.status_code, r.content))
+            raise Exception(
+                'Failed to GET /api/teams: [%s] %s' % (r.status_code, r.content))
 
         return r.json()

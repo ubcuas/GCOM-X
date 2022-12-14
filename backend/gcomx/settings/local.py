@@ -36,7 +36,7 @@ INSTALLED_APPS += ('naomi',)
 EMAIL_BACKEND = 'naomi.mail.backends.naomi.NaomiBackend'
 EMAIL_FILE_PATH = base_dir_join('tmp_email')
 
-INTERNAL_IPS = ['127.0.0.1', '::1']
+# INTERNAL_IPS = ['127.0.0.1', '::1']
 
 # Logging
 LOGGING = {
@@ -82,4 +82,8 @@ LOGGING = {
 
 JS_REVERSE_JS_MINIFY = False
 
-ACOM_HOSTNAME='http://172.0.0.1:5000'
+# For use in testing
+ACOM_HOSTNAME = 'http://host.docker.internal:5000'
+
+# For use in production
+#ACOM_HOSTNAME = 'http://51.222.12.76:5000'

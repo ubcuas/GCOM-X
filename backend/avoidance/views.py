@@ -18,6 +18,37 @@ from avoidance.decorators import timed
 
 
 @require_http_methods(["GET"])
+def winch_status(request):
+    """
+    GET:
+        - Returns the winch status as an integer
+        - See winch status definitions in ACOM's vehicle.py
+    """
+    r = requests.get(settings.ACOM_HOSTNAME + '/aircraft/winchstatus')
+    if not r.ok:
+        raise Exception(
+            'Failed to GET /aircraft/winchstatus: [%s] %s' % (r.status_code, r.content))
+    return JsonResponse(r.json(), json_dumps_params={"indent": 2})
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def winch_command(request):
+    """
+    POST:
+        - Send a command to the winch through ACOM
+        - Currently accepts anything and causes an emergency reel
+    """
+    r = requests.post(settings.ACOM_HOSTNAME +
+                      '/aircraft/winch/command', json={"command": 1})
+
+    if not r.ok:
+        raise Exception(
+            'Failed to POST /api/winch/command: [%s] %s' % (r.status_code, r.content))
+    return JsonResponse(r.json())
+
+
+@require_http_methods(["GET"])
 def route(request, mission_id):
     """
     GET[mission_id]:
@@ -27,23 +58,43 @@ def route(request, mission_id):
 
     # Map needs an empty default route
     if "0" in mission_id:
-        return JsonResponse({"default":"No Waypoints"})
+        return JsonResponse({"default": "No Waypoints"}, json_dumps_params={"indent": 2})
     return _route(request, mission_id)
+
+
+def current_route(request):
+    """
+    GET:
+        - Returns the current route as a JSON object.
+    """
+    r = requests.get(settings.ACOM_HOSTNAME + '/aircraft/mission')
+    if not r.ok:
+        raise Exception(
+            'Failed to GET /aircraft/mission: [%s] %s' % (r.status_code, r.content))
+
+    # TODO: Add obstacle and flyzone support to ACOM, then modify this to return them
+    return JsonResponse({'waypoints': r.json()['wps'], 'obstacles': [], 'flyzone': []}, json_dumps_params={"indent": 2})
+
 
 def _route(request, mission_id):
     mission = UasMission.objects.get(id=mission_id)
 
-    pre_calc_route = OrderedRouteWayPoint.objects.filter(mission=mission.id).order_by('order')
+    pre_calc_route = OrderedRouteWayPoint.objects.filter(
+        mission=mission.id).order_by('order')
 
     if not pre_calc_route:
         pre_calc_route = _call_routing(mission)
 
     output_waypoints = _parse_waypoints_to_dict(pre_calc_route)
-    output_obstacles = _parse_obs_to_points_list(mission.get_obstacles_as_list())
-    output_flyzone = _parse_fz_to_points_list(mission.flyzone.get_waypoints_as_list(), mission.flyzone.get_vertical_bounds())
+    output_obstacles = _parse_obs_to_points_list(
+        mission.get_obstacles_as_list())
+    output_flyzone = _parse_fz_to_points_list(
+        mission.flyzone.get_waypoints_as_list(), mission.flyzone.get_vertical_bounds())
 
-    payload = {'waypoints': output_waypoints, 'obstacles': output_obstacles, 'flyzone': output_flyzone}
-    return JsonResponse(payload)
+    payload = {'waypoints': output_waypoints,
+               'obstacles': output_obstacles, 'flyzone': output_flyzone}
+    return JsonResponse(payload, json_dumps_params={"indent": 2})
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -55,13 +106,123 @@ def upload_to_acom(request, mission_id):
     """
     if request.method == "POST":
         mission = UasMission.objects.get(id=mission_id)
-        route =  OrderedRouteWayPoint.objects.filter(mission=mission).order_by('order')
+        route = OrderedRouteWayPoint.objects.filter(
+            mission=mission).order_by('order')
         waypoints = _serialize_orwp_to_acomjson(route)
-        acom_payload = {'wps' : waypoints, 'takeoffAlt': 31,'rtl': False}
-        r = requests.post(settings.ACOM_HOSTNAME + '/aircraft/mission', json=acom_payload)
+        acom_payload = {'wps': waypoints, 'takeoffAlt': 31, 'rtl': False}
+        r = requests.post(settings.ACOM_HOSTNAME +
+                          '/aircraft/mission', json=acom_payload)
 
         if not r.ok:
-            raise Exception('Failed to POST /api/upload_to_acom: [%s] %s' % (r.status_code, r.content))
+            raise Exception(
+                'Failed to POST /api/upload_to_acom: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def acom_heartbeat(request):
+    """
+    GET:
+        - Returns the current aircraft heartbeat
+    """
+    if request.method == "GET":
+        r = requests.get(settings.ACOM_HOSTNAME +
+                         '/aircraft/telemetry/heartbeat')
+        if not r.ok:
+            raise Exception(
+                'Failed to GET /api/acom_heartbeat: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json(), json_dumps_params={"indent": 2})
+    return
+
+
+@csrf_exempt
+def acom_arm(request):
+    """
+    PUT:
+        - Sends an ARM command to the aircraft
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/arm')
+        if not r.ok:
+            raise Exception(
+                'Failed to PUT /api/acom_arm: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+
+@csrf_exempt
+def acom_disarm(request):
+    """
+    PUT:
+        - Sends a DISARM command to the aircraft
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/disarm')
+        if not r.ok:
+            raise Exception(
+                'Failed to PUT /api/acom_disarm: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+
+@csrf_exempt
+def acom_setmode_manual(request):
+    """
+    PUT:
+        - Attempts to set mode of aircraft to MANUAL
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/manual')
+        if not r.ok:
+            raise Exception(
+                'Failed to PUT /api/acom_setmode_manual: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+
+@csrf_exempt
+def acom_setmode_auto(request):
+    """
+    PUT:
+        - Attempts to set mode of aircraft to AUTO
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/auto')
+        if not r.ok:
+            raise Exception(
+                'Failed to PUT /api/acom_setmode_auto: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+
+@csrf_exempt
+def acom_setmode_rtl(request):
+    """
+    PUT:
+        - Attempts to set mode of aircraft to RTL
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/rtl')
+        if not r.ok:
+            raise Exception(
+                'Failed to PUT /api/acom_setmode_rtl: [%s] %s' % (r.status_code, r.content))
+        return JsonResponse(r.json())
+    return
+
+
+@csrf_exempt
+def acom_setmode_guided(request):
+    """
+    PUT:
+        - Attempts to set mode of aircraft to GUIDED
+    """
+    if request.method == "PUT":
+        r = requests.put(settings.ACOM_HOSTNAME + '/aircraft/guided')
+        if not r.ok:
+            raise Exception(
+                'Failed to PUT /api/acom_setmode_guided: [%s] %s' % (r.status_code, r.content))
         return JsonResponse(r.json())
     return
 
@@ -91,16 +252,17 @@ def reroute(request, mission_id):
         OrderedRouteWayPoint.objects.filter(mission=mission.id).delete()
         order = 0
         for new_wp in new_waypoints:
-            order+=1
+            order += 1
             db_new_wp = OrderedRouteWayPoint(mission=mission,
-                                                    latitude=new_wp['latitude'],
-                                                    longitude=new_wp['longitude'],
-                                                    altitude_msl=new_wp['altitude'],
-                                                    order=order,
-                                                    is_generated=new_wp["is_generated"],
-                                                    wp_type=new_wp["wp_type"])
+                                             latitude=new_wp['latitude'],
+                                             longitude=new_wp['longitude'],
+                                             altitude_msl=new_wp['altitude'],
+                                             order=order,
+                                             is_generated=new_wp["is_generated"],
+                                             wp_type=new_wp["wp_type"])
             db_new_wp.save()
         return _route(request, mission_id)
+
 
 @timed
 def _call_routing(mission):
@@ -123,32 +285,34 @@ def _call_routing(mission):
     obstacles = mission.get_obstacles_as_list()
 
     # Perform the routing
-    new_waypoints = wps.draw_complete_route(flyzone, auto_flight_points, airdrop_pos, search_grid_points, off_axis_odlc_pos)
+    new_waypoints = wps.draw_complete_route(
+        flyzone, auto_flight_points, airdrop_pos, search_grid_points, off_axis_odlc_pos)
 
     # import cProfile
     # pr = cProfile.Profile()
     # new_waypoints = pr.runcall(wps.find_path, new_waypoints, obstacles, flyzone, flyzone_bounds)
-    # pr.print_stats('cumtime')
-    new_waypoints, mission_map = wps.find_path(new_waypoints, obstacles, flyzone, flyzone_bounds)
+    new_waypoints, mission_map = wps.find_path(
+        new_waypoints, obstacles, flyzone, flyzone_bounds)
 
-    new_waypoints = wps.post_process_path(mission_map, new_waypoints, obstacles, flyzone, flyzone_bounds)
-
+    new_waypoints = wps.post_process_path(
+        mission_map, new_waypoints, obstacles, flyzone, flyzone_bounds)
 
     # Cleanup, write to DB and return calculated route
     OrderedRouteWayPoint.objects.filter(mission=mission.id).delete()
     order = 0
     for new_wp in new_waypoints:
-        order+=1
+        order += 1
         db_new_wp = OrderedRouteWayPoint(mission=mission,
-                                                latitude=new_wp['latitude'],
-                                                longitude=new_wp['longitude'],
-                                                altitude_msl=new_wp['altitude'],
-                                                order=order,
-                                                is_generated=new_wp["is_generated"],
-                                                delay=new_wp["delay"],
-                                                wp_type=new_wp["wp_type"])
+                                         latitude=new_wp['latitude'],
+                                         longitude=new_wp['longitude'],
+                                         altitude_msl=new_wp['altitude'],
+                                         order=order,
+                                         is_generated=new_wp["is_generated"],
+                                         delay=new_wp["delay"],
+                                         wp_type=new_wp["wp_type"])
         db_new_wp.save()
     return OrderedRouteWayPoint.objects.filter(mission=mission.id).order_by('order')
+
 
 def _serialize_orwp_to_acomjson(orwp_list):
     """
@@ -156,8 +320,10 @@ def _serialize_orwp_to_acomjson(orwp_list):
     """
     acom_wps = []
     for wp in orwp_list:
-        acom_wps.append({'hold': 0, 'radius': 1, 'lat': wp.latitude, 'lng': wp.longitude, 'alt' : wp.altitude_msl})
+        acom_wps.append({'hold': 0, 'radius': 1, 'lat': wp.latitude,
+                        'lng': wp.longitude, 'alt': wp.altitude_msl, 'wp_type': wp.wp_type})
     return acom_wps
+
 
 def _parse_waypoints_to_dict(orwp_list):
     """
@@ -165,8 +331,10 @@ def _parse_waypoints_to_dict(orwp_list):
     """
     new_waypoints = []
     for db_new_wp in orwp_list:
-        new_waypoints.append({'order': db_new_wp.order, 'latitude': db_new_wp.latitude, 'longitude': db_new_wp.longitude, 'altitude': db_new_wp.altitude_msl, 'is_generated': db_new_wp.is_generated, 'wp_type': db_new_wp.wp_type, 'delay': db_new_wp.delay})
+        new_waypoints.append({'order': db_new_wp.order, 'latitude': db_new_wp.latitude, 'longitude': db_new_wp.longitude,
+                             'altitude': db_new_wp.altitude_msl, 'is_generated': db_new_wp.is_generated, 'wp_type': db_new_wp.wp_type, 'delay': db_new_wp.delay})
     return new_waypoints
+
 
 def _parse_obs_to_dict(obs_list):
     """
@@ -174,8 +342,10 @@ def _parse_obs_to_dict(obs_list):
     """
     new_obstacles = []
     for obs in obs_list:
-        new_obstacles.append({'latitude': obs.latitude, 'longitude': obs.longitude, 'height': obs.cylinder_height, 'cylinder_radius': obs.cylinder_radius})
+        new_obstacles.append({'latitude': obs.latitude, 'longitude': obs.longitude,
+                             'height': obs.cylinder_height, 'cylinder_radius': obs.cylinder_radius})
     return new_obstacles
+
 
 def _parse_obs_to_points_list(obs_list):
     """
@@ -188,13 +358,16 @@ def _parse_obs_to_points_list(obs_list):
     for obs in obs_list:
         order = 0
         obs_as_list = []
-        points = geom.Point(ll_to_utm(obs.longitude, obs.latitude)).buffer(obs.cylinder_radius).exterior.coords
+        points = geom.Point(ll_to_utm(obs.longitude, obs.latitude)).buffer(
+            obs.cylinder_radius).exterior.coords
         for point in points:
             order += 1
             conv_long, conv_lat = utm_to_ll(*point)
-            obs_as_list.append({'order': order, 'latitude': conv_lat, 'longitude': conv_long, 'altitude': obs.cylinder_height, 'is_generated': False, 'wp_type': "obstacle"})
+            obs_as_list.append({'order': order, 'latitude': conv_lat, 'longitude': conv_long,
+                               'altitude': obs.cylinder_height, 'is_generated': False, 'wp_type': "obstacle"})
         new_obstacles.append(obs_as_list)
     return new_obstacles
+
 
 def _parse_fz_to_points_list(flyzone, bounds):
     """
@@ -204,8 +377,10 @@ def _parse_fz_to_points_list(flyzone, bounds):
     order = 0
     for fz_point in flyzone:
         order += 1
-        flyzone_dict['points'].append({'order': order, 'latitude': fz_point.latitude, 'longitude': fz_point.longitude, 'altitude': None, 'is_generated': False, 'wp_type': "flyzone"})
+        flyzone_dict['points'].append({'order': order, 'latitude': fz_point.latitude,
+                                      'longitude': fz_point.longitude, 'altitude': None, 'is_generated': False, 'wp_type': "flyzone"})
     return flyzone_dict
+
 
 @require_http_methods(["GET"])
 def missions(request):
@@ -214,7 +389,8 @@ def missions(request):
         - Returns a list of possible missions
     """
     missions = UasMission.objects.filter()
-    return JsonResponse({"missions": [mission.id for mission in missions]})
+    return JsonResponse({"missions": [mission.id for mission in missions]}, json_dumps_params={"indent": 2})
+
 
 @require_http_methods(["GET"])
 def route_file(request, mission_id):
@@ -226,7 +402,8 @@ def route_file(request, mission_id):
     filename = basepath+"mission_%s_waypoints.waypoints" % mission_id
 
     mission = UasMission.objects.get(id=mission_id)
-    pre_calc_route = OrderedRouteWayPoint.objects.filter(mission=mission.id).order_by('order')
+    pre_calc_route = OrderedRouteWayPoint.objects.filter(
+        mission=mission.id).order_by('order')
     waypoints = _parse_waypoints_to_dict(pre_calc_route)
 
     # Create and save the file
@@ -236,6 +413,7 @@ def route_file(request, mission_id):
     response = HttpResponse(wrapper, content_type='text/plain')
     response['Content-Length'] = os.path.getsize(filename)
     return response
+
 
 @require_http_methods(["GET"])
 def obs_file(request, mission_id):
