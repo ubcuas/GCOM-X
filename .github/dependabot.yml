@@ -1,0 +1,30 @@
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "Priority: Medium"
+      - "Status: Review Needed"
+      - "Type: Dependency"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "ubcuas/software-leads"
+      - "ubcuas/gcom-back-end"
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "Priority: Medium"
+      - "Status: Review Needed"
+      - "Type: Dependency"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "ubcuas/software-leads"
+      - "ubcuas/gcom-front-end"
