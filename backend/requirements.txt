@@ -26,7 +26,7 @@ lxml==4.6.2
 model-bakery==1.2.1
 networkx==2.5
 nose==1.3.7
-numpy==1.19.5
+numpy==1.24.1
 Pillow==8.1.0
 preconditions==0.1
 psycopg2-binary==2.8.6
